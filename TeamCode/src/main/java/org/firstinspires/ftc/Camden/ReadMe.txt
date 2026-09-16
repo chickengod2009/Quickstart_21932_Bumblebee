@@ -1,0 +1,2 @@
+To help with merging, I made a Folder with my code. When we start working more together We can start combing the stuff we write into one.
+I just figured a seperate folder would be better as I wait for your commits.
