@@ -7,6 +7,7 @@ public class Util{
 
 
   public Util(Opmode op){
+    if (op == null) throw new RunTimeException("Need an opmode for Util");
     //All the device naming and getting goes here
     if(!Util.haveIBeenLookedAt){
       Util.haveIbeenLookedAt = true;
@@ -15,11 +16,14 @@ public class Util{
   } 
   //An idea for states for the robot
   public enum States{}
+
+  //generic get function for all devices
   @SuppressWarnings("unchecked") 
   public <T extends HardwareDevice> T get(String s) throws Exception{
     T ret;
     HardwareDevice dev = (devices.get(s));
-    if (s==null) throw new Exception(":(")
+    if (dev == null) throw new Exception("Device " + s + "does not exist");
+    
     try{
       ret = (T)dev;
     }catch(ClassCastException e){
