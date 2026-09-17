@@ -6,6 +6,8 @@ class Log implements Loggable{
 	//Maybe for better pedro access
 	protected Follower follower = null;
 
+	//Hardware map varaible needed!
+
 	private static int totalLogCalls = 0;
 	private int logCalls =0;
 	private String lastCall = "";
@@ -29,15 +31,16 @@ class Log implements Loggable{
 
 	public void logFunction(FollowerLog Flog){
 		
-		Stringbuilder buff = new StringBuilder("");
+		StringBuilder buff = new StringBuilder("");
 		this.logCalls +=1;
 		Log.totalLogCalls += 1;
 		for (Loggable log : this.logs){
-			
+			if (log == null) continue;
 			buff.append(log.log(this.opmode)).append("\n");
 		}	
 		
 		//Need to wrap in try catch block
+		
 		if (Flog != null)
 			this.lastCall = this.logCalls + "\n" 
 					   	+ buff.toString() + Flog.toString() + "\n" + 
@@ -46,8 +49,14 @@ class Log implements Loggable{
 		else
 			this.lastCall = this.logCalls + "\n" 
 					   	+ buff.toString() + "\n" + 
-					   	"Total logs: " + Log.totalLogCalls+"\n");
-		this.writeFile(this.lastCall);
+					   	"Total logs: " + Log.totalLogCalls+"\n";
+
+		try{
+			this.writeFile(this.lastCall);
+		}catch (IOException e){
+			//TODO!
+			throw new RuntimeException("");
+		}	
 	}
 
 	
@@ -58,6 +67,19 @@ class Log implements Loggable{
 		this.logFunction(null);
 		return this.lastCall;
 	}	
+	/*
+
+	This would be the blueprint of making default tracking for the Log
+	public static Log withDriveTrain(HardwareMap map){
+		Loggable drive = new Loggable(){
+			@Override
+			public String log(Opmode op){
+				
+			}	
+		}	
+	}
+	
+	*/
 	
 	
 
