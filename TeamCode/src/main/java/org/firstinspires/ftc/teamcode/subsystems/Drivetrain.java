@@ -1,0 +1,61 @@
+package org.firstinspires.ftc.teamcode.subsystems;
+
+
+import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import java.util.HashMap;
+
+@Config
+public class Drivetrain {
+
+    private DcMotor frontLeft, frontRight, backLeft, backRight;
+
+    public static double maxLinear = 1, maxRot = 1, slowLin = 1, slowRot = 1, fastLin = 1, fastRot = 1;
+
+    public static double speedMult = 1;
+
+    public static boolean test = false;
+    public Drivetrain(Opmode op) {
+        Util util = new Util(op);
+        // frontLeft = hwMap.dcMotor.get(config.get("frontLeftMotor"));
+        // backLeft = hwMap.dcMotor.get(config.get("backLeftMotor"));
+        // frontRight = hwMap.dcMotor.get(config.get("frontRightMotor"));
+        // backRight = hwMap.dcMotor.get(config.get("backRightMotor"));
+        /*
+        frontLeft = util.get("frontLeftMotor");
+        etc.
+        
+        */
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    public void update(double x, double y, double rx) {
+        frontLeft.setPower( ((y + x - rx) * speedMult));
+        backLeft.setPower( ((y - x - rx) * speedMult));
+        frontRight.setPower( ((y - x + rx) * speedMult));
+        backRight.setPower( ((y + x + rx) * speedMult));
+    }
+
+    public void parkMode() {
+        speedMult = .30;
+//        maxLinear = slowLin;
+//        maxRot = slowRot;
+    }
+
+    public void speedMode() {
+        speedMult = 1;
+//        maxLinear = fastLin;
+//        maxRot = fastRot;
+    }
+
+
+}
