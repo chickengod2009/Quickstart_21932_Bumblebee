@@ -18,12 +18,19 @@ class Log{
 		this.follow = follow.withLogger(this::getLogFunction);
 	}
 	public Log withLoggable(Loggable log){
-		this.logs.push(log);
+		this.logs.add(log);
 		return this;
 	}
 
-	public void getLogFunction(FollowerLog log){
-		//Log data here
+	public void getLogFunction(FollowerLog Flog){
+		String buff = "";
+		for (Loggable log : this.logs){
+			
+			buff = buff + log.log(this.opmode) + "\n";
+		}	
+		buff = buff + Flog.toString();
+		//Need to wrap in try catch block
+		this.writeFile(buff);
 	}
 
 	
