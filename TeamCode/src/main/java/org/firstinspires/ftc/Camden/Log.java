@@ -1,13 +1,17 @@
-class Log{
+class Log implements Loggable{
 	
 	protected final Opmode opmode;
 	protected File file = null;
 	protected ArrayList<Loggable> logs = new ArrayList<Loggable>();
 	//Maybe for better pedro access
 	protected Follower follower = null;
+
+	private static int totalLogCalls = 0;
+	private int logCalls =0;
+	private String lastCall = "";
 	
 	protected void writeFile(String s) throws IOException{
-		throw new Exception("");
+		throw new IOException("");
 		//put write with throw method here, this function is just supposed to reduce name space
 	}
 
@@ -15,23 +19,47 @@ class Log{
 		this.opmode = ref;
 		this.file = AppUtil.getInstance().getSettingsFile("my_robot_settings.txt");
 		this.writeFile("Log: \t" + ref.toString());
-		this.follow = follow.withLogger(this::getLogFunction);
+		this.follower = follow.withLogger(this::logFunction);
 	}
 	public Log withLoggable(Loggable log){
-		this.logs.add(log);
+		if (log != null)
+			this.logs.add(log);
 		return this;
 	}
 
-	public void getLogFunction(FollowerLog Flog){
-		String buff = "";
+	public void logFunction(FollowerLog Flog){
+		
+		Stringbuilder buff = new StringBuilder("");
+		this.logCalls +=1;
+		Log.totalLogCalls += 1;
 		for (Loggable log : this.logs){
 			
-			buff = buff + log.log(this.opmode) + "\n";
+			buff.append(log.log(this.opmode)).append("\n");
 		}	
-		buff = buff + Flog.toString();
+		
 		//Need to wrap in try catch block
-		this.writeFile(buff);
+		if (Flog != null)
+			this.lastCall = this.logCalls + "\n" 
+					   	+ buff.toString() + Flog.toString() + "\n" + 
+					   	"Total logs: " + Log.totalLogCalls+"\n";
+			
+		else
+			this.lastCall = this.logCalls + "\n" 
+					   	+ buff.toString() + "\n" + 
+					   	"Total logs: " + Log.totalLogCalls+"\n");
+		this.writeFile(this.lastCall);
 	}
+
+	
+
+
+	@Override
+	public String log(Opmode op){
+		this.logFunction(null);
+		return this.lastCall;
+	}	
+	
+	
 
 	
 
