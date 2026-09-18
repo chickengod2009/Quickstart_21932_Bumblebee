@@ -95,7 +95,7 @@ class Log implements Loggable{
 	
 	
 
-	
+/*	
 	public Log withDriveTrain(Drivetrain drive){
 		Loggable ret = new Loggable(){
 			Drivetrain drivetrain = drive;
@@ -108,7 +108,7 @@ class Log implements Loggable{
 		this.logs.add(ret);
 		return this;
 	}
-
+*/
 	//closes the stream and makes sure everything gets written. Must be calles at the end of any program using a log!
 	public void closeLog(){
 		try{
