@@ -1,9 +1,22 @@
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+import com.qualcomm.robotcore.util.ReadWriteFile;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+
+
 class Log implements Loggable{
 	
 	protected final Opmode opmode;
 	protected File file = null;
 	protected ArrayList<Loggable> logs = new ArrayList<Loggable>();
 	//Maybe for better pedro access
+	protected short tick =0;
 	protected Follower follower = null;
 
 	//Hardware map varaible needed!
@@ -11,21 +24,22 @@ class Log implements Loggable{
 	private static int totalLogCalls = 0;
 	private int logCalls =0;
 	private String lastCall = "";
+	private BufferedWriter writer = null;
 	
 	protected void writeFile(String s) throws IOException{
-		if (this.file == null) return;
-		FileWriter writer = new FileWriter(this.file, true);
-		try {writer.write(s);} catch (Exception e){writer.close(); throw new IOException(e);}
-		writer.close();
-		
-		//put write with throw method here, this function is just supposed to reduce name space
+		if (this.writer == null) return;
+		this.writer.write(s);
 	}
 
 	public Log(Opmode ref, Follower follow) throws IOException{
 		this.opmode = ref;
-		this.file = (AppUtil.getInstance().getSettingsFile("my_log.txt"));
+		this.file = (AppUtil.getInstance().getLogFile("my_log.txt"));
 		ReadWriteFile.writeFile(this.file, "--- Start of Log: " + ref.toString() + " ---\n");
-		this.follower = follow.withLogger(this::logFunction);
+		this.writer = new BufferedWriter(new FileWriter(this.file, true));
+		if(follow == null)
+			this.follower = null;
+		else 
+			this.follower = follow.withLogger(this::logFunction);	
 	}
 	//add more logs
 	public Log withLoggable(Loggable log){
@@ -35,8 +49,12 @@ class Log implements Loggable{
 	}
 	//actual log function
 	public void logFunction(FollowerLog Flog){
-		
-		StringBuilder buff = new StringBuilder("");
+		if(this.tick < 1000){
+			this.tick++;
+			return;
+		}	
+		this.tick=0;	
+		StringBuilder buff = new StringBuilder();
 		this.logCalls +=1;
 		Log.totalLogCalls += 1;
 		for (Loggable log : this.logs){
@@ -66,12 +84,15 @@ class Log implements Loggable{
 
 	
 
-
+	//force log
 	@Override
 	public String log(){
+		this.tick = 1001;
 		this.logFunction(null);
 		return this.lastCall;
 	}	
+
+	
 	
 
 	
@@ -81,12 +102,25 @@ class Log implements Loggable{
 			@Override
 			public String log(){
 				//Log function for drivetrain
-				return "Drivetrain"
+				return "Drivetrain";
 			}	
 		};
 		this.logs.add(ret);
 		return this;
 	}
+
+	//closes the stream and makes sure everything gets written. Must be calles at the end of any program using a log!
+	public void closeLog(){
+		try{
+			if(this.writer == null) return;
+			this.writer.flush();
+			this.writer.close();
+			this.writer = null;
+		}catch (Exception e){
+			//telementry print, might not be worth it though as program is ending
+		}	
+
+	}	
 
 	
 	
