@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.util.HashMap;
 
 @Config
-public class Drivetrain {
+public class Drivetrain implements Loggable{
 
     private DcMotor frontLeft, frontRight, backLeft, backRight;
 
@@ -56,6 +56,13 @@ public class Drivetrain {
 //        maxLinear = fastLin;
 //        maxRot = fastRot;
     }
+
+	@Override
+	public String log(){
+		// do more here
+		return 
+			"Front Left POS" + frontLeft.getPosistion();
+	}
 
 
 }
