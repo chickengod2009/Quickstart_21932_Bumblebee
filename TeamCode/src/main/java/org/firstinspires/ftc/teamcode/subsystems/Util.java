@@ -6,16 +6,32 @@ public class Util{
 
 
 
-  public Util(Opmode op){
+  public Util(Opmode op, CurrentDevice dev){
     if (op == null) throw new RunTimeException("Need an opmode for Util");
     //All the device naming and getting goes here
     if(!Util.haveIBeenLookedAt){
       Util.haveIbeenLookedAt = true;
     }  
 
+    
+
   } 
   //An idea for states for the robot
   public enum States{}
+  //make motor direction switeches less verbose
+  public static <T implements DcMotor> void reverse(T motor){
+
+    switch (motor.getDirection()){
+      case DcSimpleMotor.Direction.REVERSE:
+        motor.setDirection(DcSimpleMotor.Direction.FORWARD);
+      case DcSimpleMotor.Direction.FORWARD:
+        motor.setDirection(DcSimpleMotor.Direction.REVERSE);
+        
+    }    
+  
+  } 
+
+  
 
   //generic get function for all devices
   @SuppressWarnings("unchecked") 
