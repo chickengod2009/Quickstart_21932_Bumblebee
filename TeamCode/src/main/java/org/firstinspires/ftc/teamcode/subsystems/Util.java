@@ -6,7 +6,7 @@ public class Util{
 
 
 
-  public Util(Opmode op, CurrentDevice dev){
+  public Util(Opmode op){
     if (op == null) throw new RuntimeException("Need an opmode for Util");
     //All the device naming and getting goes here
     if(!Util.haveIBeenLookedAt){
@@ -34,6 +34,21 @@ public class Util{
   
   } 
 
+  public static <T extends Servo> void reverseServo(@NonNull T[] servos){
+    for (Servo servo : servos){
+    switch (servo.getDirection()){
+      case SErvo.Direction.REVERSE:
+        servo.setDirection(Servo.Direction.FORWARD);
+        break;
+      case Servo.Direction.FORWARD:
+        servo.setDirection(Servo.Direction.REVERSE);
+        break;
+        
+    }   
+    }
+  
+  } 
+
 
   
 
@@ -47,7 +62,10 @@ public class Util{
     for(T dev : device){
       if(dev instanceof DcSimpleMotor){
         Util.reverseMotor((DcSimple)device);
-      }  // if else chain here
+        
+      } else if(dev instanceof Servo){
+        // servo func
+      }  else{ /*maybe just do nothing or maybe throw error*/}
         
         
     }  
@@ -67,7 +85,7 @@ public class Util{
     try{
       ret = (T)dev;
     }catch(ClassCastException e){
-      throw new IllegalArgumentException(e.toString() +"Motor name" + s);
+      throw new IllegalArgumentException(e.toString() +"Motor name:" + s);
     }  
     return ret;
 
