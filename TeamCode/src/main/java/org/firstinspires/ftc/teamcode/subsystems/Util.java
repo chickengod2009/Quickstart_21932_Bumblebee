@@ -19,17 +19,22 @@ public class Util{
   //An idea for states for the robot
   public enum States{}
   //make motor direction switeches less verbose
-  public static <T implements DcMotor> void reverse(T motor){
-
+  public static <T extends DcSimpleMotor> void reverse(@NonNull T[] motors){
+    for (DSimpleMotor motor : motors){
     switch (motor.getDirection()){
       case DcSimpleMotor.Direction.REVERSE:
         motor.setDirection(DcSimpleMotor.Direction.FORWARD);
       case DcSimpleMotor.Direction.FORWARD:
         motor.setDirection(DcSimpleMotor.Direction.REVERSE);
         
-    }    
+    }   
+    }
   
   } 
+
+  public static <T extends DcSimpleMotor> void reverse(T motor){
+    Util.reverse({motor});
+  }
 
   
 
