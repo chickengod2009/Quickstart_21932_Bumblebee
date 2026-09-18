@@ -7,10 +7,10 @@ public class Util{
 
 
   public Util(Opmode op, CurrentDevice dev){
-    if (op == null) throw new RunTimeException("Need an opmode for Util");
+    if (op == null) throw new RuntimeException("Need an opmode for Util");
     //All the device naming and getting goes here
     if(!Util.haveIBeenLookedAt){
-      Util.haveIbeenLookedAt = true;
+      Util.haveIBeenLookedAt = true;
     }  
 
     
@@ -19,36 +19,55 @@ public class Util{
   //An idea for states for the robot
   public enum States{}
   //make motor direction switeches less verbose
-  public static <T extends DcSimpleMotor> void reverse(@NonNull T[] motors){
-    for (DSimpleMotor motor : motors){
+  public static <T extends DcSimpleMotor> void reverseMotor(@NonNull T[] motors){
+    for (DcSimpleMotor motor : motors){
     switch (motor.getDirection()){
       case DcSimpleMotor.Direction.REVERSE:
         motor.setDirection(DcSimpleMotor.Direction.FORWARD);
+        break;
       case DcSimpleMotor.Direction.FORWARD:
         motor.setDirection(DcSimpleMotor.Direction.REVERSE);
+        break;
         
     }   
     }
   
   } 
 
-  public static <T extends DcSimpleMotor> void reverse(T motor){
-    Util.reverse({motor});
+
+  
+
+  public static <T extends DcSimpleMotor> void reverseMotor(@NonNull T motor){
+    Util.reverse(new DcSimpleMotor[]{motor});
+  }
+
+
+  public static <T extends HardwareDevice> void reverse(@NonNull T[] device){
+    
+    for(T dev : device){
+      if(dev instanceof DcSimpleMotor){
+        Util.reverseMotor((DcSimple)device);
+      }  // if else chain here
+        
+        
+    }  
+    
+
   }
 
   
 
   //generic get function for all devices
   @SuppressWarnings("unchecked") 
-  public <T extends HardwareDevice> T get(String s) throws Exception{
+  public <T extends HardwareDevice> T get(String s){
     T ret;
     HardwareDevice dev = (devices.get(s));
-    if (dev == null) throw new Exception("Device " + s + "does not exist");
+    if (dev == null) throw new RuntimeException("Device " + s + "does not exist");
     
     try{
       ret = (T)dev;
     }catch(ClassCastException e){
-      throw new Exception(e.toString() +"Motor name" + s);
+      throw new IllegalArgumentException(e.toString() +"Motor name" + s);
     }  
     return ret;
 
