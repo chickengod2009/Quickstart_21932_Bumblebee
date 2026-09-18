@@ -13,22 +13,27 @@ class Log implements Loggable{
 	private String lastCall = "";
 	
 	protected void writeFile(String s) throws IOException{
-		throw new IOException("");
+		if (this.file == null) return;
+		FileWriter writer = new FileWriter(this.file, true);
+		try {writer.write(s);} catch (Exception e){writer.close(); throw new IOException(e);}
+		writer.close();
+		
 		//put write with throw method here, this function is just supposed to reduce name space
 	}
 
 	public Log(Opmode ref, Follower follow) throws IOException{
 		this.opmode = ref;
-		this.file = AppUtil.getInstance().getSettingsFile("my_robot_settings.txt");
-		this.writeFile("Log: \t" + ref.toString());
+		this.file = (AppUtil.getInstance().getSettingsFile("my_log.txt"));
+		ReadWriteFile.writeFile(this.file, "--- Start of Log: " + ref.toString() + " ---\n");
 		this.follower = follow.withLogger(this::logFunction);
 	}
+	//add more logs
 	public Log withLoggable(Loggable log){
 		if (log != null)
 			this.logs.add(log);
 		return this;
 	}
-
+	//actual log function
 	public void logFunction(FollowerLog Flog){
 		
 		StringBuilder buff = new StringBuilder("");
@@ -36,7 +41,7 @@ class Log implements Loggable{
 		Log.totalLogCalls += 1;
 		for (Loggable log : this.logs){
 			if (log == null) continue;
-			buff.append(log.log(this.opmode)).append("\n");
+			buff.append(log.log()).append("\n");
 		}	
 		
 		//Need to wrap in try catch block
@@ -54,7 +59,7 @@ class Log implements Loggable{
 		try{
 			this.writeFile(this.lastCall);
 		}catch (IOException e){
-			//TODO!
+			//TODO! opmode.telementry.addData!
 			throw new RuntimeException("");
 		}	
 	}
@@ -63,23 +68,29 @@ class Log implements Loggable{
 
 
 	@Override
-	public String log(Opmode op){
+	public String log(){
 		this.logFunction(null);
 		return this.lastCall;
 	}	
-	/*
-
-	This would be the blueprint of making default tracking for the Log
-	public static Log withDriveTrain(HardwareMap map){
-		Loggable drive = new Loggable(){
-			@Override
-			public String log(Opmode op){
-				
-			}	
-		}	
-	}
 	
-	*/
+
+	
+	public Log withDriveTrain(Drivetrain drive){
+		Loggable ret = new Loggable(){
+			Drivetrain drivetrain = drive;
+			@Override
+			public String log(){
+				//Log function for drivetrain
+				return "Drivetrain"
+			}	
+		};
+		this.logs.add(ret);
+		return this;
+	}
+
+	
+	
+	
 	
 	
 
