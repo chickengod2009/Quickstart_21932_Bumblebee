@@ -1,32 +1,40 @@
-public class Util{
+public class Util implements AutoCloseable{
   //Collect all the motors and other devices at once, and you dont need to call hardwaremap.get multiple times
-  private static HashMap<String, HardwareDevice> devices = null;
+  private HashMap<String, HardwareDevice> devices = null;
   //So you only have to actually call all the get methods once
   private static boolean haveIBeenLookedAt = false;
 
 
 
-  public Util(Opmode op){
+  public Util(OpMode op){
     if (op == null) throw new RuntimeException("Need an opmode for Util");
     //All the device naming and getting goes here
     if(!Util.haveIBeenLookedAt){
       Util.haveIBeenLookedAt = true;
     }  
+    devices = new HashMap<>();
 
     
 
   } 
+  @Override
+  public void close(){
+
+    if(devices != null) devices.clear();
+    haveIBeenLookedAt = false;
+    
+  }  
   //An idea for states for the robot
   public enum States{}
   //make motor direction switeches less verbose
-  public static <T extends DcSimpleMotor> void reverseMotor(@NonNull T[] motors){
-    for (DcSimpleMotor motor : motors){
+  public static <T extends DcMotorSimple> void reverseMotor(@NonNull T[] motors){
+    for (DcMotorSimple motor : motors){
     switch (motor.getDirection()){
-      case DcSimpleMotor.Direction.REVERSE:
-        motor.setDirection(DcSimpleMotor.Direction.FORWARD);
+      case DcMotorSimple.Direction.REVERSE:
+        motor.setDirection(DcMotorSimple.Direction.FORWARD);
         break;
-      case DcSimpleMotor.Direction.FORWARD:
-        motor.setDirection(DcSimpleMotor.Direction.REVERSE);
+      case DcMotorSimple.Direction.FORWARD:
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
         break;
         
     }   
@@ -37,7 +45,7 @@ public class Util{
   public static <T extends Servo> void reverseServo(@NonNull T[] servos){
     for (Servo servo : servos){
     switch (servo.getDirection()){
-      case SErvo.Direction.REVERSE:
+      case Servo.Direction.REVERSE:
         servo.setDirection(Servo.Direction.FORWARD);
         break;
       case Servo.Direction.FORWARD:
@@ -52,16 +60,17 @@ public class Util{
 
   
 
-  public static <T extends DcSimpleMotor> void reverseMotor(@NonNull T motor){
-    Util.reverse(new DcSimpleMotor[]{motor});
+  public static <T extends DcMotorSimple> void reverseMotor(@NonNull T motor){
+    Util.reverseMotor(new DcMotorSimple[]{motor});
   }
 
 
   public static <T extends HardwareDevice> void reverse(@NonNull T[] device){
-    
+    byte i =0;
     for(T dev : device){
-      if(dev instanceof DcSimpleMotor){
-        Util.reverseMotor((DcSimple)device);
+      if(dev instanceof DcMotorSimple){
+        Util.reverseMotor((DcMotorSimple)device[i]);
+        i++;
         
       } else if(dev instanceof Servo){
         // servo func
