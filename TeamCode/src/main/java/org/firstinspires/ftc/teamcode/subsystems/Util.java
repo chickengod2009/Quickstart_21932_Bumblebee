@@ -38,6 +38,8 @@ import java.util.HashMap;
  * DcMotorSimple = util.get("motor_name"); // Auto converts to DcmotorSimple if you gave right name
  * util.close();
  *
+ * //Despite being auto closeable, it is best practice to call the clean up ptrs function at the begging of your program incase the previous program interuppted before reaching a close statement
+ *
  *
  * }
  *
@@ -46,7 +48,7 @@ import java.util.HashMap;
  * **/
 public class Util implements AutoCloseable{
   //Collect all the motors and other devices at once, and you dont need to call hardwaremap.get multiple times
-  private HashMap<String, HardwareDevice> devices = null;
+  private static HashMap<String, HardwareDevice> devices = null;
   //So you only have to actually call all the get methods once
   private static boolean haveIBeenLookedAt = false;
 
@@ -63,12 +65,15 @@ public class Util implements AutoCloseable{
 
     
 
-  } 
+  }
+
+  /**
+   * this function is just so the class can be auto closeable. That way, it can be arrayed with other auto closeables to create function that closes everything that needs to be closed.
+   */
   @Override
   public void close(){
 
-    if(devices != null) devices.clear();
-    haveIBeenLookedAt = false;
+    Util.cleanUpPtrs();
     
   }  
   //An idea for states for the robot
@@ -102,6 +107,14 @@ public class Util implements AutoCloseable{
     }   
     }
   
+  }
+
+  /**
+   * This function needs to be called at the beginning of every opmode inorder to fix all the opmode pointers
+   */
+  public static void cleanUpPtrs(){
+    if(Util.devices != null) Util.devices.clear();
+    haveIBeenLookedAt = false;
   }
 
   /**
@@ -150,20 +163,35 @@ public class Util implements AutoCloseable{
 
   }
 
-  
 
-  //generic get function for all devices
+  /**
+   *
+   * @param name
+   * @return T
+   * @param <T>
+   *
+   * This works as a generic get function that can give any stored device
+   *
+   * <pre>{@code
+   * Util.cleanUpPtrs();
+   * Util util =new Util(opmode);
+   * Servo servo = util.get("servo name");
+   * DcMotorEx motor  = util.get("motor name");
+   *
+   * }</>
+   *
+   */
   @SuppressWarnings("unchecked") 
-  public <T extends HardwareDevice> T get(String s) {
+  public <T extends HardwareDevice> T get(String name) {
     if(!haveIBeenLookedAt) throw new RuntimeException("Utility has been closed! OpMode is no longer available, must reopen.");
     T ret;
-    HardwareDevice dev = (devices.get(s));
-    if (dev == null) throw new RuntimeException("Device " + s + "does not exist");
+    HardwareDevice dev = (devices.get(name));
+    if (dev == null) throw new RuntimeException("Device " + name + "does not exist");
 
     try {
       ret = (T) dev;
     } catch (ClassCastException e) {
-      throw new IllegalArgumentException(e.toString() + "Motor name:" + s);
+      throw new IllegalArgumentException(e.toString() + "Motor name:" + name);
     }
     return ret;
 
