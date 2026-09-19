@@ -1,15 +1,18 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 
-import com.acmerobotics.dashboard.config.Config;
+//import com.acmerobotics.dashboard.config.Config;
+//import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+//import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import java.util.HashMap;
+import org.firstinspires.ftc.Control.Loggable;
 
-@Config
-public class Drivetrain implements Loggable{
+//import java.util.HashMap;
+
+//@Config
+public class Drivetrain implements Loggable {
 
     private DcMotor frontLeft, frontRight, backLeft, backRight;
 
@@ -17,9 +20,12 @@ public class Drivetrain implements Loggable{
 
     public static double speedMult = 1;
 
+    public final Util util;
+
     public static boolean test = false;
-    public Drivetrain(Opmode op) {
-        Util util = new Util(op);
+    public Drivetrain(Util util) {
+        this.util = util;
+
         // frontLeft = hwMap.dcMotor.get(config.get("frontLeftMotor"));
         // backLeft = hwMap.dcMotor.get(config.get("backLeftMotor"));
         // frontRight = hwMap.dcMotor.get(config.get("frontRightMotor"));
@@ -61,7 +67,7 @@ public class Drivetrain implements Loggable{
 	public String log(){
 		// do more here
 		return 
-			"Front Left POS" + frontLeft.getPosistion();
+			"Front Left POS" + frontLeft.getCurrentPosition();
 	}
 
 
