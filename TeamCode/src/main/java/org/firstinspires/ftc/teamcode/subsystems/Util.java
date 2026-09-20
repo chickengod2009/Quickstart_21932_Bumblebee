@@ -58,7 +58,6 @@ public class Util{
     if (op == null) throw new RuntimeException("Need an opmode for Util");
     //All the device naming and getting goes here
     this.open(op);
-    devices = new HashMap<>();
 
     
 
@@ -124,8 +123,24 @@ public class Util{
    *
    * }</>
    */
-  public void open(OpMode op){
-    //put hardware get functions here
+  private void open(OpMode op){
+    this.devices = new HashMap<>();
+
+    devices.put("frontLeftMotor",    op.hardwareMap.dcMotor.get("frontLeftMotor"));
+    devices.put("backLeftMotor",     op.hardwareMap.dcMotor.get("backLeftMotor"));
+    devices.put("frontRightMotor",   op.hardwareMap.dcMotor.get("frontRightMotor"));
+    devices.put("backRightMotor",    op.hardwareMap.dcMotor.get("backRightMotor"));
+    devices.put("intakeMotor",       op.hardwareMap.dcMotor.get("intake"));
+    devices.put("rollersMotor",      op.hardwareMap.dcMotor.get("roller"));
+    devices.put("kicker",            op.hardwareMap.servo.get("kicker"));
+    devices.put("turretMotor",       op.hardwareMap.dcMotor.get("turret"));
+    //devices.put("webcam1",           op.hardwareMap.get("camera"));
+    devices.put("shooter",           op.hardwareMap.dcMotor.get("flyMotor"));
+    devices.put("shooterTwo",        op.hardwareMap.dcMotor.get("flyMotor2"));
+    devices.put("gate",              op.hardwareMap.servo.get("gate"));
+    devices.put("turret",            op.hardwareMap.servo.get("turret"));
+    devices.put("turret2",           op.hardwareMap.servo.get("turret2"));
+    devices.put("hood",              op.hardwareMap.servo.get("hood"));
   }
 
 
