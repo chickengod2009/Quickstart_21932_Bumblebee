@@ -46,36 +46,25 @@ import java.util.HashMap;
  *
  * </>
  * **/
-public class Util implements AutoCloseable{
+public class Util{
   //Collect all the motors and other devices at once, and you dont need to call hardwaremap.get multiple times
-  private static HashMap<String, HardwareDevice> devices = null;
+  private HashMap<String, HardwareDevice> devices = null;
   //So you only have to actually call all the get methods once
-  private static boolean haveIBeenLookedAt = false;
+
 
 
 
   public Util(OpMode op){
     if (op == null) throw new RuntimeException("Need an opmode for Util");
     //All the device naming and getting goes here
-    if(!Util.haveIBeenLookedAt){
-      Util.haveIBeenLookedAt = true;
-      this.open(op);
-    }  
-    devices = new HashMap<>();
+    this.open(op);
 
     
 
   }
 
-  /**
-   * this function is just so the class can be auto closeable. That way, it can be arrayed with other auto closeables to create function that closes everything that needs to be closed.
-   */
-  @Override
-  public void close(){
 
-    Util.cleanUpPtrs();
-    
-  }  
+
   //An idea for states for the robot
   public enum States{}
   //make motor direction switeches less verbose
@@ -109,13 +98,13 @@ public class Util implements AutoCloseable{
   
   }
 
-  /**
-   * This function needs to be called at the beginning of every opmode inorder to fix all the opmode pointers
-   */
-  public static void cleanUpPtrs(){
-    if(Util.devices != null) Util.devices.clear();
-    haveIBeenLookedAt = false;
-  }
+//  /**
+//   * This function needs to be called at the beginning of every opmode inorder to fix all the opmode pointers
+//   */
+//  public static void cleanUpPtrs(){
+//    if(Util.devices != null) Util.devices.clear();
+//    haveIBeenLookedAt = false;
+//  }
 
   /**
    *
@@ -134,8 +123,24 @@ public class Util implements AutoCloseable{
    *
    * }</>
    */
-  public void open(OpMode op){
-    //put hardware get functions here
+  private void open(OpMode op){
+    this.devices = new HashMap<>();
+
+    devices.put("frontLeftMotor",    op.hardwareMap.dcMotor.get("frontLeftMotor"));
+    devices.put("backLeftMotor",     op.hardwareMap.dcMotor.get("backLeftMotor"));
+    devices.put("frontRightMotor",   op.hardwareMap.dcMotor.get("frontRightMotor"));
+    devices.put("backRightMotor",    op.hardwareMap.dcMotor.get("backRightMotor"));
+    devices.put("intakeMotor",       op.hardwareMap.dcMotor.get("intake"));
+    devices.put("rollersMotor",      op.hardwareMap.dcMotor.get("roller"));
+    devices.put("kicker",            op.hardwareMap.servo.get("kicker"));
+    devices.put("turretMotor",       op.hardwareMap.dcMotor.get("turret"));
+    //devices.put("webcam1",           op.hardwareMap.get("camera"));
+    devices.put("shooter",           op.hardwareMap.dcMotor.get("flyMotor"));
+    devices.put("shooterTwo",        op.hardwareMap.dcMotor.get("flyMotor2"));
+    devices.put("gate",              op.hardwareMap.servo.get("gate"));
+    devices.put("turret",            op.hardwareMap.servo.get("turret"));
+    devices.put("turret2",           op.hardwareMap.servo.get("turret2"));
+    devices.put("hood",              op.hardwareMap.servo.get("hood"));
   }
 
 
@@ -183,7 +188,7 @@ public class Util implements AutoCloseable{
    */
   @SuppressWarnings("unchecked") 
   public <T extends HardwareDevice> T get(String name) {
-    if(!haveIBeenLookedAt) throw new RuntimeException("Utility has been closed! OpMode is no longer available, must reopen.");
+    //if(!haveIBeenLookedAt) throw new RuntimeException("Utility has been closed! OpMode is no longer available, must reopen.");
     T ret;
     HardwareDevice dev = (devices.get(name));
     if (dev == null) throw new RuntimeException("Device " + name + "does not exist");

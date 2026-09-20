@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.jetbrains.annotations.NotNull;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import java.io.BufferedWriter;
@@ -14,14 +15,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-class Log implements Loggable{
+class Log implements Loggable, AutoCloseable{
 
 	protected final OpMode opmode;
 	protected File file;
 	protected ArrayList<Loggable> logs = new ArrayList<>();
 	//Maybe for better pedro access
-	protected short tick =0;
+	//protected short tick =0;
 	protected Follower follower;
+
+	protected ElapsedTime timer = new ElapsedTime();
+	protected boolean forceLog = false;
 
 	//Hardware map varaible needed!
 
@@ -44,6 +48,7 @@ class Log implements Loggable{
 			this.follower = null;
 		else
 			this.follower = follow.withLogger(this::logFunction);
+		this.timer.reset();
 	}
 	//add more logs
 	public Log withLoggable(Loggable log){
@@ -53,11 +58,24 @@ class Log implements Loggable{
 	}
 	//actual log function
 	public void logFunction(FollowerLog Flog){
-		if(this.tick < 1000){
-			this.tick++;
+
+		if(this.timer.seconds() < 5 || !this.forceLog){
+
 			return;
 		}
-		this.tick=0;
+		this.forceLog=false;
+		timer.reset();
+
+		try{
+			this.writeFile(this.makeLogString(Flog));
+		}catch (IOException e){
+			//TODO! opmode.telementry.addData!
+			throw new RuntimeException("");
+		}
+	}
+
+	private String makeLogString(FollowerLog Flog){
+
 		StringBuilder buff = new StringBuilder();
 		this.logCalls +=1;
 		Log.totalLogCalls += 1;
@@ -70,20 +88,14 @@ class Log implements Loggable{
 
 		if (Flog != null)
 			this.lastCall = this.logCalls + "\n"
-					   	+ buff.toString() + Flog.toString() + "\n" +
-					   	"Total logs: " + Log.totalLogCalls+"\n";
+					+ buff.toString() + Flog.toString() + "\n" +
+					"Total logs: " + Log.totalLogCalls+"\n";
 
 		else
 			this.lastCall = this.logCalls + "\n"
-					   	+ buff.toString() + "\n" +
-					   	"Total logs: " + Log.totalLogCalls+"\n";
-
-		try{
-			this.writeFile(this.lastCall);
-		}catch (IOException e){
-			//TODO! opmode.telementry.addData!
-			throw new RuntimeException("");
-		}	
+					+ buff.toString() + "\n" +
+					"Total logs: " + Log.totalLogCalls+"\n";
+		return this.lastCall;
 	}
 
 	
@@ -91,7 +103,7 @@ class Log implements Loggable{
 	//force log
 	@Override
 	public String log(){
-		this.tick = 1001;
+		this.forceLog =true;
 		this.logFunction(null);
 		return this.lastCall;
 	}	
@@ -124,7 +136,13 @@ class Log implements Loggable{
 			//telementry print, might not be worth it, though, as program is ending
 		}	
 
-	}	
+	}
+
+
+	@Override
+	public void close(){
+		this.closeLog();
+	}
 
 	
 	
