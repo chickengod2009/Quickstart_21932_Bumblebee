@@ -47,7 +47,7 @@ class Log implements Loggable, AutoCloseable{
 		if(follow == null)
 			this.follower = null;
 		else
-			this.follower = follow.withLogger(this::logFunction);
+			this.follower = follow.withLogger(this::logFunction).withLogger(this::telemetryLog);
 		this.timer.reset();
 	}
 	//add more logs
@@ -58,7 +58,8 @@ class Log implements Loggable, AutoCloseable{
 	}
 	//actual log function
 	public void logFunction(FollowerLog Flog){
-
+		this.logCalls +=1;
+		Log.totalLogCalls += 1;
 		if(this.timer.seconds() < 5 || !this.forceLog){
 
 			return;
@@ -77,8 +78,7 @@ class Log implements Loggable, AutoCloseable{
 	private String makeLogString(FollowerLog Flog){
 
 		StringBuilder buff = new StringBuilder();
-		this.logCalls +=1;
-		Log.totalLogCalls += 1;
+
 		for (Loggable log : this.logs){
 			if (log == null) continue;
 			buff.append(log.log()).append("\n");
@@ -96,6 +96,17 @@ class Log implements Loggable, AutoCloseable{
 					+ buff.toString() + "\n" +
 					"Total logs: " + Log.totalLogCalls+"\n";
 		return this.lastCall;
+	}
+
+
+	public void telemetryLog(FollowerLog Flog){
+		if(this.timer.seconds() < 5 || !this.forceLog){
+
+			return;
+		}
+
+		this.opmode.telemetry.addLine(this.makeLogString(Flog));
+
 	}
 
 	
