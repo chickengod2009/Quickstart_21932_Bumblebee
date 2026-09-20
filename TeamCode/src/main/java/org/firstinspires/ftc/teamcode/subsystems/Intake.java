@@ -12,10 +12,12 @@ public class Intake {
     private DcMotorEx rollers;
 
     private double intakePower, rollerPower;
+    private Util util;
 
-    public Intake(HardwareMap hwMap, HashMap<String, String> config) {
-        intake = hwMap.get(DcMotorEx.class, config.get("intakeMotor"));
-        rollers = hwMap.get(DcMotorEx.class, config.get("rollersMotor"));
+    public Intake(Util util){
+        this.util = util;
+        //intake = hwMap.get(DcMotorEx.class, config.get("intakeMotor"));
+        //rollers = hwMap.get(DcMotorEx.class, config.get("rollersMotor"));
 
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rollers.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

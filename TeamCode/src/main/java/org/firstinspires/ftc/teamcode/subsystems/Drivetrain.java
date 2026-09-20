@@ -5,9 +5,11 @@ package org.firstinspires.ftc.teamcode.subsystems;
 //import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 //import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.Control.Loggable;
+import org.jetbrains.annotations.NotNull;
 
 //import java.util.HashMap;
 
@@ -35,8 +37,13 @@ public class Drivetrain implements Loggable {
         etc.
         
         */
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft = util.get("frontLeftMotor");
+        backLeft = util.get("backLeftMotor");
+        frontRight = util.get("frontRightMotor");
+        backRight = util.get("backRightMotor");
+
+        Util.reverse(new HardwareDevice[] {frontLeft, backLeft});
+
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
