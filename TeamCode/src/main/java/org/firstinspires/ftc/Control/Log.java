@@ -84,7 +84,7 @@ class Log implements Loggable, AutoCloseable{
 			buff.append(log.log()).append("\n");
 		}
 
-		//Need to wrap in try catch block
+
 
 		if (Flog != null)
 			this.lastCall = this.logCalls + "\n"
@@ -100,10 +100,6 @@ class Log implements Loggable, AutoCloseable{
 
 
 	public void telemetryLog(FollowerLog Flog){
-		if(this.timer.seconds() < 5 || !this.forceLog){
-
-			return;
-		}
 
 		this.opmode.telemetry.addLine(this.makeLogString(Flog));
 
