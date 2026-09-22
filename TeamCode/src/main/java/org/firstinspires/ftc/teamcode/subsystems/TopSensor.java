@@ -13,8 +13,8 @@ public class TopSensor {
     private String color;
     private float R, G, B;
     public int ct, noise;
-    public TopSensor(HardwareMap hwMap, HashMap<String, String> config) {
-        topSensor = hwMap.get(ColorSensor.class, config.get("topSensor"));
+    public TopSensor(Util util) {
+        topSensor = util.get("topSensor");
         noise = 200;
         //topSensor.setGain(4);
     }

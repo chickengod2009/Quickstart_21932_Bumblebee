@@ -5,16 +5,23 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Objects;
 
 public class MiddleSensor {
     ColorSensor middleSensor;
-    private String color;
+
+    public enum Color {
+        GREEN, UNKNOWN, PURPLE
+
+    }
+    private Color color;
     private float R, G, B;
     public int ct, noise;
-    public MiddleSensor(HardwareMap hwMap, HashMap<String, String> config) {
-        middleSensor = hwMap.get(ColorSensor.class, config.get("middleSensor"));
+    public MiddleSensor(@NotNull Util util) {
+        middleSensor = util.get("middleSensor");
         noise = 160;
         //topSensor.setGain(4);
     }
@@ -31,15 +38,15 @@ public class MiddleSensor {
         telemetry.addData("Color: ", getColor());
 */
         if ((R + G + B) < noise) {
-            color = "UNKNOWN";
+            color = Color.UNKNOWN;
         } else if (G > 110 && G > B) {
-            color = "GREEN";
+            color = Color.GREEN;
         } else {
-            color = "PURPLE";
+            color = Color.PURPLE;
         }
 
     }
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
     public float getR() {return R;}
@@ -47,7 +54,7 @@ public class MiddleSensor {
     public float getB() {return B;}
 
     public int hasBall() {
-        return (!(Objects.equals(color, "UNKNOWN"))) ? 1 : 0;
+        return (!(Objects.equals(color, Color.UNKNOWN))) ? 1 : 0;
     }
 
 }

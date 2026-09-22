@@ -25,9 +25,9 @@ class Log implements Loggable, AutoCloseable{
 	protected Follower follower;
 
 	protected ElapsedTime timer = new ElapsedTime();
-	protected boolean forceLog = false;
 
-	//Hardware map varaible needed!
+
+
 
 	private static int totalLogCalls = 0;
 	private int logCalls =0;
@@ -60,11 +60,11 @@ class Log implements Loggable, AutoCloseable{
 	public void logFunction(FollowerLog Flog){
 		this.logCalls +=1;
 		Log.totalLogCalls += 1;
-		if(this.timer.seconds() < 5 || !this.forceLog){
+		if(this.timer.seconds() < 5){
 
 			return;
 		}
-		this.forceLog=false;
+
 		timer.reset();
 
 		try{
@@ -100,12 +100,12 @@ class Log implements Loggable, AutoCloseable{
 
 
 	public void telemetryLog(FollowerLog Flog){
-		if(this.timer.seconds() < 5 || !this.forceLog){
 
-			return;
-		}
 
 		this.opmode.telemetry.addLine(this.makeLogString(Flog));
+
+
+
 
 	}
 
@@ -114,9 +114,9 @@ class Log implements Loggable, AutoCloseable{
 	//force log
 	@Override
 	public String log(){
-		this.forceLog =true;
-		this.logFunction(null);
-		return this.lastCall;
+		this.logCalls +=1;
+		Log.totalLogCalls += 1;
+		return this.makeLogString(null);
 	}	
 
 	
@@ -137,7 +137,7 @@ class Log implements Loggable, AutoCloseable{
 	}
 */
 	//closes the stream and makes sure everything gets written. Must be calles at the end of any program using a log!
-	public void closeLog(){
+	private void closeLog(){
 		try{
 			if(this.writer == null) return;
 			this.writer.flush();

@@ -3,9 +3,14 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
@@ -47,7 +52,7 @@ import java.util.HashMap;
  * </>
  * **/
 public class Util{
-  //Collect all the motors and other devices at once, and you dont need to call hardwaremap.get multiple times
+  //Collect all the motors and other devices at once, and you don't need to call hardwaremap.get multiple times
   private HashMap<String, HardwareDevice> devices = null;
   //So you only have to actually call all the get methods once
 
@@ -123,7 +128,7 @@ public class Util{
    *
    * }</>
    */
-  private void open(OpMode op){
+  private void open(@NotNull OpMode op){
     this.devices = new HashMap<>();
 
     devices.put("frontLeftMotor",    op.hardwareMap.dcMotor.get("frontLeftMotor"));
@@ -134,13 +139,16 @@ public class Util{
     devices.put("rollersMotor",      op.hardwareMap.dcMotor.get("roller"));
     devices.put("kicker",            op.hardwareMap.servo.get("kicker"));
     devices.put("turretMotor",       op.hardwareMap.dcMotor.get("turret"));
-    //devices.put("webcam1",           op.hardwareMap.get("camera"));
-    devices.put("shooter",           op.hardwareMap.dcMotor.get("flyMotor"));
-    devices.put("shooterTwo",        op.hardwareMap.dcMotor.get("flyMotor2"));
+    devices.put("webcam1",           op.hardwareMap.get(WebcamName.class, "camera"));
+
+    devices.put("shooter",           op.hardwareMap.get(DcMotorEx.class, "flyMotor"));
+    devices.put("shooterTwo",        op.hardwareMap.get(DcMotorEx.class, "flyMotor2"));
     devices.put("gate",              op.hardwareMap.servo.get("gate"));
     devices.put("turret",            op.hardwareMap.servo.get("turret"));
     devices.put("turret2",           op.hardwareMap.servo.get("turret2"));
     devices.put("hood",              op.hardwareMap.servo.get("hood"));
+    devices.put("topSensor",         op.hardwareMap.get(ColorSensor.class, "topSenor"));
+
   }
 
 

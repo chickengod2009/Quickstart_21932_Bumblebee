@@ -16,8 +16,8 @@ public class Intake {
 
     public Intake(Util util){
         this.util = util;
-        //intake = hwMap.get(DcMotorEx.class, config.get("intakeMotor"));
-        //rollers = hwMap.get(DcMotorEx.class, config.get("rollersMotor"));
+        intake = util.get("intakeMotor");
+        rollers = util.get("rollersMotor");
 
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rollers.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
