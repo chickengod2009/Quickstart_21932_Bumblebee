@@ -55,14 +55,15 @@ public class Util{
   //Collect all the motors and other devices at once, and you don't need to call hardwaremap.get multiple times
   private volatile HashMap<String, HardwareDevice> devices = null;
   //So you only have to actually call all the get methods once
+  public enum TeamColor{RED, BLUE}
+  private static TeamColor color;
 
 
-
-
-  public Util(OpMode op){
+  public Util(OpMode op, TeamColor color){
     if (op == null) throw new RuntimeException("Need an opmode for Util");
     //All the device naming and getting goes here
     this.open(op);
+    color = color;
 
     
 
@@ -73,7 +74,7 @@ public class Util{
   //An idea for states for the robot
   public enum States{}
 
-  public enum Side{RED, BLUE}
+  
   
   //make motor direction switeches less verbose
   public static <T extends DcMotorSimple> void reverseMotor(@NonNull T[] motors){
@@ -212,4 +213,10 @@ public class Util{
     return ret;
 
   }
+
+
+  public static TeamColor getTeam(){return color;}
+
+
+  
 }
