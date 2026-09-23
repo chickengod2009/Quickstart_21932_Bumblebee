@@ -4,12 +4,10 @@ package org.firstinspires.ftc.teamcode.subsystems;
 //import com.acmerobotics.dashboard.config.Config;
 //import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 //import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.Control.Loggable;
-import org.jetbrains.annotations.NotNull;
+import org.firstinspires.ftc.control.Loggable;
 
 //import java.util.HashMap;
 

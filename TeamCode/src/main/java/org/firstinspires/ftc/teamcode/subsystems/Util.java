@@ -53,7 +53,7 @@ import java.util.HashMap;
  * **/
 public class Util{
   //Collect all the motors and other devices at once, and you don't need to call hardwaremap.get multiple times
-  private HashMap<String, HardwareDevice> devices = null;
+  private volatile HashMap<String, HardwareDevice> devices = null;
   //So you only have to actually call all the get methods once
 
 

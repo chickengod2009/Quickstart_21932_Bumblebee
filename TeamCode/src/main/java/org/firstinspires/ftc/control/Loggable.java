@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.Control;
+package org.firstinspires.ftc.control;
 
 
 @FunctionalInterface
