@@ -16,17 +16,36 @@ public class MortarBrain {
         CLOSING,
         OPENING,
     }
+    public enum Target{
+        REDSEESAW,
+        BLUESEESAW,
+        FLOWERS,
+    }    
     //a pos that a shot cannot be made from
     boolean poisonedState = false;
 
     ShootingState state;
+    Target target;
 
     Mortar mortar;
 
     float vel =0;
+
+    Util util;
+
+    Pose previousPose = new Pose(0,0);
+    
     public MortarBrain(Util util){
         state = ShootingState.OFF;
         this.mortar = new Mortar(util);
+        this.util = util;
+    }
+
+
+    public MortarBrain(Mortar mort, Util util){
+        state = ShootingState.OFF;
+        this.mortar = mort;
+        this.util = util;
 
     }
 
@@ -44,6 +63,7 @@ public class MortarBrain {
         switch (this.state){
             case OFF:
             case IDLE:
+            case CLOSING:    
                 break;
             default:
                 this.state = ShootingState.IDLE;
@@ -56,7 +76,7 @@ public class MortarBrain {
     }
 
 
-    Pose previousPose = null;
+    
     /**
      * <pre>My thinking with this function is that all the processes of shooting the balls can be handled in an orderly
      * fashion where everything happens in order when we want it to.
