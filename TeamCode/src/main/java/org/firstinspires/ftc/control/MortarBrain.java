@@ -31,21 +31,21 @@ public class MortarBrain {
 
     float vel =0;
 
-    Util util;
+    Util.TeamColor teamColor;
 
     Pose previousPose = new Pose(0,0);
     
     public MortarBrain(Util util){
         state = ShootingState.OFF;
         this.mortar = new Mortar(util);
-        this.util = util;
+        this.teamColor = util.getTeam();
     }
 
 
     public MortarBrain(Mortar mort, Util util){
         state = ShootingState.OFF;
         this.mortar = mort;
-        this.util = util;
+        this.teamColor = util.getTeam();
 
     }
 
