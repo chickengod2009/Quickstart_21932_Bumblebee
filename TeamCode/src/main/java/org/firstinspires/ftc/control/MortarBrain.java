@@ -17,8 +17,7 @@ public class MortarBrain {
         OPENING,
     }
     public enum Target{
-        REDSEESAW,
-        BLUESEESAW,
+        SEESAW,
         FLOWERS,
     }    
     //a pos that a shot cannot be made from
