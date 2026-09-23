@@ -72,6 +72,9 @@ public class Util{
 
   //An idea for states for the robot
   public enum States{}
+
+  public enum Side{RED, BLUE}
+  
   //make motor direction switeches less verbose
   public static <T extends DcMotorSimple> void reverseMotor(@NonNull T[] motors){
     for (DcMotorSimple motor : motors){
