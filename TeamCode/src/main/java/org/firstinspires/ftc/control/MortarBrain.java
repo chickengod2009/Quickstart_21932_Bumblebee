@@ -4,6 +4,7 @@ import com.pedropathing.math.Pose;
 
 import org.firstinspires.ftc.teamcode.subsystems.Mortar;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
+import org.jetbrains.annotations.NotNull;
 
 public class MortarBrain {
 
@@ -17,9 +18,15 @@ public class MortarBrain {
         OPENING,
     }
     public enum Target{
-        SEESAW,
-        FLOWERS,
-    }    
+        SEESAW(new PoseBody(null)),
+        FLOWERS(new PoseBody(null));
+
+        final PoseBody body;
+
+        Target(PoseBody bod){
+            this.body = bod;
+        }
+    }
     //a pos that a shot cannot be made from
     boolean poisonedState = false;
 
@@ -28,23 +35,24 @@ public class MortarBrain {
 
     Mortar mortar;
 
-    float vel =0;
+    double vel =0;
 
     Util.TeamColor teamColor;
 
-    Pose previousPose = new Pose(0,0);
+
+    Pose lastRecalibratedPose = new Pose(0,0);
     
     public MortarBrain(Util util){
         state = ShootingState.OFF;
         this.mortar = new Mortar(util);
-        this.teamColor = util.getTeam();
+        this.teamColor = Util.getTeam();
     }
 
 
     public MortarBrain(Mortar mort, Util util){
         state = ShootingState.OFF;
         this.mortar = mort;
-        this.teamColor = util.getTeam();
+        this.teamColor = Util.getTeam();
 
     }
 
@@ -52,7 +60,7 @@ public class MortarBrain {
         switch (this.state){
             case OFF:
             case IDLE:
-                this.state = ShootingState.FIRING_UP;
+                this.state = ShootingState.THINKING;
                 break;
             default:
                 break;
@@ -65,7 +73,7 @@ public class MortarBrain {
             case CLOSING:    
                 break;
             default:
-                this.state = ShootingState.IDLE;
+                this.state = ShootingState.CLOSING;
                 break;
         }
     }
@@ -93,40 +101,65 @@ public class MortarBrain {
                 break;
             case THINKING:
                 //calc distance for target velocity than set state to firing up
-
+                think(pose);
+                this.state = ShootingState.FIRING_UP;
                 break;
             case FIRING_UP:
                 //get to target velocity, then switch to shooting
+                mortar.setVelocity(vel);
+                if (poisonedState){poisonedState = false; state = ShootingState.THINKING; break;}
+                if(checkForRecalibration(pose)) break;
+                if (Math.abs(mortar.getVelocity() - vel) <= 100) this.state =ShootingState.OPENING;
 
-                if (poisonedState){poisonedState = false; state = ShootingState.THINKING;}
-                checkForRecalibration(pose);
                 break;
             case OPENING:
                 //make sure nothing else happening while opening
+                //when not opened, break;
+                //when opened
+                this.state = ShootingState.SHOOTING;
                 break;
             case SHOOTING:
-                //maintain velocity and open gate or whatever to start opening
+                //maintain velocity and keep gate open, maybe keep check of how many balls?
                 checkForRecalibration(pose);
                 break;
 
             case CLOSING:
                 //make sure nothing else is happening while gate is closing
+                this.state = ShootingState.IDLE;
                 break;
 
             case OFF:
                 this.mortar.setPower(0);
         }
+
+
     }
 
-    private void think(Pose pose){
+    private void think(@NotNull Pose pose){
         //logic
-        this.vel = 0; //set vel here
-        this.previousPose = pose;
+
+
+
+        double dist = pose.distance(this.target.body.center());
+
+        this.vel = dist*100; //Not final formula!!
+
+
+
     }
 
-    private void checkForRecalibration(Pose pose){
-        // if distance to large, reset to thinking
-        throw new RuntimeException("TODO!");
+    private static final byte needRecalibration = 1;
+    private boolean checkForRecalibration(Pose pose){
+        boolean ret = false;
+        if (pose.distance(this.lastRecalibratedPose) >= needRecalibration){
+            this.state =ShootingState.THINKING;
+            ret= true;
+            this.lastRecalibratedPose = pose;
+        }
+
+        return ret;
+
+
     }
 
 
