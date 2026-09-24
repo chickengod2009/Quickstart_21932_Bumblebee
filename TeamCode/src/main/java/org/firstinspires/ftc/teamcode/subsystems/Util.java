@@ -214,6 +214,14 @@ public class Util{
 
   }
 
+  public static void TODO(){
+    throw new RuntimeException("TODO!");
+  }
+
+  public static void TODO(String str){
+    throw new RuntimeException("TODO!" + str);
+  }
+
 
   public static TeamColor getTeam(){return color;}
 
