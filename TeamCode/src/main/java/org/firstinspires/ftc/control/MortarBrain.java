@@ -18,20 +18,60 @@ public class MortarBrain {
         OPENING,
     }
     public enum Target{
-        SEESAW(new PoseBody(null)),
-        FLOWERS(new PoseBody(null));
+        SEESAW,
+        FLOWERS;
 
-        final PoseBody body;
 
-        Target(PoseBody bod){
-            this.body = bod;
+
+        private Pose closestRedSeesaw(Pose pose){
+
+            throw new RuntimeException("TODO!!");
+            
+        }    
+
+        private Pose closestBlueSeesaw(Pose pose){
+
+            throw new RuntimeException("TODO!!");
+            
+        }    
+
+        public Pose closestSeesaw(Util.TeamColor color, Pose pose){
+
+            switch(color){
+                case RED:
+                    return closestRedSeesaw(pose);
+                case BLUE:
+                    return closestBlueSeesaw(pose);
+            }    
+
+        }    
+
+        public Pose closestFlower(Pose pose){
+
+
+        }    
+
+        public Pose closestTarget(Util.TeamColor color, Pose pose){
+            switch (this){
+                case SEESAW:
+                    return closestSeesaw(color, pose);
+                    break;
+                case FLOWERS:
+                    return closestFlower(pose);
+            }        
+                    
         }
+        // final PoseBody body;
+
+        // Target(PoseBody bod){
+        //     this.body = bod;
+        // }
     }
     //a pos that a shot cannot be made from
     boolean poisonedState = false;
 
     ShootingState state;
-    Target target;
+    Target target = Target.SEESAW;
 
     Mortar mortar;
 
@@ -56,7 +96,7 @@ public class MortarBrain {
 
     }
 
-    public void activate(/*Maybe ad poise*/){
+    public void activate(){
         switch (this.state){
             case OFF:
             case IDLE:
@@ -135,16 +175,26 @@ public class MortarBrain {
 
     }
 
+    public void setTarg(Target targ){
+        this.target = targ;
+    }   
+
     private void think(@NotNull Pose pose){
         //logic
 
 
 
-        double dist = pose.distance(this.target.body.center());
+        
 
-        this.vel = dist*100; //Not final formula!!
+        
 
-
+        
+        Pose targ = target.closestTarget(teamColor, pose);
+                
+        // if pose block by body :- poisdenedState = true;
+        double dist = pose.distance(targ);
+        this.vel = dist*100;//Not final formula!!
+        
 
     }
 
