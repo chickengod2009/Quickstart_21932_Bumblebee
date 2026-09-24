@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Mortar;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 import org.jetbrains.annotations.NotNull;
 
-public class MortarBrain {
+public class ShootyBrain {
 
     public enum ShootingState {
         SHOOTING,
