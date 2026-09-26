@@ -6,7 +6,12 @@ import org.firstinspires.ftc.teamcode.subsystems.Mortar;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 import org.jetbrains.annotations.NotNull;
 
-public class ShootyBrain {
+public class ShootyBrain implements Updated{
+
+    @Override
+    public void update() {
+        update(util.getPose());
+    }
 
     public enum ShootingState {
         SHOOTING,
@@ -17,61 +22,12 @@ public class ShootyBrain {
         CLOSING,
         OPENING,
     }
-    public enum Target{
-        SEESAW,
-        FLOWERS;
 
-
-
-        private Pose closestRedSeesaw(Pose pose){
-
-            throw new RuntimeException("TODO!!");
-            
-        }    
-
-        private Pose closestBlueSeesaw(Pose pose){
-
-            throw new RuntimeException("TODO!!");
-            
-        }    
-
-        public Pose closestSeesaw(Util.TeamColor color, Pose pose){
-
-            switch(color){
-                case RED:
-                    return closestRedSeesaw(pose);
-                case BLUE:
-                    return closestBlueSeesaw(pose);
-            }    
-
-        }    
-
-        public Pose closestFlower(Pose pose){
-
-
-        }    
-
-        public Pose closestTarget(Util.TeamColor color, Pose pose){
-            switch (this){
-                case SEESAW:
-                    return closestSeesaw(color, pose);
-                    break;
-                case FLOWERS:
-                    return closestFlower(pose);
-            }        
-                    
-        }
-        // final PoseBody body;
-
-        // Target(PoseBody bod){
-        //     this.body = bod;
-        // }
-    }
     //a pos that a shot cannot be made from
     boolean poisonedState = false;
 
     ShootingState state;
-    Target target = Target.SEESAW;
+
 
     Mortar mortar;
 
@@ -81,18 +37,21 @@ public class ShootyBrain {
 
 
     Pose lastRecalibratedPose = new Pose(0,0);
+    final Util util;
     
-    public MortarBrain(Util util){
+    public ShootyBrain(Util util){
         state = ShootingState.OFF;
         this.mortar = new Mortar(util);
         this.teamColor = Util.getTeam();
+        this.util=util;
     }
 
 
-    public MortarBrain(Mortar mort, Util util){
+    public ShootyBrain(Mortar mort, Util util){
         state = ShootingState.OFF;
         this.mortar = mort;
         this.teamColor = Util.getTeam();
+        this.util=util;
 
     }
 
@@ -175,9 +134,7 @@ public class ShootyBrain {
 
     }
 
-    public void setTarg(Target targ){
-        this.target = targ;
-    }   
+
 
     private void think(@NotNull Pose pose){
         //logic
@@ -189,7 +146,7 @@ public class ShootyBrain {
         
 
         
-        Pose targ = target.closestTarget(teamColor, pose);
+        Pose targ = util.getTarget().closestTarget(teamColor, pose);
                 
         // if pose block by body :- poisdenedState = true;
         double dist = pose.distance(targ);

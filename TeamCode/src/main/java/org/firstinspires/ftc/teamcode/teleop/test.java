@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleop;
+import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -6,11 +7,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 @TeleOp
 public class test extends OpMode{
+    Follower follower;
     Intake intake;
     Util util;
     Telemetry telemetry;
@@ -20,7 +23,7 @@ public class test extends OpMode{
 
     @Override
     public void init() {
-        util = new Util(this);
+        //util = new Util(this, Util.TeamColor.RED, ); //add follower
         intake = new Intake(util.get("intakemotor"));
     }
 

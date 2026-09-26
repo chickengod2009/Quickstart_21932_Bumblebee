@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.control;
 
 import com.pedropathing.math.Pose;
+
+import org.firstinspires.ftc.teamcode.subsystems.Util;
 import org.jetbrains.annotations.NotNull;
 
 public class PoseBody {
@@ -37,7 +39,7 @@ public class PoseBody {
 
 
     public Pose center(){
-        Util.TODO();
+        throw Util.TODO();
     }
 
     

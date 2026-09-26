@@ -5,13 +5,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
-import org.firstinspires.ftc.control.MortarBrain;
+import org.firstinspires.ftc.control.ShootyBrain;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import java.util.HashMap;
 
 public class Mortar {
-    private DcMotorEx flyMotor, flyMotor2;
+    private final DcMotorEx flyMotor, flyMotor2;
 
     private double power, vel;
 

@@ -5,9 +5,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.control.Loggable;
+import org.firstinspires.ftc.control.Updated;
+
 import java.util.HashMap;
 
-public class Intake {
+public class Intake implements Loggable, Updated {
     private DcMotorEx intake;
     private DcMotorEx rollers;
 
@@ -41,9 +44,14 @@ public class Intake {
         intakePower = power;
         rollerPower = power;
     }
-
+    @Override
     public void update() {
         intake.setPower(intakePower);
         rollers.setPower(rollerPower);
+    }
+
+    @Override
+    public String log() {
+        throw Util.TODO();
     }
 }

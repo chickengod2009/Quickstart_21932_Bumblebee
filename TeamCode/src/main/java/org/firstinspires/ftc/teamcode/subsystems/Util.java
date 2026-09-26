@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import androidx.annotation.NonNull;
 
+import com.pedropathing.follower.Follower;
+import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -59,7 +61,7 @@ public class Util{
   private static TeamColor color;
 
 
-  public Util(OpMode op, TeamColor color){
+  public Util(OpMode op, TeamColor color, Follower follower){
     if (op == null) throw new RuntimeException("Need an opmode for Util");
     //All the device naming and getting goes here
     this.open(op);
@@ -70,13 +72,22 @@ public class Util{
   }
 
 
+  //STATES LOGIC
 
   //An idea for states for the robot
-  public enum States{}
+  public enum States{SHOOTING, DRIVING, PARKING, EXTRACTING}
+
+  public States getState(){return state;}
+
+  public void setState(States state){this.state = state;}
+
+  States state = States.DRIVING;
 
   
-  
-  //make motor direction switeches less verbose
+  //REVERSE LOGIC
+
+  //make motor direction switches less verbose
+  //Util.reverse("MotorName");
   public static <T extends DcMotorSimple> void reverseMotor(@NonNull T[] motors){
     for (DcMotorSimple motor : motors){
     switch (motor.getDirection()){
@@ -86,12 +97,14 @@ public class Util{
       case FORWARD:
         motor.setDirection(DcMotorSimple.Direction.REVERSE);
         break;
+
         
     }   
     }
   
   } 
 
+  //Util.reverse("ServoName")
   public static <T extends Servo> void reverseServo(@NonNull T[] servos){
     for (Servo servo : servos){
     switch (servo.getDirection()){
@@ -107,14 +120,7 @@ public class Util{
   
   }
 
-//  /**
-//   * This function needs to be called at the beginning of every opmode inorder to fix all the opmode pointers
-//   */
-//  public static void cleanUpPtrs(){
-//    if(Util.devices != null) Util.devices.clear();
-//    haveIBeenLookedAt = false;
-//  }
-
+  //DRIVER STATION LOGIC
   /**
    *
    * @param op
@@ -132,6 +138,7 @@ public class Util{
    *
    * }</>
    */
+
   private void open(@NotNull OpMode op){
     this.devices = new HashMap<>();
 
@@ -214,16 +221,83 @@ public class Util{
 
   }
 
-  public static void TODO(){
-    throw new RuntimeException("TODO!");
+
+  //BUM LARP LOGIC
+  public static RuntimeException TODO(){
+    return new RuntimeException("TODO!");
   }
 
-  public static void TODO(String str){
-    throw new RuntimeException("TODO!" + str);
+  public static RuntimeException TODO(String str){
+    return new RuntimeException("TODO!" + str);
   }
 
 
+
+
+  //TARGET LOGIC
   public static TeamColor getTeam(){return color;}
+
+  public enum Target{
+    SEESAW,
+    FLOWERS;
+
+
+
+    private Pose closestRedSeesaw(Pose pose){
+
+      throw new RuntimeException("TODO!!");
+
+    }
+
+    private Pose closestBlueSeesaw(Pose pose){
+
+      throw new RuntimeException("TODO!!");
+
+    }
+
+    public Pose closestSeesaw(Util.TeamColor color, Pose pose){
+
+      switch(color){
+        case RED:
+          return closestRedSeesaw(pose);
+        case BLUE:
+          return closestBlueSeesaw(pose);
+        default:
+          throw Util.TODO();
+
+      }
+
+    }
+
+    public Pose closestFlower(Pose pose){
+
+      throw Util.TODO();
+    }
+
+    public Pose closestTarget(Util.TeamColor color, Pose pose){
+      switch (this){
+        case SEESAW:
+          return closestSeesaw(color, pose);
+        case FLOWERS:
+          return closestFlower(pose);
+        default: throw Util.TODO();
+      }
+
+    }
+    // final PoseBody body;
+
+    // Target(PoseBody bod){
+    //     this.body = bod;
+    // }
+  }
+  public Target target = Target.SEESAW;
+  public Target getTarget(){return target;}
+  public void setTarget(Target targ) {this.target = targ;}
+
+  //returns the current pos of Robot
+  Pose currentPose = new Pose(0,0);
+  public Pose getPose() {return currentPose;}
+
 
 
   
