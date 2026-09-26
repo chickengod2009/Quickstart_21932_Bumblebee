@@ -32,6 +32,7 @@ public class Intake {
         intakePower = power;
     }
 
+
     public void setRollerPower(double power) {
         rollerPower = power;
     }
