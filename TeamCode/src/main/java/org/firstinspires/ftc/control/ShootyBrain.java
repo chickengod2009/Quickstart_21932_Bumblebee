@@ -14,7 +14,7 @@ public class ShootyBrain implements Updated{
     }
 
     public enum ShootingState {
-        SHOOTING,
+        LAUNCHING,
         IDLE,
         FIRING_UP,
         OFF,
@@ -115,9 +115,9 @@ public class ShootyBrain implements Updated{
                 //make sure nothing else happening while opening
                 //when not opened, break;
                 //when opened
-                this.state = ShootingState.SHOOTING;
+                this.state = ShootingState.LAUNCHING;
                 break;
-            case SHOOTING:
+            case LAUNCHING:
                 //maintain velocity and keep gate open, maybe keep check of how many balls?
                 checkForRecalibration(pose);
                 break;
