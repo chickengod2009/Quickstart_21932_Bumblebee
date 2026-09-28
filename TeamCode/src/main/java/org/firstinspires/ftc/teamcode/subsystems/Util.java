@@ -60,6 +60,8 @@ public class Util{
   public enum TeamColor{RED, BLUE}
   private static TeamColor color;
 
+  public final OpMode opmode;
+
 
   public Util(OpMode op, TeamColor color, Follower follower){
     if (op == null) throw new RuntimeException("Need an opmode for Util");
@@ -72,6 +74,11 @@ public class Util{
       new ShootyBrain(this),
       // new More stuff
     });
+
+    this.opmode = op;
+
+    
+    
 
     
 
@@ -308,7 +315,6 @@ public class Util{
   public void updateAll(UpdatePackage update){
 
       for(Updated device : devices){
-        device.receivePackage(update);
         device.update();
       }  
 
