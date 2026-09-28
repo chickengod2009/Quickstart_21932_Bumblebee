@@ -67,6 +67,12 @@ public class Util{
     this.open(op);
     color = color;
 
+    this.devices = new ArrayList<Updated>(new Updated[]{
+      new DriveTrain(this),
+      new ShootyBrain(this),
+      // new More stuff
+    });
+
     
 
   }
@@ -297,6 +303,20 @@ public class Util{
   //returns the current pos of Robot
   Pose currentPose = new Pose(0,0);
   public Pose getPose() {return currentPose;}
+
+
+  public void updateAll(UpdatePackage update){
+
+      for(Updated device : devices){
+        device.receivePackage(update);
+        device.update();
+      }  
+
+  }  
+
+
+
+  
 
 
 
