@@ -8,11 +8,12 @@ import com.qualcomm.robotcore.hardware.HardwareDevice;
 //import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.control.Loggable;
+import org.firstinspires.ftc.control.Updated;
 
 //import java.util.HashMap;
 
 //@Config
-public class Drivetrain implements Loggable {
+public class Drivetrain implements Loggable, Updated {
 
     private DcMotor frontLeft, frontRight, backLeft, backRight;
 
@@ -48,12 +49,14 @@ public class Drivetrain implements Loggable {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-
-    public void update(double x, double y, double rx) {
+    @Override
+    public void update() {
+        double x = 0,  y =0 ,  rx = 0;
         frontLeft.setPower( ((y + x - rx) * speedMult));
         backLeft.setPower( ((y - x - rx) * speedMult));
         frontRight.setPower( ((y - x + rx) * speedMult));
         backRight.setPower( ((y + x + rx) * speedMult));
+        throw Util.TODO("Need to make variables responsive");
     }
 
 
@@ -76,6 +79,10 @@ public class Drivetrain implements Loggable {
 		return 
 			"Front Left POS" + frontLeft.getCurrentPosition();
 	}
+
+
+
+
 
 
 }

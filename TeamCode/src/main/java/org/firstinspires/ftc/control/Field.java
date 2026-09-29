@@ -16,10 +16,10 @@ public class Field {
         Pose bottomRed = new Pose(58,60);
         Pose bottomLeft = new Pose(46,52);
 
-        return new PoseBod(new Pose[]{topLeft,topRed,topBlue,topRight,bottomRight,bottomBlue,bottomRed,bottomLeft});
+        return new PoseBody(new Pose[]{topLeft,topRed,topBlue,topRight,bottomRight,bottomBlue,bottomRed,bottomLeft});
         
         
-        throw  new RuntimeException("Todo!");
+
     }
     public static Pose redGoalTop(){
         throw new RuntimeException("Todo!!");

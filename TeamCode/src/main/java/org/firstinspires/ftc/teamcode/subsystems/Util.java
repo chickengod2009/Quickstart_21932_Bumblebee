@@ -11,9 +11,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.control.Loggable;
+import org.firstinspires.ftc.control.ShootyBrain;
+import org.firstinspires.ftc.control.Testable;
+import org.firstinspires.ftc.control.Updated;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -53,34 +59,53 @@ import java.util.HashMap;
  *
  * </>
  * **/
-public class Util{
+public class Util implements Testable<Integer>, Updated, Loggable {
+  private final ArrayList<Updated> deviceStorage;
   //Collect all the motors and other devices at once, and you don't need to call hardwaremap.get multiple times
   private volatile HashMap<String, HardwareDevice> devices = null;
+
+  @Override
+  public String log() {
+    throw TODO();
+  }
+
+  @Override
+  public void update() {
+    currentPose= this.follower.pose();
+    throw TODO();
+  }
+
+  @Override
+  public void test(Integer arg) throws InterruptedException {
+      throw TODO();
+  }
+
   //So you only have to actually call all the get methods once
   public enum TeamColor{RED, BLUE}
   private static TeamColor color;
 
   public final OpMode opmode;
 
+  public final Follower follower;
+
 
   public Util(OpMode op, TeamColor color, Follower follower){
     if (op == null) throw new RuntimeException("Need an opmode for Util");
     //All the device naming and getting goes here
     this.open(op);
-    color = color;
+    Util.color = color;
+    this.follower=follower;
 
-    this.devices = new ArrayList<Updated>(new Updated[]{
-      new DriveTrain(this),
-      new ShootyBrain(this),
-      // new More stuff
-    });
+    this.deviceStorage = new ArrayList<>(Arrays.asList(
+            new Drivetrain(this),
+            new ShootyBrain(this)));
 
     this.opmode = op;
 
-    
-    
 
-    
+
+
+
 
   }
 
@@ -111,7 +136,7 @@ public class Util{
         motor.setDirection(DcMotorSimple.Direction.REVERSE);
         break;
 
-        
+
     }   
     }
   
@@ -312,19 +337,21 @@ public class Util{
   public Pose getPose() {return currentPose;}
 
 
-  public void updateAll(UpdatePackage update){
 
-      for(Updated device : devices){
+  public void updateAll(){
+
+      for(Updated device : deviceStorage){
         device.update();
-      }  
+      }
 
-  }  
-
-
-
-  
+  }
 
 
 
-  
+
+
+
+
+
+
 }

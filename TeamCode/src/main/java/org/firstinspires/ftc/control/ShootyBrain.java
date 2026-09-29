@@ -2,6 +2,7 @@ package org.firstinspires.ftc.control;
 
 import com.pedropathing.math.Pose;
 
+import org.firstinspires.ftc.teamcode.subsystems.Gate;
 import org.firstinspires.ftc.teamcode.subsystems.Mortar;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +31,7 @@ public class ShootyBrain implements Updated{
 
 
     Mortar mortar;
+    Gate gate;
 
     double vel =0;
 
@@ -38,11 +40,12 @@ public class ShootyBrain implements Updated{
 
     Pose lastRecalibratedPose = new Pose(0,0);
     final Util util;
-    
+
     public ShootyBrain(Util util){
         state = ShootingState.OFF;
         this.mortar = new Mortar(util);
         this.teamColor = Util.getTeam();
+        this.gate = new Gate(util);
         this.util=util;
     }
 
