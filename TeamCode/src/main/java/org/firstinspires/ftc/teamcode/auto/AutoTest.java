@@ -1,4 +1,4 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-public class test {
+public interface AutoTest extends Test {
 }
