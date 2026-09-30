@@ -10,12 +10,16 @@ import java.util.function.Consumer;
 public enum OpModeFunctions {
 
 
-  Telop(OpModeFunctions::todo,OpModeFunctions::todo,OpModeFunctions::todo),
+  TELOP(OpModeFunctions::todo,OpModeFunctions::todo,OpModeFunctions::todo),
+  
 
-  AutonBlue1(OpModeFunctions::todo, OpModeFunctions::autonBlue1Func, OpModeFunctions::todo),
+  AUTON_BLUE_ONE(OpModeFunctions::todo, OpModeFunctions::todo, OpModeFunctions::todo),
+  
 
-  AutonRed1(OpModeFunctions::todo, OpModeFunctions::autonRed1Func, OpModeFunctions::todo),
-  TEST1(OpModeFunctions::todo,OpModeFunctions::todo,OpModeFunctions::todo);
+  AUTON_RED_ONE(OpModeFunctions::todo, OpModeFunctions::todo, OpModeFunctions::todo),
+
+  
+  TEST_1(OpModeFunctions::todo, OpModeFunctions::todo, OpModeFunctions::todo);
 
   public final Consumer<Util> start;
   public final Consumer<Util> update;
@@ -32,15 +36,7 @@ public enum OpModeFunctions {
 //  private ArrayList<Path> paths = null;
 
 
-  private static void autonBlue1Func(Util util){
-      throw Util.TODO();
-    
-  }  
-
-  private static void autonRed1Func(Util util){throw Util.TODO();}
-
-  private static void todo(Util util){throw Util.TODO();}
-
+  
 
   public boolean isSafe(){
     boolean ret = this.fin != null && this.start != null && this.update != null;
