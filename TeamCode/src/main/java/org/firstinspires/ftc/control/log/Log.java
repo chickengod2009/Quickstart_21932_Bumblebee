@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.control;
+package org.firstinspires.ftc.control.log;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerLog;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.jetbrains.annotations.NotNull;
 

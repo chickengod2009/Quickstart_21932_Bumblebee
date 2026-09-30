@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.control;
+package org.firstinspires.ftc.control.log;
 
 
 @FunctionalInterface

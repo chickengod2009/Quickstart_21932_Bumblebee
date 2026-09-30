@@ -1,13 +1,18 @@
+package org.firstinspires.ftc.teamcode.teleop;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-class TelopRed extends OpMode{
+import org.firstinspires.ftc.control.functionality.OpModeFunctions;
+import org.firstinspires.ftc.teamcode.subsystems.Util;
+
+class TelopRed extends OpMode {
 
 
   Util util;
 
   public void init() {
-    util = new Util(this, Util.TeamColor.Red, Auton.Telop);
+    util = new Util(this, Util.TeamColor.RED, OpModeFunctions.Telop);
     util.start();
   }
 

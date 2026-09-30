@@ -11,15 +11,14 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.control.Loggable;
-import org.firstinspires.ftc.control.ShootyBrain;
-import org.firstinspires.ftc.control.Testable;
-import org.firstinspires.ftc.control.Updated;
+import org.firstinspires.ftc.control.log.Loggable;
+import org.firstinspires.ftc.control.functionality.Testable;
+import org.firstinspires.ftc.control.functionality.DefaultUpdate;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.control.functionality.OpModeFunctions;
+import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -59,8 +58,8 @@ import java.util.HashMap;
  *
  * </>
  * **/
-public class Util implements Testable<Integer>, Updated, Loggable {
-  private final ArrayList<Updated> deviceStorage;
+public class Util implements Testable, DefaultUpdate, Loggable {
+
   //Collect all the motors and other devices at once, and you don't need to call hardwaremap.get multiple times
   private volatile HashMap<String, HardwareDevice> devices = null;
 
@@ -72,11 +71,35 @@ public class Util implements Testable<Integer>, Updated, Loggable {
   @Override
   public void update() {
     currentPose= this.follower.pose();
+
+    if(opmode.gamepad1.startWasPressed()) {
+      switch (this.target){
+        case FLOWERS:
+          this.target=Target.SEESAW;
+          break;
+        case SEESAW:
+          this.target=Target.FLOWERS;
+          break;
+      }
+
+
+
+    }
+
+    this.func.update.accept(this);
     throw TODO();
   }
 
+  public void start(){
+    this.func.start.accept(this);
+  }
+
+  public void stop(){
+    this.func.fin.accept(this);
+  }
+
   @Override
-  public void test(Integer arg) throws InterruptedException {
+  public void test() throws InterruptedException {
       throw TODO();
   }
 
@@ -88,19 +111,21 @@ public class Util implements Testable<Integer>, Updated, Loggable {
 
   public final Follower follower;
 
+  public final OpModeFunctions func;
 
-  public Util(OpMode op, TeamColor color, Follower follower){
-    if (op == null) throw new RuntimeException("Need an opmode for Util");
+
+  public Util(OpMode op, TeamColor color, OpModeFunctions auto){
+    if (op == null || color==null || auto == null || !auto.isSafe()) throw new RuntimeException("Need an opmode for Util");
     //All the device naming and getting goes here
     this.open(op);
     Util.color = color;
-    this.follower=follower;
+    this.follower= Constants.create(op.hardwareMap);
 
-    this.deviceStorage = new ArrayList<>(Arrays.asList(
-            new Drivetrain(this),
-            new ShootyBrain(this)));
+
 
     this.opmode = op;
+
+    this.func =auto;
 
 
 
@@ -338,13 +363,7 @@ public class Util implements Testable<Integer>, Updated, Loggable {
 
 
 
-  public void updateAll(){
 
-      for(Updated device : deviceStorage){
-        device.update();
-      }
-
-  }
 
 
 

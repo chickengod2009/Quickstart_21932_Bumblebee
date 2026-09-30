@@ -2,16 +2,28 @@ package org.firstinspires.ftc.control;
 
 import com.pedropathing.math.Pose;
 
+import org.firstinspires.ftc.control.functionality.DefaultUpdate;
+import org.firstinspires.ftc.control.functionality.UtilityObject;
 import org.firstinspires.ftc.teamcode.subsystems.Gate;
 import org.firstinspires.ftc.teamcode.subsystems.Mortar;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 import org.jetbrains.annotations.NotNull;
 
-public class ShootyBrain implements Updated{
+public class ShootyBrain implements UtilityObject, DefaultUpdate {
 
     @Override
     public void update() {
         update(util.getPose());
+    }
+
+    @Override
+    public String log() {
+        return "";
+    }
+
+    @Override
+    public void test() throws InterruptedException {
+
     }
 
     public enum ShootingState {

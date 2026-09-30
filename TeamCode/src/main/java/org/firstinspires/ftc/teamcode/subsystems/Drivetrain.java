@@ -7,13 +7,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 //import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.control.Loggable;
-import org.firstinspires.ftc.control.Updated;
+import org.firstinspires.ftc.control.functionality.DefaultUpdate;
+import org.firstinspires.ftc.control.functionality.UtilityObject;
 
 //import java.util.HashMap;
 
 //@Config
-public class Drivetrain implements Loggable, Updated {
+public class Drivetrain implements UtilityObject, DefaultUpdate {
 
     private DcMotor frontLeft, frontRight, backLeft, backRight;
 
@@ -59,6 +59,13 @@ public class Drivetrain implements Loggable, Updated {
         throw Util.TODO("Need to make variables responsive");
     }
 
+    public void manualUpdate(double x, double y, double rx){
+        frontLeft.setPower( ((y + x - rx) * speedMult));
+        backLeft.setPower( ((y - x - rx) * speedMult));
+        frontRight.setPower( ((y - x + rx) * speedMult));
+        backRight.setPower( ((y + x + rx) * speedMult));
+    }
+
 
 
     public void parkMode() {
@@ -81,8 +88,8 @@ public class Drivetrain implements Loggable, Updated {
 	}
 
 
-
-
-
-
+    @Override
+    public void test() throws InterruptedException {
+        throw Util.TODO();
+    }
 }

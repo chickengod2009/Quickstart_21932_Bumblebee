@@ -3,14 +3,11 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.control.Loggable;
-import org.firstinspires.ftc.control.Updated;
+import org.firstinspires.ftc.control.log.Loggable;
+import org.firstinspires.ftc.control.functionality.DefaultUpdate;
 
-import java.util.HashMap;
-
-public class Intake implements Loggable, Updated {
+public class Intake implements Loggable, DefaultUpdate {
     private DcMotorEx intake;
     private DcMotorEx rollers;
 
