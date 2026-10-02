@@ -72,25 +72,20 @@ public class Util implements Testable, DefaultUpdate, Loggable {
   public void update() {
     currentPose= this.follower.pose();
 
-    if(opmode.gamepad1.startWasPressed()) {
-      switch (this.target){
-        case FLOWERS:
-          this.target=Target.SEESAW;
-          break;
-        case SEESAW:
-          this.target=Target.FLOWERS;
-          break;
-      }
+    
+    
 
-
-
-    }
+    this.target = Target.getClosestTarget();
 
     this.func.update.accept(this);
     throw TODO();
   }
 
   public void start(){
+    this.intake = new Intake(this);
+    this.drivetrain = new DriveTrain(this);
+    this.shooty= new ShootyBrain(this);
+    //all new devices have to be made before this function call, or a nullptr exception could be thrown
     this.func.start.accept(this);
   }
 
