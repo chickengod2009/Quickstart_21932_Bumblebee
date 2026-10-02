@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 public enum OpModeFunctions {
 
 
-  TELOP(OpModeFunctions::todo,OpModeFunctions::todo,OpModeFunctions::todo),
+  TELOP(Tele::start,Tele::update,Tele::stop),
   
 
   AUTON_BLUE_ONE(OpModeFunctions::todo, OpModeFunctions::todo, OpModeFunctions::todo),
