@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.control.ShootyBrain;
 import org.firstinspires.ftc.control.log.Loggable;
 import org.firstinspires.ftc.control.functionality.Testable;
 import org.firstinspires.ftc.control.functionality.DefaultUpdate;
@@ -61,7 +62,7 @@ import java.util.HashMap;
 public class Util implements Testable, DefaultUpdate, Loggable {
 
   //Collect all the motors and other devices at once, and you don't need to call hardwaremap.get multiple times
-  private volatile HashMap<String, HardwareDevice> devices = null;
+  private HashMap<String, HardwareDevice> devices = null;
 
   @Override
   public String log() {
@@ -75,15 +76,19 @@ public class Util implements Testable, DefaultUpdate, Loggable {
     
     
 
-    this.target = Target.getClosestTarget();
+    this.targetPose = this.target.closestTarget(Util.color, this.currentPose);
 
     this.func.update.accept(this);
     throw TODO();
   }
 
+  private Intake intake;
+  private Drivetrain drivetrain;
+  private ShootyBrain shooty;
+
   public void start(){
     this.intake = new Intake(this);
-    this.drivetrain = new DriveTrain(this);
+    this.drivetrain = new Drivetrain(this);
     this.shooty= new ShootyBrain(this);
     //all new devices have to be made before this function call, or a nullptr exception could be thrown
     this.func.start.accept(this);
@@ -348,7 +353,8 @@ public class Util implements Testable, DefaultUpdate, Loggable {
     //     this.body = bod;
     // }
   }
-  public Target target = Target.SEESAW;
+  private Target target = Target.SEESAW;
+  private Pose targetPose;
   public Target getTarget(){return target;}
   public void setTarget(Target targ) {this.target = targ;}
 
