@@ -1,16 +1,24 @@
+package org.firstinspires.ftc.teamcode.OPS.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.control.functionality.OpModeFunctions;
+import org.firstinspires.ftc.teamcode.subsystems.Util;
 
-
-public class DriveTrainTest extends Opmode{
+public class DriveTrainTests extends OpMode {
 
   Util util;
 
 
   @Override
+  public void init() {
+
+  }
+
+  @Override
   public void start(){
 
-    this.telementry.addLine("Select opmode: \n X: <>, Y: <> "/*ETC*/);
+    this.telemetry.addLine("Select opmode: \n X: <>, Y: <> "/*ETC*/);
 
     OpModeFunctions fun = null;
 
@@ -19,22 +27,22 @@ public class DriveTrainTest extends Opmode{
       //check what button was pressed
     
 
-    }while(true);  
+    }while(false);
 
-    util = new Util(this, Util.RED, fun);
+    util = new Util(this, Util.TeamColor.RED, fun);
 
     util.start();
   }
 
 
   @Override
-  punlic void loop(){
+  public void loop(){
     util.update();
   } 
 
   @Override
-  punlic void stop(){
-    util.fin();
+  public void stop(){
+    util.stop();
   } 
 
 

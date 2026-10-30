@@ -1,4 +1,5 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.OPS.auto;
 
-public interface AutoTest extends Test {
+
+public interface AutoTest {
 }

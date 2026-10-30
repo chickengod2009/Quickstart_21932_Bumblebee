@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.control.functionality;
 
+import org.firstinspires.ftc.teamcode.opModeFuncs.telopFuncs.Teleop;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 import java.util.function.Consumer;
@@ -10,7 +11,7 @@ import java.util.function.Consumer;
 public enum OpModeFunctions {
 
 
-  TELOP(Tele::start,Tele::update,Tele::stop),
+  TELOP(Teleop::start,Teleop::update,Teleop::end),
   
 
   AUTON_BLUE_ONE(OpModeFunctions::todo, OpModeFunctions::todo, OpModeFunctions::todo),
@@ -31,6 +32,9 @@ public enum OpModeFunctions {
     fin = finish;
                     
   }
+
+
+  static void todo(Util oogabooga) {throw Util.TODO();}
 
 //  private ArrayList<Pose> poses = null;
 //  private ArrayList<Path> paths = null;
