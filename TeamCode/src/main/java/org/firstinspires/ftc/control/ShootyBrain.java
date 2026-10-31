@@ -6,14 +6,14 @@ import org.firstinspires.ftc.control.functionality.DefaultUpdate;
 import org.firstinspires.ftc.control.functionality.UtilityObject;
 import org.firstinspires.ftc.teamcode.subsystems.Gate;
 import org.firstinspires.ftc.teamcode.subsystems.Mortar;
-import org.firstinspires.ftc.teamcode.subsystems.Util;
+import org.firstinspires.ftc.teamcode.subsystems.Master;
 import org.jetbrains.annotations.NotNull;
 
 public class ShootyBrain implements UtilityObject, DefaultUpdate {
 
     @Override
     public void update() {
-        update(util.getPose());
+        update(master.getPose());
     }
 
     @Override
@@ -47,26 +47,26 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
 
     double vel =0;
 
-    Util.TeamColor teamColor;
+    Master.TeamColor teamColor;
 
 
     Pose lastRecalibratedPose = new Pose(0,0);
-    final Util util;
+    final Master master;
 
-    public ShootyBrain(Util util){
+    public ShootyBrain(Master master){
         state = ShootingState.OFF;
-        this.mortar = new Mortar(util);
-        this.teamColor = Util.getTeam();
-        this.gate = new Gate(util);
-        this.util=util;
+        this.mortar = new Mortar(master);
+        this.teamColor = Master.getTeam();
+        this.gate = new Gate(master);
+        this.master = master;
     }
 
 
-    public ShootyBrain(Mortar mort, Util util){
+    public ShootyBrain(Mortar mort, Master master){
         state = ShootingState.OFF;
         this.mortar = mort;
-        this.teamColor = Util.getTeam();
-        this.util=util;
+        this.teamColor = Master.getTeam();
+        this.master = master;
 
     }
 
@@ -161,7 +161,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
         
 
         
-        Pose targ = util.getTarget().closestTarget(Util.getTeam(), pose);
+        Pose targ = master.getTarget().closestTarget(Master.getTeam(), pose);
                 
         // if pose block by body :- poisdenedState = true;
         double dist = pose.distance(targ);

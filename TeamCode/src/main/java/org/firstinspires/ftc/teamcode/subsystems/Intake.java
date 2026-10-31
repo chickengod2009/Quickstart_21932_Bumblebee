@@ -12,12 +12,12 @@ public class Intake implements Loggable, DefaultUpdate {
     private DcMotorEx rollers;
 
     private double intakePower, rollerPower;
-    private Util util;
+    private Master master;
 
-    public Intake(Util util){
-        this.util = util;
-        intake = util.get("intakeMotor");
-        rollers = util.get("rollersMotor");
+    public Intake(Master master){
+        this.master = master;
+        intake = master.get("intakeMotor");
+        rollers = master.get("rollersMotor");
 
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rollers.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -49,6 +49,6 @@ public class Intake implements Loggable, DefaultUpdate {
 
     @Override
     public String log() {
-        throw Util.TODO();
+        throw Master.TODO();
     }
 }

@@ -1,20 +1,21 @@
 package org.firstinspires.ftc.teamcode.opModeFuncs.telopFuncs;
 
-import org.firstinspires.ftc.teamcode.subsystems.Util;
+import org.firstinspires.ftc.control.functionality.Utility;
+import org.firstinspires.ftc.teamcode.subsystems.Master;
 
 public class Teleop {
 
-  private static Util util;
+  private static Master master;
 
 
-  public static void start(Util util){
+  public static void start(Utility util){
 
 
 
   }
 
 
-  public static void update(Util util){
+  public static void update(Utility util){
 
     
 
@@ -22,7 +23,7 @@ public class Teleop {
   }  
 
 
-  public static void end(Util util){
+  public static void end(Utility util){
 
   
 

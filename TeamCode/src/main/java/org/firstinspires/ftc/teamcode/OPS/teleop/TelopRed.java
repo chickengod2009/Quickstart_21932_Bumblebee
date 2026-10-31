@@ -5,27 +5,28 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.control.functionality.OpModeFunctions;
-import org.firstinspires.ftc.teamcode.subsystems.Util;
+import org.firstinspires.ftc.teamcode.subsystems.Master;
 @TeleOp(name = "TelopRed", group = "Teleops")
 public class TelopRed extends OpMode {
 
 
-  Util util;
+  Master master;
 
   public void init() {
-    util = new Util(this, Util.TeamColor.RED, OpModeFunctions.TELOP);
+    master = new Master(this, Master.TeamColor.RED, OpModeFunctions.TELOP);
 
   }
 
-  public void start(){util.start();}
+  public void start(){
+    master.start();}
 
   public void loop(){
-    util.update();
+    master.update();
 
   }
 
   public void stop(){
-    util.stop();
+    master.stop();
   }  
 
 

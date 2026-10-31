@@ -1,14 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-
-import org.firstinspires.ftc.control.ShootyBrain;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-
-import java.util.HashMap;
 
 public class Mortar {
     private final DcMotorEx flyMotor, flyMotor2;
@@ -22,12 +16,12 @@ public class Mortar {
 
 
 
-    public Mortar(Util util) {
-        flyMotor = util.get("shooter");
+    public Mortar(Master master) {
+        flyMotor = master.get("shooter");
         flyMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         flyMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p, i, d, f));
 
-        flyMotor2 = util.get("shooterTwo");
+        flyMotor2 = master.get("shooterTwo");
         flyMotor2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         flyMotor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p, i, d, f));
         flyMotor2.setDirection(Direction.REVERSE);

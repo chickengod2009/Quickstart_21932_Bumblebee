@@ -21,11 +21,11 @@ public class Drivetrain implements UtilityObject, DefaultUpdate {
 
     public static double speedMult = 1;
 
-    public final Util util;
+    public final Master master;
 
     public static boolean test = false;
-    public Drivetrain(Util util) {
-        this.util = util;
+    public Drivetrain(Master master) {
+        this.master = master;
 
         // frontLeft = hwMap.dcMotor.get(config.get("frontLeftMotor"));
         // backLeft = hwMap.dcMotor.get(config.get("backLeftMotor"));
@@ -36,12 +36,12 @@ public class Drivetrain implements UtilityObject, DefaultUpdate {
         etc.
         
         */
-        frontLeft = util.get("frontLeftMotor");
-        backLeft = util.get("backLeftMotor");
-        frontRight = util.get("frontRightMotor");
-        backRight = util.get("backRightMotor");
+        frontLeft = master.get("frontLeftMotor");
+        backLeft = master.get("backLeftMotor");
+        frontRight = master.get("frontRightMotor");
+        backRight = master.get("backRightMotor");
 
-        Util.reverse(new HardwareDevice[] {frontLeft, backLeft});
+        Master.reverse(new HardwareDevice[] {frontLeft, backLeft});
 
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -56,7 +56,7 @@ public class Drivetrain implements UtilityObject, DefaultUpdate {
         backLeft.setPower( ((y - x - rx) * speedMult));
         frontRight.setPower( ((y - x + rx) * speedMult));
         backRight.setPower( ((y + x + rx) * speedMult));
-        throw Util.TODO("Need to make variables responsive");
+        throw Master.TODO("Need to make variables responsive");
     }
 
     public void manualUpdate(double x, double y, double rx){
@@ -90,6 +90,6 @@ public class Drivetrain implements UtilityObject, DefaultUpdate {
 
     @Override
     public void test() throws InterruptedException {
-        throw Util.TODO();
+        throw Master.TODO();
     }
 }

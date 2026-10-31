@@ -4,45 +4,52 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.control.functionality.OpModeFunctions;
-import org.firstinspires.ftc.teamcode.subsystems.Util;
+import org.firstinspires.ftc.teamcode.subsystems.Master;
 
 
-@TeleOp(name = "TestStuff", group = "Test")
+@TeleOp(name = "TesgtStuff", group = "Test")
 public class DriveTrainTests extends OpMode {
 
-  Util util;
+  Master master;
 
 
   @Override
   public void init() {
-    this.telemetry.addLine("Select opmode: \n X: <>, Y: <> "/*ETC*/);
+    //this.telemetry.addLine("Select opmode: \n X: <>, Y: <> "/*ETC*/);
 
-    OpModeFunctions fun = null;
-
-    boolean done =false;
-
-    do{
-
-      if(gamepad1.a){done = true; fun = OpModeFunctions.TEST_1;}
+    OpModeFunctions fun = OpModeFunctions.TEST_1;
 
 
-    }while(!done);
 
-    util = new Util(this, Util.TeamColor.RED, fun);
+
+
+    master = new Master(this, Master.TeamColor.RED, fun);
 
 
   }
 
   @Override
   public void start(){
-    util.start();
+    OpModeFunctions fun = OpModeFunctions.TEST_1;
+
+
+
+
+
+    //util = new Util(this, Util.TeamColor.RED, fun);
+//    try {
+//      util.start();
+//    }catch (Exception e){telemetry.addLine(":("); telemetry.update(); requestOpModeStop();}
 
   }
 
 
   @Override
   public void loop(){
-    util.update();
+//    try{
+//    util.update();
+//    }catch (Exception e){telemetry.addLine(":( 2"); telemetry.update(); requestOpModeStop();}
+    telemetry.update();
   } 
 
   @Override

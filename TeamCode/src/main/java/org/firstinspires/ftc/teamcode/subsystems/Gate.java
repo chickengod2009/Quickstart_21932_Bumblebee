@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import java.util.HashMap;
 
 public class Gate {
     private Servo gate;
@@ -11,8 +8,8 @@ public class Gate {
     public static double CLOSE = 0.4, OPEN = 0.1;
     private double position = OPEN;
 
-    public Gate(Util util) {
-        gate = util.get("gate");
+    public Gate(Master master) {
+        gate = master.get("gate");
     }
 
     public void setPosition(double gatePosition){

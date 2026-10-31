@@ -5,19 +5,16 @@ import androidx.annotation.NonNull;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.control.ShootyBrain;
+import org.firstinspires.ftc.control.functionality.Utility;
 import org.firstinspires.ftc.control.log.Loggable;
 import org.firstinspires.ftc.control.functionality.Testable;
 import org.firstinspires.ftc.control.functionality.DefaultUpdate;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.control.functionality.OpModeFunctions;
-import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -59,10 +56,10 @@ import java.util.HashMap;
  *
  * </>
  * **/
-public class Util implements Testable, DefaultUpdate, Loggable {
+public class Master implements Testable, DefaultUpdate, Loggable, Utility {
 
   //Collect all the motors and other devices at once, and you don't need to call hardwaremap.get multiple times
-  private volatile HashMap<String, HardwareDevice> devices = null;
+  private  HashMap<String, HardwareDevice> devices = null;
   private Pose targetPose;
 
   @Override
@@ -72,15 +69,16 @@ public class Util implements Testable, DefaultUpdate, Loggable {
 
   @Override
   public void update() {
-    currentPose= this.follower.pose();
+    //currentPose= this.follower.pose();
 
     
 
 
-    this.targetPose = this.target.closestTarget(Util.color, this.currentPose);
+    //this.targetPose = this.target.closestTarget(Util.color, this.currentPose);
+    Utility ptr = (Utility) this;
 
-    this.func.update.accept(this);
-    throw TODO();
+    this.func.update.accept(ptr);
+    //throw TODO();
   }
 
   private Intake intake;
@@ -88,20 +86,42 @@ public class Util implements Testable, DefaultUpdate, Loggable {
   private ShootyBrain shooty;
 
   public void start(){
-    this.intake = new Intake(this);
-    this.drivetrain = new Drivetrain(this);
-    this.shooty= new ShootyBrain(this);
+//    this.intake = new Intake(this);
+//    this.drivetrain = new Drivetrain(this);
+//    this.shooty= new ShootyBrain(this);
     //all new devices have to be made before this function call, or a nullptr exception could be thrown
-    this.func.start.accept(this);
+    Utility ptr = (Utility) this;
+    this.func.start.accept(ptr);
   }
 
   public void stop(){
-    this.func.fin.accept(this);
+    Utility ptr = (Utility) this;
+    this.func.fin.accept(ptr);
   }
 
   @Override
   public void test() throws InterruptedException {
       throw TODO();
+  }
+
+  @Override
+  public ShootyBrain getShootyBrain() {
+    return this.shooty;
+  }
+
+  @Override
+  public Intake getIntake() {
+    return this.intake;
+  }
+
+  @Override
+  public Drivetrain getDrive() {
+    return this.drivetrain;
+  }
+
+  @Override
+  public OpMode getOpmode() {
+    return this.opmode;
   }
 
   //So you only have to actually call all the get methods once
@@ -115,12 +135,12 @@ public class Util implements Testable, DefaultUpdate, Loggable {
   public final OpModeFunctions func;
 
 
-  public Util(OpMode op, TeamColor color, OpModeFunctions auto){
-    if (op == null || color==null || auto == null || !auto.isSafe()) throw new RuntimeException("Need an opmode for Util");
+  public Master(OpMode op, TeamColor color, OpModeFunctions auto){
+    //if (op == null || color==null || auto == null || !auto.isSafe()) throw new RuntimeException("Need an opmode for Util");
     //All the device naming and getting goes here
-    this.open(op);
-    Util.color = color;
-    this.follower= Constants.create(op.hardwareMap);
+    //this.open(op);
+    //Util.color = color;
+    this.follower= null;
 
 
 
@@ -206,23 +226,23 @@ public class Util implements Testable, DefaultUpdate, Loggable {
   private void open(@NotNull OpMode op){
     this.devices = new HashMap<>();
 
-    devices.put("frontLeftMotor",    op.hardwareMap.dcMotor.get("frontLeftMotor"));
-    devices.put("backLeftMotor",     op.hardwareMap.dcMotor.get("backLeftMotor"));
-    devices.put("frontRightMotor",   op.hardwareMap.dcMotor.get("frontRightMotor"));
-    devices.put("backRightMotor",    op.hardwareMap.dcMotor.get("backRightMotor"));
-    devices.put("intakeMotor",       op.hardwareMap.dcMotor.get("intake"));
-    devices.put("rollersMotor",      op.hardwareMap.dcMotor.get("roller"));
-    devices.put("kicker",            op.hardwareMap.servo.get("kicker"));
-    devices.put("turretMotor",       op.hardwareMap.dcMotor.get("turret"));
-    devices.put("webcam1",           op.hardwareMap.get(WebcamName.class, "camera"));
-
-    devices.put("shooter",           op.hardwareMap.get(DcMotorEx.class, "flyMotor"));
-    devices.put("shooterTwo",        op.hardwareMap.get(DcMotorEx.class, "flyMotor2"));
-    devices.put("gate",              op.hardwareMap.servo.get("gate"));
-    devices.put("turret",            op.hardwareMap.servo.get("turret"));
-    devices.put("turret2",           op.hardwareMap.servo.get("turret2"));
-    devices.put("hood",              op.hardwareMap.servo.get("hood"));
-    devices.put("topSensor",         op.hardwareMap.get(ColorSensor.class, "topSenor"));
+//    devices.put("frontLeftMotor",    op.hardwareMap.dcMotor.get("frontLeftMotor"));
+//    devices.put("backLeftMotor",     op.hardwareMap.dcMotor.get("backLeftMotor"));
+//    devices.put("frontRightMotor",   op.hardwareMap.dcMotor.get("frontRightMotor"));
+//    devices.put("backRightMotor",    op.hardwareMap.dcMotor.get("backRightMotor"));
+//    devices.put("intakeMotor",       op.hardwareMap.dcMotor.get("intake"));
+//    devices.put("rollersMotor",      op.hardwareMap.dcMotor.get("roller"));
+//    devices.put("kicker",            op.hardwareMap.servo.get("kicker"));
+//    devices.put("turretMotor",       op.hardwareMap.dcMotor.get("turret"));
+//    devices.put("webcam1",           op.hardwareMap.get(WebcamName.class, "camera"));
+//
+//    devices.put("shooter",           op.hardwareMap.get(DcMotorEx.class, "flyMotor"));
+//    devices.put("shooterTwo",        op.hardwareMap.get(DcMotorEx.class, "flyMotor2"));
+//    devices.put("gate",              op.hardwareMap.servo.get("gate"));
+//    devices.put("turret",            op.hardwareMap.servo.get("turret"));
+//    devices.put("turret2",           op.hardwareMap.servo.get("turret2"));
+//    devices.put("hood",              op.hardwareMap.servo.get("hood"));
+//    devices.put("topSensor",         op.hardwareMap.get(ColorSensor.class, "topSenor"));
 
   }
 
@@ -230,7 +250,7 @@ public class Util implements Testable, DefaultUpdate, Loggable {
   
 
   public static <T extends DcMotorSimple> void reverseMotor(@NonNull T motor){
-    Util.reverseMotor(new DcMotorSimple[]{motor});
+    Master.reverseMotor(new DcMotorSimple[]{motor});
   }
 
 
@@ -238,7 +258,7 @@ public class Util implements Testable, DefaultUpdate, Loggable {
     byte i =0;
     for(T dev : device){
       if(dev instanceof DcMotorSimple){
-        Util.reverseMotor((DcMotorSimple)device[i]);
+        Master.reverseMotor((DcMotorSimple)device[i]);
         i++;
         
       } else if(dev instanceof Servo){
@@ -319,7 +339,7 @@ public class Util implements Testable, DefaultUpdate, Loggable {
 
     }
 
-    public Pose closestSeesaw(Util.TeamColor color, Pose pose){
+    public Pose closestSeesaw(Master.TeamColor color, Pose pose){
 
       switch(color){
         case RED:
@@ -327,7 +347,7 @@ public class Util implements Testable, DefaultUpdate, Loggable {
         case BLUE:
           return closestBlueSeesaw(pose);
         default:
-          throw Util.TODO();
+          throw Master.TODO();
 
       }
 
@@ -335,16 +355,16 @@ public class Util implements Testable, DefaultUpdate, Loggable {
 
     public Pose closestFlower(Pose pose){
 
-      throw Util.TODO();
+      throw Master.TODO();
     }
 
-    public Pose closestTarget(Util.TeamColor color, Pose pose){
+    public Pose closestTarget(Master.TeamColor color, Pose pose){
       switch (this){
         case SEESAW:
           return closestSeesaw(color, pose);
         case FLOWERS:
           return closestFlower(pose);
-        default: throw Util.TODO();
+        default: throw Master.TODO();
       }
 
     }
