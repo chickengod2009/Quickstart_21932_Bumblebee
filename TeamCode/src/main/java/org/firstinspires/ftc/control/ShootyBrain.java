@@ -161,7 +161,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
         
 
         
-        Pose targ = util.getTarget().closestTarget(teamColor, pose);
+        Pose targ = util.getTarget().closestTarget(Util.getTeam(), pose);
                 
         // if pose block by body :- poisdenedState = true;
         double dist = pose.distance(targ);

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.control.functionality.OpModeFunctions;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 @TeleOp(name = "TelopRed", group = "Teleops")
-class TelopRed extends OpMode {
+public class TelopRed extends OpMode {
 
 
   Util util;

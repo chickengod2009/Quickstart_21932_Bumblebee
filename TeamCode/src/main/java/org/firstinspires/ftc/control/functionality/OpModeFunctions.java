@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.control.functionality;
 
 import org.firstinspires.ftc.teamcode.opModeFuncs.telopFuncs.Teleop;
+
+import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.FlywheelTest;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
 import java.util.function.Consumer;
@@ -12,7 +14,7 @@ public enum OpModeFunctions {
 
 
   TELOP(Teleop::start,Teleop::update,Teleop::end),
-  
+
 
   AUTON_BLUE_ONE(OpModeFunctions::todo, OpModeFunctions::todo, OpModeFunctions::todo),
   
@@ -20,7 +22,7 @@ public enum OpModeFunctions {
   AUTON_RED_ONE(OpModeFunctions::todo, OpModeFunctions::todo, OpModeFunctions::todo),
 
   
-  TEST_1(OpModeFunctions::todo, OpModeFunctions::todo, OpModeFunctions::todo);
+  TEST_1(FlywheelTest::init, FlywheelTest::loop, OpModeFunctions::todo);
 
   public final Consumer<Util> start;
   public final Consumer<Util> update;
@@ -34,7 +36,7 @@ public enum OpModeFunctions {
   }
 
 
-  static void todo(Util oogabooga) {throw Util.TODO();}
+  public static void todo(Util ut) {throw Util.TODO();}
 
 //  private ArrayList<Pose> poses = null;
 //  private ArrayList<Path> paths = null;
