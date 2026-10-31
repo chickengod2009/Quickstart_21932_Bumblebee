@@ -62,7 +62,8 @@ import java.util.HashMap;
 public class Util implements Testable, DefaultUpdate, Loggable {
 
   //Collect all the motors and other devices at once, and you don't need to call hardwaremap.get multiple times
-  private HashMap<String, HardwareDevice> devices = null;
+  private volatile HashMap<String, HardwareDevice> devices = null;
+  private Pose targetPose;
 
   @Override
   public String log() {
@@ -74,7 +75,7 @@ public class Util implements Testable, DefaultUpdate, Loggable {
     currentPose= this.follower.pose();
 
     
-    
+
 
     this.targetPose = this.target.closestTarget(Util.color, this.currentPose);
 
@@ -353,8 +354,7 @@ public class Util implements Testable, DefaultUpdate, Loggable {
     //     this.body = bod;
     // }
   }
-  private Target target = Target.SEESAW;
-  private Pose targetPose;
+  public Target target = Target.SEESAW;
   public Target getTarget(){return target;}
   public void setTarget(Target targ) {this.target = targ;}
 

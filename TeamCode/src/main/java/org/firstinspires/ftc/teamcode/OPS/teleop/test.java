@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Util;
 
-@TeleOp
+@TeleOp(name = "test")
 public class test extends OpMode{
     Follower follower;
     Intake intake;

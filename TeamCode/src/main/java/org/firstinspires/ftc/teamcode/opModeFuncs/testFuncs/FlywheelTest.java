@@ -1,36 +1,37 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
-@TeleOp(name = "Flywheel Test")
-public class FlywheelTest extends OpMode{
-    public DcMotorEx Flywheel1;
-    public DcMotorEx Flywheel2;
+import org.firstinspires.ftc.teamcode.subsystems.Util;
 
-    public double lowVel = 1500;
+public class FlywheelTest{
+    public static DcMotorEx Flywheel1;
+    public static DcMotorEx Flywheel2;
 
-    public double highVel = 2100;
+    public static double lowVel = 1500;
 
-    double targetVel;
-    double targetVel2;
-    boolean pidfMode;
+    public static double highVel = 2100;
 
-    double F = 0;
-    double P = 0;
+    static double targetVel;
+    static double targetVel2;
+    static boolean pidfMode;
 
-    double[] stepSizes = {50.0, 10.0, 1.0, 0.5, 0.05, .005, .0005};
+    static double F = 0;
+    static double P = 0;
 
-    int stepIndex = 1;
+    static double[] stepSizes = {50.0, 10.0, 1.0, 0.5, 0.05, .005, .0005};
+
+    static int stepIndex = 1;
 
 
 
-    @Override
-    public void init() {
-        Flywheel1 = hardwareMap.get(DcMotorEx.class, "flyMotor");
-        Flywheel2 = hardwareMap.get(DcMotorEx.class, "flyMotor2");
+    
+    public static void init(Util util) {
+        Flywheel1 = util.opmode.hardwareMap.get(DcMotorEx.class, "flyMotor");
+        Flywheel2 = util.opmode.hardwareMap.get(DcMotorEx.class, "flyMotor2");
         Flywheel1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Flywheel2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Flywheel2.setDirection(DcMotorEx.Direction.REVERSE);
@@ -40,40 +41,40 @@ public class FlywheelTest extends OpMode{
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P, 0, 0, F);
         Flywheel1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         Flywheel2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-        telemetry.addLine("Init complete");
+        util.opmode.telemetry.addLine("Init complete");
         pidfMode = false;
         targetVel = 0;
     }
 
 
-    @Override
-    public void loop() {
+    
+    public static void loop(Util util) {
         //get all our gamepad commands
         //set target velocity
-        //update telemetry
+        //update util.opmode.telemetry
 
-        if (gamepad1.aWasPressed()) {
+        if (util.opmode.gamepad1.aWasPressed()) {
             pidfMode = !pidfMode;
         }
         if (!pidfMode) {
-            if (gamepad1.bWasPressed()) {
+            if (util.opmode.gamepad1.bWasPressed()) {
                 stepIndex = (stepIndex + 1) % stepSizes.length;
             }
-            if (gamepad1.dpadUpWasPressed()) {
+            if (util.opmode.gamepad1.dpadUpWasPressed()) {
                 targetVel += stepSizes[stepIndex];
             }
-            if (gamepad1.dpadDownWasPressed()) {
+            if (util.opmode.gamepad1.dpadDownWasPressed()) {
                 targetVel -= stepSizes[stepIndex];
             }
-            if (gamepad1.dpadRightWasPressed()) {
+            if (util.opmode.gamepad1.dpadRightWasPressed()) {
                 targetVel2 += stepSizes[stepIndex];
             }
-            if (gamepad1.dpadLeftWasPressed()) {
+            if (util.opmode.gamepad1.dpadLeftWasPressed()) {
                 targetVel2 -= stepSizes[stepIndex];
             }
         }
         if (pidfMode) {
-            if (gamepad1.yWasPressed()) {
+            if (util.opmode.gamepad1.yWasPressed()) {
                 if (targetVel == highVel) {
                     targetVel = lowVel;
                 }
@@ -83,24 +84,24 @@ public class FlywheelTest extends OpMode{
                 }
             }
 
-            if (gamepad1.bWasPressed()) {
+            if (util.opmode.gamepad1.bWasPressed()) {
                 stepIndex = (stepIndex + 1) % stepSizes.length;
             }
 
 
 
-            if (gamepad1.dpadRightWasPressed()) {
+            if (util.opmode.gamepad1.dpadRightWasPressed()) {
                 F += stepSizes[stepIndex];
             }
-            if (gamepad1.dpadLeftWasPressed()) {
+            if (util.opmode.gamepad1.dpadLeftWasPressed()) {
                 F -= stepSizes[stepIndex];
             }
 
 
-            if (gamepad1.dpadUpWasPressed()) {
+            if (util.opmode.gamepad1.dpadUpWasPressed()) {
                 P += stepSizes[stepIndex];
             }
-            if (gamepad1.dpadDownWasPressed()) {
+            if (util.opmode.gamepad1.dpadDownWasPressed()) {
                 P -= stepSizes[stepIndex];
             }
 
@@ -118,14 +119,14 @@ public class FlywheelTest extends OpMode{
         double currentVel = Flywheel2.getVelocity();
         double error = targetVel - currentVel;
 
-        telemetry.addData("Press A to switch between PIDF and VEL. PIDF Mode", pidfMode);
-        telemetry.addData("Target Velocity", targetVel);
-        telemetry.addData("Current Velocity", currentVel);
-        telemetry.addData("Error", "%.2f", error);
-        telemetry.addData("-------------------", 0);
-        telemetry.addData("Tuning P or Flywheel1 Vel" , "%.4f (D-Pad U/D", P);
-        telemetry.addData("Tuning F or Flywheel2 Vel", "%.4f (D-Pad L/R", F);
-        telemetry.addData("Step Size", "%.4f (B Button", stepSizes[stepIndex]);
+        util.opmode.telemetry.addData("Press A to switch between PIDF and VEL. PIDF Mode", pidfMode);
+        util.opmode.telemetry.addData("Target Velocity", targetVel);
+        util.opmode.telemetry.addData("Current Velocity", currentVel);
+        util.opmode.telemetry.addData("Error", "%.2f", error);
+        util.opmode.telemetry.addData("-------------------", 0);
+        util.opmode.telemetry.addData("Tuning P or Flywheel1 Vel" , "%.4f (D-Pad U/D", P);
+        util.opmode.telemetry.addData("Tuning F or Flywheel2 Vel", "%.4f (D-Pad L/R", F);
+        util.opmode.telemetry.addData("Step Size", "%.4f (B Button", stepSizes[stepIndex]);
     }
 
 }
