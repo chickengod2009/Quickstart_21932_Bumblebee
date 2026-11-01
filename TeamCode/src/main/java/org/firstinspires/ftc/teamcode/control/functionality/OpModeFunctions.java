@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.control.functionality;
+package org.firstinspires.ftc.teamcode.control.functionality;
 
 import org.firstinspires.ftc.teamcode.opModeFuncs.telopFuncs.Teleop;
 
 import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.FlywheelTest;
-import org.firstinspires.ftc.teamcode.subsystems.Util;
+import org.firstinspires.ftc.teamcode.subsystems.Master;
 
 import java.util.function.Consumer;
 
@@ -24,11 +24,11 @@ public enum OpModeFunctions {
   
   TEST_1(FlywheelTest::init, FlywheelTest::loop, OpModeFunctions::todo);
 
-  public final Consumer<Util> start;
-  public final Consumer<Util> update;
-  public final Consumer<Util> fin;
+  public final Consumer<MasterTrait> start;
+  public final Consumer<MasterTrait> update;
+  public final Consumer<MasterTrait> fin;
   
-  private OpModeFunctions(Consumer<Util> star, Consumer<Util> up, Consumer<Util> finish){
+  private OpModeFunctions(Consumer<MasterTrait> star, Consumer<MasterTrait> up, Consumer<MasterTrait> finish){
     start =star;
     update = up;
     fin = finish;
@@ -36,7 +36,7 @@ public enum OpModeFunctions {
   }
 
 
-  public static void todo(Util ut) {throw Util.TODO();}
+  public static void todo(MasterTrait ut) {throw Master.TODO();}
 
 //  private ArrayList<Pose> poses = null;
 //  private ArrayList<Path> paths = null;

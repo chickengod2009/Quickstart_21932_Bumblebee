@@ -11,13 +11,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.control.ShootyBrain;
-import org.firstinspires.ftc.control.log.Loggable;
-import org.firstinspires.ftc.control.functionality.Testable;
-import org.firstinspires.ftc.control.functionality.DefaultUpdate;
+import org.firstinspires.ftc.teamcode.control.ShootyBrain;
+import org.firstinspires.ftc.teamcode.control.functionality.MasterTrait;
+import org.firstinspires.ftc.teamcode.control.log.Loggable;
+import org.firstinspires.ftc.teamcode.control.functionality.Testable;
+import org.firstinspires.ftc.teamcode.control.functionality.DefaultUpdate;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.control.functionality.OpModeFunctions;
-import org.firstinspires.ftc.teamcode.pedro.Constants;
+import org.firstinspires.ftc.teamcode.control.functionality.OpModeFunctions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -30,7 +30,7 @@ import java.util.HashMap;
  * Due to how FTC control hub works, this class, whenever initiated, must be closed as,
  * if not, the motor ptrs will point to invalid memory.
  * <pre>{@code
- * public Util ut = new Util(Opmode);
+ * public Master ut = new Master(Opmode);
  *  //opmode end function
  * public void stop(){
  *     ut.close();
@@ -38,7 +38,7 @@ import java.util.HashMap;
  *
  * //you could also use a try with resources to auto close
  *
- * try (Util ut = new Util(opmode)){
+ * try (Master ut = new Master(opmode)){
  *     //program
  * }catch (Exception e){
  *     //other stuff
@@ -47,9 +47,9 @@ import java.util.HashMap;
  *
  *
  * // using get function
- * Util util = new Util(opmode);
- * DcMotorSimple = util.get("motor_name"); // Auto converts to DcmotorSimple if you gave right name
- * util.close();
+ * Master master = new Master(opmode);
+ * DcMotorSimple = master.get("motor_name"); // Auto converts to DcmotorSimple if you gave right name
+ * master.close();
  *
  * //Despite being auto closeable, it is best practice to call the clean up ptrs function at the begging of your program incase the previous program interuppted before reaching a close statement
  *
@@ -59,11 +59,11 @@ import java.util.HashMap;
  *
  * </>
  * **/
-public class Util implements Testable, DefaultUpdate, Loggable {
+public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
 
   //Collect all the motors and other devices at once, and you don't need to call hardwaremap.get multiple times
   private volatile HashMap<String, HardwareDevice> devices = null;
-  private Pose targetPose;
+  //private Pose targetPose;
 
   @Override
   public String log() {
@@ -72,15 +72,15 @@ public class Util implements Testable, DefaultUpdate, Loggable {
 
   @Override
   public void update() {
-    currentPose= this.follower.pose();
+    //currentPose= this.follower.pose();
 
     
 
 
-    this.targetPose = this.target.closestTarget(Util.color, this.currentPose);
+    //this.targetPose = this.target.closestTarget(Master.color, this.currentPose);
 
     this.func.update.accept(this);
-    throw TODO();
+    //throw TODO();
   }
 
   private Intake intake;
@@ -88,11 +88,11 @@ public class Util implements Testable, DefaultUpdate, Loggable {
   private ShootyBrain shooty;
 
   public void start(){
-    this.intake = new Intake(this);
-    this.drivetrain = new Drivetrain(this);
-    this.shooty= new ShootyBrain(this);
-    //all new devices have to be made before this function call, or a nullptr exception could be thrown
-    this.func.start.accept(this);
+//    this.intake = new Intake(this);
+//    this.drivetrain = new Drivetrain(this);
+//    this.shooty= new ShootyBrain(this);
+//    //all new devices have to be made before this function call, or a nullptr exception could be thrown
+//    this.func.start.accept(this);
   }
 
   public void stop(){
@@ -104,23 +104,43 @@ public class Util implements Testable, DefaultUpdate, Loggable {
       throw TODO();
   }
 
+  @Override
+  public OpMode getOpMode() {
+    return this.opmode;
+  }
+
+  @Override
+  public Drivetrain getDrivetrain() {
+    return null;
+  }
+
+  @Override
+  public ShootyBrain getShootyBrain() {
+    return this.shooty;
+  }
+
+  @Override
+  public Intake getIntake() {
+    return this.intake;
+  }
+
   //So you only have to actually call all the get methods once
   public enum TeamColor{RED, BLUE}
   private static TeamColor color;
 
-  public final OpMode opmode;
+  public  OpMode opmode;
 
   public final Follower follower;
 
   public final OpModeFunctions func;
 
 
-  public Util(OpMode op, TeamColor color, OpModeFunctions auto){
-    if (op == null || color==null || auto == null || !auto.isSafe()) throw new RuntimeException("Need an opmode for Util");
+  public Master(OpMode op, TeamColor color, OpModeFunctions auto){
+    if (op == null || color==null || auto == null || !auto.isSafe()) throw new RuntimeException("Need an opmode for Master");
     //All the device naming and getting goes here
-    this.open(op);
-    Util.color = color;
-    this.follower= Constants.create(op.hardwareMap);
+    //this.open(op);
+    //Master.color = color;
+    this.follower= null;
 
 
 
@@ -151,7 +171,7 @@ public class Util implements Testable, DefaultUpdate, Loggable {
   //REVERSE LOGIC
 
   //make motor direction switches less verbose
-  //Util.reverse("MotorName");
+  //Master.reverse("MotorName");
   public static <T extends DcMotorSimple> void reverseMotor(@NonNull T[] motors){
     for (DcMotorSimple motor : motors){
     switch (motor.getDirection()){
@@ -168,7 +188,7 @@ public class Util implements Testable, DefaultUpdate, Loggable {
   
   } 
 
-  //Util.reverse("ServoName")
+  //Master.reverse("ServoName")
   public static <T extends Servo> void reverseServo(@NonNull T[] servos){
     for (Servo servo : servos){
     switch (servo.getDirection()){
@@ -189,16 +209,16 @@ public class Util implements Testable, DefaultUpdate, Loggable {
    *
    * @param op
    * This function is used by constructor, but it can be used to reopen a closed
-   * util. Note that the map is static, so closing one util closes all, and same for opening!
+   * master. Note that the map is static, so closing one master closes all, and same for opening!
    * It takes in an opmode
    * and goes through all the hardware, assigning a device to a string in the hash map.
    * <pre>{@code
    *
-   * Util util = new Util(op);
+   * Master master = new Master(op);
    * //code
-   * util.close();
-   * //more code and now we need util again
-   * util.open();
+   * master.close();
+   * //more code and now we need master again
+   * master.open();
    *
    * }</>
    */
@@ -219,8 +239,8 @@ public class Util implements Testable, DefaultUpdate, Loggable {
     devices.put("shooter",           op.hardwareMap.get(DcMotorEx.class, "flyMotor"));
     devices.put("shooterTwo",        op.hardwareMap.get(DcMotorEx.class, "flyMotor2"));
     devices.put("gate",              op.hardwareMap.servo.get("gate"));
-    devices.put("turret",            op.hardwareMap.servo.get("turret"));
-    devices.put("turret2",           op.hardwareMap.servo.get("turret2"));
+    devices.put("transfer1",         op.hardwareMap.servo.get("transfer1"));
+    devices.put("transfer2",         op.hardwareMap.servo.get("transfer2"));
     devices.put("hood",              op.hardwareMap.servo.get("hood"));
     devices.put("topSensor",         op.hardwareMap.get(ColorSensor.class, "topSenor"));
 
@@ -230,7 +250,7 @@ public class Util implements Testable, DefaultUpdate, Loggable {
   
 
   public static <T extends DcMotorSimple> void reverseMotor(@NonNull T motor){
-    Util.reverseMotor(new DcMotorSimple[]{motor});
+    Master.reverseMotor(new DcMotorSimple[]{motor});
   }
 
 
@@ -238,7 +258,7 @@ public class Util implements Testable, DefaultUpdate, Loggable {
     byte i =0;
     for(T dev : device){
       if(dev instanceof DcMotorSimple){
-        Util.reverseMotor((DcMotorSimple)device[i]);
+        Master.reverseMotor((DcMotorSimple)device[i]);
         i++;
         
       } else if(dev instanceof Servo){
@@ -261,14 +281,15 @@ public class Util implements Testable, DefaultUpdate, Loggable {
    * This works as a generic get function that can give any stored device
    *
    * <pre>{@code
-   * Util.cleanUpPtrs();
-   * Util util =new Util(opmode);
-   * Servo servo = util.get("servo name");
-   * DcMotorEx motor  = util.get("motor name");
+   * Master.cleanUpPtrs();
+   * Master master =new Master(opmode);
+   * Servo servo = master.get("servo name");
+   * DcMotorEx motor  = master.get("motor name");
    *
    * }</>
    *
    */
+  @Override
   @SuppressWarnings("unchecked") 
   public <T extends HardwareDevice> T get(String name) {
     //if(!haveIBeenLookedAt) throw new RuntimeException("Utility has been closed! OpMode is no longer available, must reopen.");
@@ -279,7 +300,7 @@ public class Util implements Testable, DefaultUpdate, Loggable {
     try {
       ret = (T) dev;
     } catch (ClassCastException e) {
-      throw new IllegalArgumentException(e.toString() + "Motor name:" + name);
+      throw new IllegalArgumentException(e.toString() + "\nDevice name:" + name);
     }
     return ret;
 
@@ -319,7 +340,7 @@ public class Util implements Testable, DefaultUpdate, Loggable {
 
     }
 
-    public Pose closestSeesaw(Util.TeamColor color, Pose pose){
+    public Pose closestSeesaw(Master.TeamColor color, Pose pose){
 
       switch(color){
         case RED:
@@ -327,7 +348,7 @@ public class Util implements Testable, DefaultUpdate, Loggable {
         case BLUE:
           return closestBlueSeesaw(pose);
         default:
-          throw Util.TODO();
+          throw Master.TODO();
 
       }
 
@@ -335,16 +356,16 @@ public class Util implements Testable, DefaultUpdate, Loggable {
 
     public Pose closestFlower(Pose pose){
 
-      throw Util.TODO();
+      throw Master.TODO();
     }
 
-    public Pose closestTarget(Util.TeamColor color, Pose pose){
+    public Pose closestTarget(Master.TeamColor color, Pose pose){
       switch (this){
         case SEESAW:
           return closestSeesaw(color, pose);
         case FLOWERS:
           return closestFlower(pose);
-        default: throw Util.TODO();
+        default: throw Master.TODO();
       }
 
     }
@@ -359,8 +380,8 @@ public class Util implements Testable, DefaultUpdate, Loggable {
   public void setTarget(Target targ) {this.target = targ;}
 
   //returns the current pos of Robot
-  Pose currentPose = new Pose(0,0);
-  public Pose getPose() {return currentPose;}
+  //Pose currentPose = new Pose(0,0);
+  //public Pose getPose() {return currentPose;}
 
 
 

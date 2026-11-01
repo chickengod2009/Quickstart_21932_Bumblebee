@@ -33,8 +33,6 @@ public class FlywheelTest extends OpMode{
         Flywheel2 = hardwareMap.get(DcMotorEx.class, "flyMotor2");
         Flywheel1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Flywheel2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Flywheel2.setDirection(DcMotorEx.Direction.REVERSE);
-        Flywheel1.setDirection(DcMotorEx.Direction.REVERSE);
 
 
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P, 0, 0, F);
@@ -115,17 +113,22 @@ public class FlywheelTest extends OpMode{
         Flywheel1.setVelocity(targetVel);
         Flywheel2.setVelocity(targetVel2);
 
-        double currentVel = Flywheel2.getVelocity();
+        double currentVel = Flywheel1.getVelocity();
+        double currentVel2 = Flywheel2.getVelocity();
         double error = targetVel - currentVel;
 
         telemetry.addData("Press A to switch between PIDF and VEL. PIDF Mode", pidfMode);
-        telemetry.addData("Target Velocity", targetVel);
-        telemetry.addData("Current Velocity", currentVel);
+        telemetry.addData("Target Velocity1", targetVel);
+        telemetry.addData("Target Velocity2", targetVel);
+        telemetry.addData("Current Velocity1", currentVel);
+        telemetry.addData("Current Velocity2", currentVel2);
         telemetry.addData("Error", "%.2f", error);
         telemetry.addData("-------------------", 0);
         telemetry.addData("Tuning P or Flywheel1 Vel" , "%.4f (D-Pad U/D", P);
         telemetry.addData("Tuning F or Flywheel2 Vel", "%.4f (D-Pad L/R", F);
         telemetry.addData("Step Size", "%.4f (B Button", stepSizes[stepIndex]);
+
+
     }
 
 }

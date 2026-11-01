@@ -9,6 +9,6 @@ class Telop{
 
   public statuc void start(Util ut){}
 
-//loop(util)
-//stop(util)
+//loop(master)
+//stop(master)
 }

@@ -3,46 +3,46 @@ package org.firstinspires.ftc.teamcode.OPS.test;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.control.functionality.OpModeFunctions;
-import org.firstinspires.ftc.teamcode.subsystems.Util;
+import org.firstinspires.ftc.teamcode.control.functionality.OpModeFunctions;
+import org.firstinspires.ftc.teamcode.subsystems.Master;
 
 
-@TeleOp(name = "TestStuff", group = "Test")
+@TeleOp(name = "Test Stuff Please Work", group = "Test")
 public class DriveTrainTests extends OpMode {
 
-  Util util;
+  Master master;
 
 
   @Override
   public void init() {
     this.telemetry.addLine("Select opmode: \n X: <>, Y: <> "/*ETC*/);
+    this.telemetry.update();
 
-    OpModeFunctions fun = null;
-
-    boolean done =false;
-
-    do{
-
-      if(gamepad1.a){done = true; fun = OpModeFunctions.TEST_1;}
+    OpModeFunctions fun = OpModeFunctions.TEST_1;
 
 
-    }while(!done);
-
-    util = new Util(this, Util.TeamColor.RED, fun);
+    master = new Master(this, Master.TeamColor.RED, fun);
+    this.telemetry.addLine("I LIVE"/*ETC*/);
+    this.telemetry.update();
 
 
   }
 
   @Override
   public void start(){
-    util.start();
+    if(master != null) master.start();
+    else {
+      telemetry.addLine("Init is second btw");
+    }
+
+    telemetry.update();
 
   }
 
 
   @Override
   public void loop(){
-    util.update();
+    if(master != null) master.update();
   } 
 
   @Override

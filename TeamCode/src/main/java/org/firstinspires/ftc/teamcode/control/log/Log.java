@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.control.log;
+package org.firstinspires.ftc.teamcode.control.log;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerLog;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

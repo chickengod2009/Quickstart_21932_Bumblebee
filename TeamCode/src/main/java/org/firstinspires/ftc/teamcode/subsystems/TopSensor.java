@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
-import java.util.HashMap;
 import java.util.Objects;
 
 public class TopSensor {
@@ -13,8 +9,8 @@ public class TopSensor {
     private String color;
     private float R, G, B;
     public int ct, noise;
-    public TopSensor(Util util) {
-        topSensor = util.get("topSensor");
+    public TopSensor(Master master) {
+        topSensor = master.get("topSensor");
         noise = 200;
         //topSensor.setGain(4);
     }

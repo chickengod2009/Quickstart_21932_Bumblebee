@@ -1,13 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Objects;
 
 public class MiddleSensor {
@@ -20,8 +16,8 @@ public class MiddleSensor {
     private Color color;
     private float R, G, B;
     public int ct, noise;
-    public MiddleSensor(@NotNull Util util) {
-        middleSensor = util.get("middleSensor");
+    public MiddleSensor(@NotNull Master master) {
+        middleSensor = master.get("middleSensor");
         noise = 160;
         //topSensor.setGain(4);
     }

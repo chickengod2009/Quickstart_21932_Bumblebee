@@ -1,15 +1,12 @@
-package org.firstinspires.ftc.teamcode.OPS.test;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+package org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
-import org.firstinspires.ftc.teamcode.subsystems.Util;
+import org.firstinspires.ftc.teamcode.control.functionality.MasterTrait;
 
-@TeleOp(name = "Intake Test")
-public class IntakeTest extends OpMode{
+
+public class IntakeTest{
     public DcMotorEx intake;
     public DcMotorEx rollers;
 
@@ -22,13 +19,13 @@ public class IntakeTest extends OpMode{
 
     int stepIndex = 1;
 
-    Util util;
 
 
-    @Override
-    public void init() {
-        intake = util.get("intakeMotor");
-        rollers = util.get("rollersMotor");
+
+
+    public void init(MasterTrait master) {
+        intake = master.get("intakeMotor");
+        rollers = master.get("rollersMotor");
 
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rollers.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -37,32 +34,32 @@ public class IntakeTest extends OpMode{
 
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rollers.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        telemetry.addLine("Init complete");
+        master.getOpMode().telemetry.addLine("Init complete");
         targetPow = 0;
         targetPow2 = 0;
     }
 
 
-    @Override
-    public void loop() {
+    
+    public void loop(MasterTrait master) {
         //get all our gamepad commands
         //set target velocity
-        //update telemetry
+        //update master.getOpMode().telemetry
 
 
-        if (gamepad1.bWasPressed()) {
+        if (master.getOpMode().gamepad1.bWasPressed()) {
             stepIndex = (stepIndex + 1) % stepSizes.length;
         }
-        if (gamepad1.dpadUpWasPressed()) {
+        if (master.getOpMode().gamepad1.dpadUpWasPressed()) {
             targetPow += stepSizes[stepIndex];
         }
-        if (gamepad1.dpadDownWasPressed()) {
+        if (master.getOpMode().gamepad1.dpadDownWasPressed()) {
             targetPow -= stepSizes[stepIndex];
         }
-        if (gamepad1.dpadRightWasPressed()) {
+        if (master.getOpMode().gamepad1.dpadRightWasPressed()) {
             targetPow2 += stepSizes[stepIndex];
         }
-        if (gamepad1.dpadLeftWasPressed()) {
+        if (master.getOpMode().gamepad1.dpadLeftWasPressed()) {
             targetPow2 -= stepSizes[stepIndex];
         }
 
@@ -75,12 +72,12 @@ public class IntakeTest extends OpMode{
         double currentRollersPow = rollers.getPower();
 
 
-        telemetry.addData("Intake Target Power", targetPow);
-        telemetry.addData("Intake Current Power", currentIntakePow);
-        telemetry.addData("-------------------", 0);
-        telemetry.addData("Rollers Target Power", targetPow2);
-        telemetry.addData("Rollers Current Power", currentRollersPow);
-        telemetry.addData("Step Size", "%.4f (B Button", stepSizes[stepIndex]);
+        master.getOpMode().telemetry.addData("Intake Target Power", targetPow);
+        master.getOpMode().telemetry.addData("Intake Current Power", currentIntakePow);
+        master.getOpMode().telemetry.addData("-------------------", 0);
+        master.getOpMode().telemetry.addData("Rollers Target Power", targetPow2);
+        master.getOpMode().telemetry.addData("Rollers Current Power", currentRollersPow);
+        master.getOpMode().telemetry.addData("Step Size", "%.4f (B Button", stepSizes[stepIndex]);
     }
 }
 
