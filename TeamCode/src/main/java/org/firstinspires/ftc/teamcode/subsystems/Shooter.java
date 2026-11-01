@@ -13,6 +13,7 @@ public class Shooter {
     public static double OFF = 0, MAX = 1, NORMAL = 0.6, WAIT = 1400;
     public static double slope = 5.9343, closeB = 1015, farB = 1285;
     public static double p = 5589, i = 0, d = 0, f = 33.6;
+    public static double p2 = 0, i2 = 0, d2 = 0, f2 = 12.5;
 
 
 
@@ -23,7 +24,7 @@ public class Shooter {
 
         flyMotor2 = master.get("shooterTwo");
         flyMotor2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        flyMotor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p, i, d, f));
+        flyMotor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p2, i2, d2, f2));
         flyMotor2.setDirection(Direction.REVERSE);
     }
 

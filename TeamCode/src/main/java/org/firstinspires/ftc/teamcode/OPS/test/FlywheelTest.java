@@ -21,7 +21,7 @@ public class FlywheelTest extends OpMode{
     double F = 0;
     double P = 0;
 
-    double[] stepSizes = {50.0, 10.0, 1.0, 0.5, 0.05, .005, .0005};
+    double[] stepSizes = {1000.0, 100.0, 50.0, 10.0, 1.0, 0.5, 0.05, .005, .0005};
 
     int stepIndex = 1;
 
@@ -119,7 +119,7 @@ public class FlywheelTest extends OpMode{
 
         telemetry.addData("Press A to switch between PIDF and VEL. PIDF Mode", pidfMode);
         telemetry.addData("Target Velocity1", targetVel);
-        telemetry.addData("Target Velocity2", targetVel);
+        telemetry.addData("Target Velocity2", targetVel2);
         telemetry.addData("Current Velocity1", currentVel);
         telemetry.addData("Current Velocity2", currentVel2);
         telemetry.addData("Error", "%.2f", error);
