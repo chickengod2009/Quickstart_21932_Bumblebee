@@ -47,7 +47,7 @@ public class DriveTrainTests extends OpMode {
 
   @Override
   public void stop() {
-
+    master.stop();
   } 
 
 

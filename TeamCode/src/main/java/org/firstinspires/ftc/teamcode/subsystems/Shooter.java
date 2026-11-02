@@ -55,7 +55,7 @@ public class Shooter {
 
     public double getTargetVelocity() {
         return vel;
-    }
+    } //Nectar 2500
 
     public double getPower() {
         return power;

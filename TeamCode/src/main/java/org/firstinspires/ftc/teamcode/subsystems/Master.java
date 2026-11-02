@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -92,7 +93,7 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
 //    this.drivetrain = new Drivetrain(this);
 //    this.shooty= new ShootyBrain(this);
 //    //all new devices have to be made before this function call, or a nullptr exception could be thrown
-//    this.func.start.accept(this);
+    this.func.start.accept(this);
   }
 
   public void stop(){
@@ -111,7 +112,7 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
 
   @Override
   public Drivetrain getDrivetrain() {
-    return null;
+    return this.drivetrain;
   }
 
   @Override
@@ -139,7 +140,7 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
     if (op == null || color==null || auto == null || !auto.isSafe()) throw new RuntimeException("Need an opmode for Master");
     //All the device naming and getting goes here
     //this.open(op);
-    //Master.color = color;
+    Master.color = color;
     this.follower= null;
 
 
@@ -172,7 +173,7 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
 
   //make motor direction switches less verbose
   //Master.reverse("MotorName");
-  public static <T extends DcMotorSimple> void reverseMotor(@NonNull T[] motors){
+  public static <T extends DcMotorSimple> void reverseMotorAndCRServoIGB(@NonNull T[] motors){
     for (DcMotorSimple motor : motors){
     switch (motor.getDirection()){
       case REVERSE:
@@ -190,6 +191,7 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
 
   //Master.reverse("ServoName")
   public static <T extends Servo> void reverseServo(@NonNull T[] servos){
+
     for (Servo servo : servos){
     switch (servo.getDirection()){
       case REVERSE:
@@ -239,8 +241,8 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
     devices.put("shooter",           op.hardwareMap.get(DcMotorEx.class, "flyMotor"));
     devices.put("shooterTwo",        op.hardwareMap.get(DcMotorEx.class, "flyMotor2"));
     devices.put("gate",              op.hardwareMap.servo.get("gate"));
-    devices.put("transfer1",         op.hardwareMap.servo.get("transfer1"));
-    devices.put("transfer2",         op.hardwareMap.servo.get("transfer2"));
+    devices.put("transfer1",         op.hardwareMap.crservo.get("transfer1"));
+    devices.put("transfer2",         op.hardwareMap.crservo.get("transfer2"));
     devices.put("hood",              op.hardwareMap.servo.get("hood"));
     devices.put("topSensor",         op.hardwareMap.get(ColorSensor.class, "topSenor"));
 
@@ -249,8 +251,8 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
 
   
 
-  public static <T extends DcMotorSimple> void reverseMotor(@NonNull T motor){
-    Master.reverseMotor(new DcMotorSimple[]{motor});
+  public static <T extends DcMotorSimple> void reverseMotorAndCRServoIGB(@NonNull T motor){
+    Master.reverseMotorAndCRServoIGB(new DcMotorSimple[]{motor});
   }
 
 
@@ -258,11 +260,11 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
     byte i =0;
     for(T dev : device){
       if(dev instanceof DcMotorSimple){
-        Master.reverseMotor((DcMotorSimple)device[i]);
+        Master.reverseMotorAndCRServoIGB((DcMotorSimple)device[i]);
         i++;
         
       } else if(dev instanceof Servo){
-        // servo func
+        Master.reverseServo(new Servo[]{(Servo)device[i]});
       }  else{ /*maybe just do nothing or maybe throw error*/}
         
         
