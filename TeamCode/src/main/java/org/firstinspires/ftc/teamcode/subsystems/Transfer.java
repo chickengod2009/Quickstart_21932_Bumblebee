@@ -12,18 +12,19 @@ public class Transfer {
     public Transfer(Master master) {
         transfer1 = master.get("transfer1");
         transfer2 = master.get("transfer2");
+        Master.reverseMotorAndCRServoIGB(transfer2);
     }
 
     public void transferSetPower(double servoPower) {
         power = servoPower;
     }
 
-    public double tiltGetPower() {
+    public double transferGetPower() {
         return power;
     }
 
     public void update() {
         transfer1.setPower(power);
-        transfer2.setPower(-power);
+        transfer2.setPower(power);
     }
 }

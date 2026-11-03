@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -245,7 +246,7 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
     devices.put("transfer2",         op.hardwareMap.crservo.get("transfer2"));
     devices.put("hood",              op.hardwareMap.servo.get("hood"));
     devices.put("topSensor",         op.hardwareMap.get(ColorSensor.class, "topSenor"));
-
+    devices.put("touchSensor",       op.hardwareMap.get(DigitalChannel.class, "touchSensor"));
   }
 
 
