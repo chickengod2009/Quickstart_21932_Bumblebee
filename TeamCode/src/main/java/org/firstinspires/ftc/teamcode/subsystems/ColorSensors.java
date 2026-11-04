@@ -5,11 +5,64 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import java.util.Objects;
 
 public class ColorSensors {
+
+    public static class RGB{
+        public final float Red;
+        public final float Blue;
+        public final float Green;
+
+        public RGB(float r, float g, float b){
+            this.Red=r;
+            this.Blue=b;
+            this.Green=g;
+        }
+
+
+        public enum SensorID{
+            ONE(0),
+            TWO(1),
+            THREE(2);
+
+            final int arrayIndex;
+            SensorID(int index){
+                arrayIndex= index;
+            }
+        }
+
+
+
+
+        public Colors assignColor(int noise){
+
+            if ((this.Red + this.Green + this.Blue) < noise) {
+                return Colors.NA;
+            } else if (this.Red > 110 && this.Green > this.Blue) {
+                return Colors.BLUE;
+            } else {
+                return Colors.RED;
+            }
+        }
+
+    }
+    public enum Colors{
+        RED(new RGB(255,0,0)),
+        BLUE(new RGB(0,0,255)),
+        YELLOW(new RGB(220,190,40)),
+        NA(null);
+
+        final RGB rgb;
+        Colors(RGB rgb){
+            this.rgb = rgb;
+        }
+
+
+        public RGB getRgb(){return this.rgb;}
+
+    }
     ColorSensor firstSensor, secondSensor, thirdSensor;
-    private String color1, color2, color3;
-    private float R1, G1, B1;
-    private float R2, G2, B2;
-    private float R3, G3, B3;
+    private Colors color1, color2, color3;
+    private RGB C1, C2, C3;
+
     public int ct, noise;
     public ColorSensors(Master master) {
         firstSensor = master.get("topSensor");
@@ -21,98 +74,77 @@ public class ColorSensors {
     }
 
     public void update() {
-        R1 = firstSensor.red();
-        G1 = firstSensor.green();
-        B1 = firstSensor.blue();
+        C1 = new RGB( firstSensor.red(),
+                firstSensor.green(),
+                firstSensor.blue());
 
-        R2 = secondSensor.red();
-        G2 = secondSensor.green();
-        B2 = secondSensor.blue();
+        C2 = new RGB( secondSensor.red(),
+                secondSensor.green(),
+                secondSensor.blue());
 
-        R3 = thirdSensor.red();
-        G3 = thirdSensor.green();
-        B3 = thirdSensor.blue();
+        C3 = new RGB( thirdSensor.red(),
+                thirdSensor.green(),
+                thirdSensor.blue());
 
         //TODO: find parameters for colors
         //FIRST
-        if ((R1 + G1 + B1) < noise) {
-            color1 = "UNKNOWN";
-        } else if (G1 > 110 && G1 > B1) {
-            color1 = "GREEN";
-        } else {
-            color1 = "PURPLE";
-        }
-        //SECOND
-        if ((R1 + G1 + B1) < noise) {
-            color2 = "UNKNOWN";
-        } else if (G1 > 110 && G1 > B1) {
-            color2 = "GREEN";
-        } else {
-            color2 = "PURPLE";
-        }
-        //THIRD
-        if ((R1 + G1 + B1) < noise) {
-            color3 = "UNKNOWN";
-        } else if (G1 > 110 && G1 > B1) {
-            color3 = "GREEN";
-        } else {
-            color3 = "PURPLE";
-        }
+        color1 = C1.assignColor(noise);
+        color2 = C2.assignColor(noise);
+        color3 = C3.assignColor(noise);
 
     }
-    public String getColor(ColorSensor sensor) {
+    public Colors getColor(RGB.SensorID sensor) {
 
-        if (sensor == firstSensor) {
-            return color1;
-        } else if (sensor == secondSensor) {
-            return color2;
-        } else if (sensor == thirdSensor) {
-            return color3;
+        switch (sensor){
+            case ONE:
+                return color1;
+            case TWO:
+                return color2;
+            case THREE:
+                return color3;
         }
         return color1;
     }
-    public float getR(ColorSensor sensor) {
-        if (sensor == firstSensor) {
-            return R1;
-        } else if (sensor == secondSensor) {
-            return R2;
-        } else if (sensor == thirdSensor) {
-            return R3;
+    public float getR(RGB.SensorID sensor) {
+        switch (sensor){
+            case ONE:
+                return C1.Red;
+            case TWO:
+                return C2.Red;
+            case THREE:
+                return C3.Red;
         }
-        return R1;
+        return -1;
     }
-    public float getG(ColorSensor sensor) {
-        if (sensor == firstSensor) {
-            return G1;
-        } else if (sensor == secondSensor) {
-            return G2;
-        } else if (sensor == thirdSensor) {
-            return G3;
+    public float getG(RGB.SensorID sensor) {
+        switch (sensor){
+            case ONE:
+                return C1.Green;
+            case TWO:
+                return C2.Green;
+            case THREE:
+                return C3.Green;
         }
-        return G1;
+        return -1;
     }
-    public float getB(ColorSensor sensor) {
-        if (sensor == firstSensor) {
-            return B1;
-        } else if (sensor == secondSensor) {
-            return B2;
-        } else if (sensor == thirdSensor) {
-            return B3;
+    public float getB(RGB.SensorID sensor) {
+        switch (sensor){
+            case ONE:
+                return C1.Blue;
+            case TWO:
+                return C2.Blue;
+            case THREE:
+                return C3.Blue;
         }
-        return B1;
+        return -1;
     }
 
-    public int hasBall(ColorSensor sensor) {
+    public int hasBall(RGB.SensorID sensorID) {
 
 
-        if (sensor == firstSensor) {
-            return (!(Objects.equals(color1, "UNKNOWN"))) ? 1 : 0;
-        } else if (sensor == secondSensor) {
-            return (!(Objects.equals(color2, "UNKNOWN"))) ? 1 : 0;
-        } else if (sensor == thirdSensor) {
-            return (!(Objects.equals(color3, "UNKNOWN"))) ? 1 : 0;
-        }
-        return (!(Objects.equals(color1, "UNKNOWN"))) ? 1 : 0;
+
+        Colors[] sensors = {color1,color2,color3};
+        return (sensors[sensorID.arrayIndex] != Colors.NA) ? 1 : 0;
     }
 
 }

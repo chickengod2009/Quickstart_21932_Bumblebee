@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems;
+package org.firstinspires.ftc.teamcode.subsystems.ShitforWebcam;
 
 import android.util.Size;
 
@@ -62,5 +62,28 @@ public class Webcam {
             aprilTag = -1;
         }
         return aprilTag;
+    }
+    public static class TagPose {
+        public final int id;
+        public final double yaw;     //tag rotation relative to camera (deg)
+        public final double range;   //straight line distance to tag (in.)
+        public final double bearing; //angle to tag (degrees). positive = tag is to the left
+
+        public TagPose(int id, double yaw, double range, double bearing) {
+            this.id = id;
+            this.yaw = yaw;
+            this.range = range;
+            this.bearing = bearing;
+        }
+    }
+
+    public TagPose getTagPose(int tagId) {
+        List<AprilTagDetection> detections = aprilTagProcessor.getDetections();
+        for (AprilTagDetection d : detections) {
+            if (d.metadata != null && d.id == tagId) {
+                return new TagPose(d.id, d.ftcPose.yaw, d.ftcPose.range, d.ftcPose.bearing);
+            }
+        }
+        return null;
     }
 }
