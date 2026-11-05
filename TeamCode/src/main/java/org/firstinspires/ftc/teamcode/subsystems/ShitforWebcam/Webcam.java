@@ -63,6 +63,17 @@ public class Webcam {
         }
         return aprilTag;
     }
+
+    public void stopStream() {
+        if (visionPortal != null) {
+            visionPortal.stopStreaming();
+        }
+    }
+    public void resumeStream() {
+        if (visionPortal != null) {
+            visionPortal.resumeStreaming();
+        }
+    }
     public static class TagPose {
         public final int id;
         public final double yaw;     //tag rotation relative to camera (deg)
