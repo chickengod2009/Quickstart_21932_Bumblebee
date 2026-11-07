@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.ShitforWebcam;
+package org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam;
 
 import android.util.Size;
 
@@ -15,14 +15,14 @@ import java.util.List;
 
 public class Webcam {
 
-    private VisionPortal visionPortal;
+    private final VisionPortal visionPortal;
 
-    private AprilTagProcessor aprilTagProcessor;
+    private final AprilTagProcessor aprilTagProcessor;
     private List<AprilTagDetection> aprilTagDetections;
     private int aprilTag;
 
 
-    private int cameraWidth = 640, cameraHeight = 480; // TODO: set proper aspect ratio and resolution if needed
+    public final int cameraWidth = 640, cameraHeight = 480; // TODO: set proper aspect ratio and resolution if needed
 
 
     public Webcam(HardwareMap hwMap, HashMap<String, String> config) {
@@ -94,6 +94,7 @@ public class Webcam {
             if (d.metadata != null && d.id == tagId) {
                 return new TagPose(d.id, d.ftcPose.yaw, d.ftcPose.range, d.ftcPose.bearing);
             }
+
         }
         return null;
     }

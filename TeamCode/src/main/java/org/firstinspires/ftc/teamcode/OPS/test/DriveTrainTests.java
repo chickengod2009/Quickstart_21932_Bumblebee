@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.control.functionality.OpModeFunctions;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 
 
-@TeleOp(name = "Test Stuff Please Work", group = "Test")
+@TeleOp(name = "Shreay when he sees men at the func", group = "Test")
 public class DriveTrainTests extends OpMode {
 
   Master master;
@@ -47,8 +47,8 @@ public class DriveTrainTests extends OpMode {
 
   @Override
   public void stop() {
-    master.stop();
-  } 
+//    master.stop();
+  }
 
 
 

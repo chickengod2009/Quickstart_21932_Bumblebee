@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
-import java.util.Objects;
-
 public class ColorSensors {
 
     public static class RGB{
@@ -32,26 +30,26 @@ public class ColorSensors {
 
 
 
-        public Colors assignColor(int noise){
+        public Color assignColor(int noise){
 
             if ((this.Red + this.Green + this.Blue) < noise) {
-                return Colors.NA;
+                return Color.NA;
             } else if (this.Red > 110 && this.Green > this.Blue) {
-                return Colors.BLUE;
+                return Color.BLUE;
             } else {
-                return Colors.RED;
+                return Color.RED;
             }
         }
 
     }
-    public enum Colors{
+    public enum Color {
         RED(new RGB(255,0,0)),
         BLUE(new RGB(0,0,255)),
         YELLOW(new RGB(220,190,40)),
         NA(null);
 
         final RGB rgb;
-        Colors(RGB rgb){
+        Color(RGB rgb){
             this.rgb = rgb;
         }
 
@@ -60,7 +58,7 @@ public class ColorSensors {
 
     }
     ColorSensor firstSensor, secondSensor, thirdSensor;
-    private Colors color1, color2, color3;
+    private Color color1, color2, color3;
     private RGB C1, C2, C3;
 
     public int ct, noise;
@@ -93,7 +91,7 @@ public class ColorSensors {
         color3 = C3.assignColor(noise);
 
     }
-    public Colors getColor(RGB.SensorID sensor) {
+    public Color getColor(RGB.SensorID sensor) {
 
         switch (sensor){
             case ONE:
@@ -143,8 +141,8 @@ public class ColorSensors {
 
 
 
-        Colors[] sensors = {color1,color2,color3};
-        return (sensors[sensorID.arrayIndex] != Colors.NA) ? 1 : 0;
+        Color[] sensors = {color1,color2,color3};
+        return (sensors[sensorID.arrayIndex] != Color.NA) ? 1 : 0;
     }
 
 }

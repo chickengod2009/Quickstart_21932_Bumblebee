@@ -7,25 +7,25 @@ import org.firstinspires.ftc.teamcode.control.functionality.MasterTrait;
 
 
 public class IntakeTest{
-    public DcMotorEx intake;
-    public DcMotorEx rollers;
+    public static DcMotorEx intake;
+    public static DcMotorEx rollers;
 
 
-    double targetPow;
-    double targetPow2;
+    static double  targetPow;
+    static double targetPow2;
 
 
-    double[] stepSizes = {.1, .5, .75, 1};
+    static double[] stepSizes = {.05,.07,.1,.15,.3,.5,.6,.8,.9,1};
 
-    int stepIndex = 1;
-
-
+    static int stepIndex = 1;
 
 
 
-    public void init(MasterTrait master) {
-        intake = master.get("intakeMotor");
-        rollers = master.get("rollersMotor");
+
+
+    public static void init(MasterTrait master) {
+        intake = master.getOpMode().hardwareMap.get(DcMotorEx.class, "intakeMotor");
+        rollers = master.getOpMode().hardwareMap.get(DcMotorEx.class, "rollersMotor");
 
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rollers.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -41,7 +41,7 @@ public class IntakeTest{
 
 
     
-    public void loop(MasterTrait master) {
+    public static void loop(MasterTrait master) {
         //get all our gamepad commands
         //set target velocity
         //update master.getOpMode().telemetry
