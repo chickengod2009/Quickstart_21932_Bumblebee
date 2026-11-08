@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems.LimelightLarp;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import org.firstinspires.ftc.teamcode.subsystems.ColorSensors;
@@ -12,7 +13,9 @@ import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.llError.NullResul
 import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.llError.PipelineIndexError;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class TowerOfSauron {
 
@@ -43,6 +46,7 @@ public class TowerOfSauron {
 
     public void setPipeline(PipelineIndex index){
         this.pipeline=index;
+        this.theOneRing.pipelineSwitch(pipeline.index);
     }
     public PipelineIndex getPipeline(){
         return this.pipeline;
@@ -56,8 +60,8 @@ public class TowerOfSauron {
     public static final double hCam =.5;
 
     public static final double mountAngleDegree = 33;
-
     public BallsResult getPythonBallFinding() throws LLResultError {
+
         double[] py = getPy();
 
         int n = (int) py[0];
@@ -72,21 +76,19 @@ public class TowerOfSauron {
         int k = 0;
 
         for (int i = 0; i < n; i++) {
-            double tanTx = Math.tan(Math.toRadians(py[1 + 3 * i]));
-            double tanTy = Math.tan(Math.toRadians(py[2 + 3 * i]));
+
             int id = (int) py[3 + 3 * i];
             if (id < 0 || id >= byId.length) continue;
 
             // Ray from the camera, in world axes (forward, up), scaled so lateral = tanTx
-            double a = Math.cos(pitch) + tanTy * Math.sin(pitch);    // forward component
-            double b = -Math.sin(pitch) + tanTy * Math.cos(pitch);   // vertical component
-            if (b >= -1e-6) continue;                                // points at or above the horizon
-
-            double t = dz / b;                                       // scale to reach the ball's height
-            x[k] = t * a;                                            // forward
-            y[k] = t * tanTx;                                        // right-positive; negate for left-positive
+            double[] xy = projectToFloor(py[1 + 3 * i], py[2 + 3 * i]);
+            if (xy ==null) continue;
+            // scale to reach the ball's height
+            x[k] = xy[0];                                            // forward
+            y[k] = xy[1];                                        // right-positive; negate for left-positive
             colors[k] = byId[id];
             k++;
+
         }
 
         return new BallsResult(Arrays.copyOf(x, k), Arrays.copyOf(y, k), Arrays.copyOf(colors, k));
@@ -104,6 +106,59 @@ public class TowerOfSauron {
         double[] py = res.getPythonOutput();
         if (py == null || py.length < 1) throw new NullPythonResult("No python result");
         return py;
+    }
+
+
+
+
+    private double[] projectToFloor(double txDeg, double tyDeg) {
+        double pitch = Math.toRadians(-mountAngleDegree);
+        double tanTx = Math.tan(Math.toRadians(txDeg));
+        double tanTy = Math.tan(Math.toRadians(tyDeg));
+        double a = Math.cos(pitch) + tanTy * Math.sin(pitch);
+        double b = -Math.sin(pitch) + tanTy * Math.cos(pitch);
+        if (b >= -1e-6) return null;                 // at or above the horizon
+        double t = (hBall - hCam) / b;
+        return new double[]{ t * a, t * tanTx };     // {forward, lateral}
+    }
+
+    private static final double MIN_CONFIDENCE = 0.4;   // tune
+
+    public BallsResult getDetectorBallFinding() throws LLResultError {
+        LLResult res = theOneRing.getLatestResult();
+        if (res == null) throw new NullResult("No result");
+        if (res.getPipelineIndex() != PipelineIndex.NEURALBALLFINDING.index)
+            throw new PipelineIndexError("Result is from pipeline " + res.getPipelineIndex());
+        if (res.getStaleness() > MAX_STALE_MS)
+            throw new NullResult("Stale result: " + res.getStaleness() + " ms");
+
+        List<LLResultTypes.DetectorResult> dets = res.getDetectorResults();
+        List<double[]> pos = new ArrayList<>();
+        List<ColorSensors.Color> cols = new ArrayList<>();
+
+        if (dets != null) {
+            for (LLResultTypes.DetectorResult d : dets) {
+                if (d.getConfidence() < MIN_CONFIDENCE) continue;
+                ColorSensors.Color c = colorFor(d.getClassName());
+                if (c == null) continue;
+                double[] p = projectToFloor(d.getTargetXDegrees(), d.getTargetYDegrees());
+                if (p == null) continue;
+                pos.add(p);
+                cols.add(c);
+            }
+        }
+
+        double[] x = new double[pos.size()], y = new double[pos.size()];
+        for (int i = 0; i < pos.size(); i++) { x[i] = pos.get(i)[0]; y[i] = pos.get(i)[1]; }
+        return new BallsResult(x, y, cols.toArray(new ColorSensors.Color[0]));
+    }
+
+    private static ColorSensors.Color colorFor(String cls) {
+        String s = cls.toLowerCase();
+        if (s.startsWith("yellow")) return ColorSensors.Color.YELLOW;
+        if (s.startsWith("red"))    return ColorSensors.Color.RED;
+        if (s.startsWith("blue"))   return ColorSensors.Color.BLUE;
+        return null;
     }
 
 
