@@ -74,7 +74,7 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
 
   @Override
   public void update() {
-    //currentPose= this.follower.pose();
+    currentPose= this.follower.pose();
 
     
 
@@ -127,7 +127,7 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
   }
 
   //So you only have to actually call all the get methods once
-  public enum TeamColor{RED, BLUE}
+  public enum TeamColor{RED(0), BLUE(1); final int index; TeamColor(int index){this.index = index;}}
   private static TeamColor color;
 
   public  OpMode opmode;
@@ -383,8 +383,8 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
   public void setTarget(Target targ) {this.target = targ;}
 
   //returns the current pos of Robot
-  //Pose currentPose = new Pose(0,0);
-  //public Pose getPose() {return currentPose;}
+  Pose currentPose = new Pose(0,0);
+  public Pose getPose() {return currentPose;}
 
 
 

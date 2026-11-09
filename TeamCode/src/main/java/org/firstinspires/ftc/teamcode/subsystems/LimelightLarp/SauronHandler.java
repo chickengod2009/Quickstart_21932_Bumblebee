@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.subsystems.LimelightLarp;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 
+import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.llError.LLResultError;
+import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.llError.PipelineIndexError;
+
 public class SauronHandler {
 
 
@@ -56,12 +59,17 @@ public class SauronHandler {
         return null;
     }
 
-    BallsResult produceBalls() throws Exception{
-        if (this.sauron.getPipeline() != PipelineIndex.SPECIALBALLFINDING) {
-            throw new Exception("Not in the right pipeLine");
+    BallsResult produceBalls() throws LLResultError, PipelineIndexError {
+
+        switch (this.sauron.getPipeline()){
+            case NEURALBALLFINDING:
+                return this.sauron.getDetectorBallFinding();
+            case SPECIALBALLFINDING:
+                return this.sauron.getPythonBallFinding();
+            default:
+                throw new PipelineIndexError("Not proper pipeline");
         }
 
-        return null;
     }
 
 

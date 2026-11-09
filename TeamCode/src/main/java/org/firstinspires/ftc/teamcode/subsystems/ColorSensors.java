@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
+import org.jetbrains.annotations.NotNull;
+
 public class ColorSensors {
 
     public static class RGB{
@@ -43,18 +45,26 @@ public class ColorSensors {
 
     }
     public enum Color {
-        RED(new RGB(255,0,0)),
-        BLUE(new RGB(0,0,255)),
-        YELLOW(new RGB(220,190,40)),
-        NA(null);
+        RED(new RGB(255,0,0), 0),
+        BLUE(new RGB(0,0,255), 1),
+        YELLOW(new RGB(220,190,40), 2),
+        NA(null, 3);
 
         final RGB rgb;
-        Color(RGB rgb){
-            this.rgb = rgb;
+        final int index;
+        Color(RGB rgb, int index){
+            this.rgb = rgb; this.index = index;
         }
 
 
         public RGB getRgb(){return this.rgb;}
+
+
+        public boolean equalTeamColor(@NotNull Master.TeamColor obj){
+
+            return this.index == (obj).index;
+
+        }
 
     }
     ColorSensor firstSensor, secondSensor, thirdSensor;

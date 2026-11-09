@@ -30,6 +30,7 @@ public class BallsResult {
         ballCount = bally.length;
         balls = bally;
         closestBall = min;
+        setClusters();
     }
     public BallsResult(@NotNull double[] x, double[] y, ColorSensors.Color[] colors){
         if (x.length != y.length || x.length!=colors.length) throw Master.TODO();
@@ -49,6 +50,8 @@ public class BallsResult {
     }
 
     public static final double CLUSTER_RANGE = .3;
+
+    public int getBallCount() {return this.ballCount;}
 
     public void setClusters(){
 
@@ -102,6 +105,8 @@ public class BallsResult {
             double x = this.ballVectorCart.x();
             double y = this.ballVectorCart.y();
         }
+
+        public int getClusterSize() { return clusterSize; }
 
 
     }
