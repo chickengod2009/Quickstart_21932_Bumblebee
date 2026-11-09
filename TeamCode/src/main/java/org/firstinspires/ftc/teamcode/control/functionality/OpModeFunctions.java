@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.control.functionality;
 import org.firstinspires.ftc.teamcode.opModeFuncs.telopFuncs.Teleop;
 
 import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.FlywheelTest;
+import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.FullTest;
 import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.IntakeTest;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 
@@ -23,7 +24,8 @@ public enum OpModeFunctions {
   AUTON_RED_ONE(OpModeFunctions::todo, OpModeFunctions::todo, OpModeFunctions::todo),
 
   
-  TEST_1(IntakeTest::init, IntakeTest::loop, OpModeFunctions::todo);
+  TEST_1(IntakeTest::init, IntakeTest::loop, OpModeFunctions::todo),
+  FULL_TEST(FullTest::init, FullTest::loop, OpModeFunctions::todo );
 
   public final Consumer<MasterTrait> start;
   public final Consumer<MasterTrait> update;

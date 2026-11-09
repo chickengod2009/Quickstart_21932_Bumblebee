@@ -7,6 +7,9 @@ import com.pedropathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 import static com.pedropathing.api.Paths.*;
 import com.pedropathing.paths.Path;
+import com.pedropathing.ivy.Scheduler;
+import static com.pedropathing.ivy.Scheduler.schedule;
+import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
 @Autonomous
 public class PrePathing extends OpMode {
@@ -23,11 +26,19 @@ public class PrePathing extends OpMode {
     public void init() {
         follower = Constants.create(hardwareMap);
         follower.setPose(startPose);
+        Scheduler.reset();
+        follower = Constants.create(hardwareMap);
+        follower.setPose(startPose);
     }
+
     @Override
     public void start() {
+        schedule(follow(follower, park()));
     }
+
     @Override
     public void loop() {
+        follower.update();
+        Scheduler.execute();
     }
 }

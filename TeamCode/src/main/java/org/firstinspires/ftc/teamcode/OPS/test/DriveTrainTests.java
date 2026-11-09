@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.control.functionality.OpModeFunctions;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 
 
-@TeleOp(name = "Shreay when he sees men at the func", group = "Test")
+@TeleOp(name = "Almond's a little femboy", group = "Test")
 public class DriveTrainTests extends OpMode {
 
   Master master;
@@ -18,7 +18,7 @@ public class DriveTrainTests extends OpMode {
     this.telemetry.addLine("Select opmode: \n X: <>, Y: <> "/*ETC*/);
     this.telemetry.update();
 
-    OpModeFunctions fun = OpModeFunctions.TEST_1;
+    OpModeFunctions fun = OpModeFunctions.FULL_TEST;
 
 
     master = new Master(this, Master.TeamColor.RED, fun);
