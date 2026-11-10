@@ -25,7 +25,7 @@ public class BallSniffer {
     BallsResult.BallDetails closest;
 
 
-    void createPoses(BallsResult results){
+    void createPoses(BallsResult results, Pose pose){
 
         Pose roboPose = master.getPose();
 
@@ -40,7 +40,7 @@ public class BallSniffer {
                 continue;
             }
             BallStrength ball = new BallStrength(details.ballVectorCart.toPose(), details.color, details.getClusterSize());
-            ball.adjustStrength(roboPose);
+            ball.adjustStrength(pose);
             positions.add(ball);
 
             positions.sort(
@@ -66,12 +66,41 @@ public class BallSniffer {
 
 
     public ArrayList<Path> formulatePaths(BallsResult res){
-        this.createPoses(res);
 
+
+
+
+
+
+
+        Pose robo = master.getPose();
+
+        Pose cornerPose =null;
+
+        switch (Master.getTeam()){
+
+            case RED:
+                cornerPose = (robo.distance(RedCornerRedGoal) <= robo.distance(RedCornerBlueGoal)) ? RedCornerRedGoal : RedCornerBlueGoal;
+                break;
+            case BLUE:
+                cornerPose = (robo.distance(BlueCornerRedGoal) <= robo.distance(BlueCornerBlueGoal)) ? BlueCornerRedGoal : BlueCornerBlueGoal;
+                break;
+
+
+        }
+
+
+        this.createPoses(res,cornerPose);
+
+        ArrayList<Path> paths = new ArrayList<>(positions.size()/2);
 
         List<BallStrength> topPos = positions.subList(0, positions.size()/2);
 
-        ArrayList<Path> paths = new ArrayList<>(positions.size()/2);
+
+
+
+
+
 
 
 

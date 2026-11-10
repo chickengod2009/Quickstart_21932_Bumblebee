@@ -12,16 +12,18 @@ public class DriveTrainTests extends OpMode {
 
   Master master;
 
+  OpModeFunctions func = OpModeFunctions.Intake_Gate_Shooter_Test;
+
 
   @Override
   public void init() {
-    this.telemetry.addLine("Select opmode: \n X: <>, Y: <> "/*ETC*/);
-    this.telemetry.update();
-
-    OpModeFunctions fun = OpModeFunctions.FULL_TEST;
 
 
-    master = new Master(this, Master.TeamColor.RED, fun);
+
+
+
+
+
     this.telemetry.addLine("I LIVE"/*ETC*/);
     this.telemetry.update();
 
@@ -29,11 +31,28 @@ public class DriveTrainTests extends OpMode {
   }
 
   @Override
-  public void start(){
-    if(master != null) master.start();
-    else {
-      telemetry.addLine("Init is second btw");
+  public void init_loop() {
+    this.telemetry.addLine("Select opmode: \n A: Full Test, Y: Intake -- Gate --- Shooter Test "/*ETC*/);
+
+
+    if (gamepad1.aWasPressed()){
+      func = OpModeFunctions.FULL_TEST;
+    }else if (gamepad1.bWasPressed()){
+      func = OpModeFunctions.Intake_Gate_Shooter_Test;
     }
+
+    master = new Master(this, Master.TeamColor.RED, func);
+    this.telemetry.update();
+
+
+  }
+
+
+  @Override
+  public void start(){
+
+    master.start();
+
 
     telemetry.update();
 
