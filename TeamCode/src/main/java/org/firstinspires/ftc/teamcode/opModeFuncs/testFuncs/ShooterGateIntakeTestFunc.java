@@ -53,8 +53,8 @@ public class ShooterGateIntakeTestFunc {
         targetPow = 0;
         targetPow2 = 0;
 
-        Flywheel1 = hardwareMap.get(DcMotorEx.class, "flyMotor");
-        Flywheel2 = hardwareMap.get(DcMotorEx.class, "flyMotor2");
+        Flywheel1 = master.getOpMode().hardwareMap.get(DcMotorEx.class, "flyMotor");
+        Flywheel2 = master.getOpMode().hardwareMap.get(DcMotorEx.class, "flyMotor2");
         Flywheel1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Flywheel2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 

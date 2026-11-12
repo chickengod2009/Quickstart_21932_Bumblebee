@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.control.functionality;
 
 import org.firstinspires.ftc.teamcode.opModeFuncs.telopFuncs.Teleop;
 
-import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.FlywheelTest;
 import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.FullTest;
 import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.IntakeTest;
 import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.ShooterGateIntakeTestFunc;
@@ -53,7 +52,7 @@ public enum OpModeFunctions {
     boolean ret = this.fin != null && this.start != null && this.update != null;
     return ret;
   }
-  
+
 
 
 } 

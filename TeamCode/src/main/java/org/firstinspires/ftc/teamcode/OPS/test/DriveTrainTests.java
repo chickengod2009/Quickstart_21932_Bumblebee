@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.control.functionality.OpModeFunctions;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 
 
-@TeleOp(name = "Almond's a little femboy", group = "Test")
+@TeleOp(name = "Would you rather?", group = "Test")
 public class DriveTrainTests extends OpMode {
 
   Master master;
@@ -32,7 +32,7 @@ public class DriveTrainTests extends OpMode {
 
   @Override
   public void init_loop() {
-    this.telemetry.addLine("Select opmode: \n A: Full Test, Y: Intake -- Gate --- Shooter Test "/*ETC*/);
+    this.telemetry.addLine("Select opmode: \n A: Full Test, B: Intake -- Gate --- Shooter Test "/*ETC*/);
 
 
     if (gamepad1.aWasPressed()){
