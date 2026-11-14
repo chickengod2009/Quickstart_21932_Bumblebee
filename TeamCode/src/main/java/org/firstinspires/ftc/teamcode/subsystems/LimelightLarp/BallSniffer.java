@@ -104,7 +104,8 @@ public class BallSniffer {
 
 
         for (BallStrength strength : topPos){
-           // Path path = line(prev, strength.pos.withHeading());
+
+           //Path path = line(prev, strength.pos.withHeading());
         }
 
 
