@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -62,7 +60,7 @@ public class ShooterGateIntakeTestFunc {
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P, 0, 0, F);
         Flywheel1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         Flywheel2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-        telemetry.addLine("Init complete");
+        master.getOpMode().telemetry.addLine("Init complete");
         pidfMode = false;
         targetVel = 0;
     }
@@ -76,19 +74,19 @@ public class ShooterGateIntakeTestFunc {
 
 
         if (!pidfMode) {
-            if (gamepad1.bWasPressed()) {
+            if (master.getOpMode().gamepad1.bWasPressed()) {
                 stepIndex = (stepIndex + 1) % stepSizes.length;
             }
-            if (gamepad1.leftBumperWasPressed()) {
+            if (master.getOpMode().gamepad1.leftBumperWasPressed()) {
                 targetVel += stepSizes[stepIndex];
             }
-            if (gamepad1.leftTriggerWasPressed()) {
+            if (master.getOpMode().gamepad1.leftTriggerWasPressed()) {
                 targetVel -= stepSizes[stepIndex];
             }
-            if (gamepad1.rightBumperWasPressed()) {
+            if (master.getOpMode().gamepad1.rightBumperWasPressed()) {
                 targetVel2 += stepSizes[stepIndex];
             }
-            if (gamepad1.rightTriggerWasPressed()) {
+            if (master.getOpMode().gamepad1.rightTriggerWasPressed()) {
                 targetVel2 -= stepSizes[stepIndex];
             }
         }
@@ -109,11 +107,11 @@ public class ShooterGateIntakeTestFunc {
                 targetPow2 -= stepSizes[stepIndex];
             }
 
-            if (gamepad1.aWasPressed()) {
+            if (master.getOpMode().gamepad1.aWasPressed()) {
                 pidfMode = !pidfMode;
             }
 
-            if (gamepad1.yWasPressed()) {
+            if (master.getOpMode().gamepad1.yWasPressed()) {
                 if (targetVel == highVel) {
                     targetVel = lowVel;
                 }
@@ -123,24 +121,24 @@ public class ShooterGateIntakeTestFunc {
                 }
             }
 
-            if (gamepad1.bWasPressed()) {
+            if (master.getOpMode().gamepad1.bWasPressed()) {
                 stepIndex = (stepIndex + 1) % stepSizes.length;
             }
 
 
 
-            if (gamepad1.dpadRightWasPressed()) {
+            if (master.getOpMode().gamepad1.dpadRightWasPressed()) {
                 F += stepSizes[stepIndex];
             }
-            if (gamepad1.dpadLeftWasPressed()) {
+            if (master.getOpMode().gamepad1.dpadLeftWasPressed()) {
                 F -= stepSizes[stepIndex];
             }
 
 
-            if (gamepad1.dpadUpWasPressed()) {
+            if (master.getOpMode().gamepad1.dpadUpWasPressed()) {
                 P += stepSizes[stepIndex];
             }
-            if (gamepad1.dpadDownWasPressed()) {
+            if (master.getOpMode().gamepad1.dpadDownWasPressed()) {
                 P -= stepSizes[stepIndex];
             }
 
@@ -159,16 +157,16 @@ public class ShooterGateIntakeTestFunc {
         double currentVel2 = Flywheel2.getVelocity();
         double error = targetVel - currentVel;
 
-        telemetry.addData("Press A to switch between PIDF and VEL. PIDF Mode", pidfMode);
-        telemetry.addData("Target Velocity1", targetVel);
-        telemetry.addData("Target Velocity2", targetVel2);
-        telemetry.addData("Current Velocity1", currentVel);
-        telemetry.addData("Current Velocity2", currentVel2);
-        telemetry.addData("Error", "%.2f", error);
-        telemetry.addData("-------------------", 0);
-        telemetry.addData("Tuning P or Flywheel1 Vel" , "%.4f (D-Pad U/D", P);
-        telemetry.addData("Tuning F or Flywheel2 Vel", "%.4f (D-Pad L/R", F);
-        telemetry.addData("Step Size", "%.4f (B Button", stepSizes[stepIndex]);
+        master.getOpMode().telemetry.addData("Press A to switch between PIDF and VEL. PIDF Mode", pidfMode);
+        master.getOpMode().telemetry.addData("Target Velocity1", targetVel);
+        master.getOpMode().telemetry.addData("Target Velocity2", targetVel2);
+        master.getOpMode().telemetry.addData("Current Velocity1", currentVel);
+        master.getOpMode().telemetry.addData("Current Velocity2", currentVel2);
+        master.getOpMode().telemetry.addData("Error", "%.2f", error);
+        master.getOpMode().telemetry.addData("-------------------", 0);
+        master.getOpMode().telemetry.addData("Tuning P or Flywheel1 Vel" , "%.4f (D-Pad U/D", P);
+        master.getOpMode().telemetry.addData("Tuning F or Flywheel2 Vel", "%.4f (D-Pad L/R", F);
+        master.getOpMode().telemetry.addData("Step Size", "%.4f (B Button", stepSizes[stepIndex]);
 
 
 

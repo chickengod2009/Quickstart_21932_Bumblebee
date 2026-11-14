@@ -130,7 +130,7 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
   public enum TeamColor{RED(0), BLUE(1); final int index; TeamColor(int index){this.index = index;}}
   private static TeamColor color;
 
-  public  OpMode opmode;
+  public final OpMode opmode;
 
   public final Follower follower;
 
