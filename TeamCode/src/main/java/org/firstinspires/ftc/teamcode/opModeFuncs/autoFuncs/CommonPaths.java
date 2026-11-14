@@ -15,14 +15,19 @@ import static com.pedropathing.ivy.groups.Groups.sequential;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.Gate;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Squinting;
 import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Webcam;
 
 public class CommonPaths {
+    Master master;
     Follower follower;
     Squinting squinting;
     Webcam cam;
+    Gate gate;
+    Intake intake;
     private final PoseFactory poseFactory = PoseFactory.degrees();
     // Poses
     private final Pose startPose;
@@ -48,18 +53,21 @@ public class CommonPaths {
             throw new RuntimeException();
         }
         follower.setPose(startPose);
+        gate = new Gate(master);
+        cam = new Webcam(master);
     }
 
     Command drainBalls = Command.build()
             .setStart(() -> {
-                cam.resumeStream();
+                gate.setPosition(Gate.OPEN);
             })
             .setExecute(() -> {
-                squinting.correctChuddedAim();
+                intake.setAllPower(1);
             })
             .setDone(() -> !follower.isBusy())
             .setEnd(endCondition -> {
                 cam.stopStream();
+                gate.setPosition(Gate.CLOSE);
             });
 
     private Path startToScore() {
@@ -91,7 +99,7 @@ public class CommonPaths {
 
     }
 
-    private Command commonPaths() {
+    public Command commonPaths() {
         return sequential(
                 follow(follower, startToScore()),
                 drainBalls,

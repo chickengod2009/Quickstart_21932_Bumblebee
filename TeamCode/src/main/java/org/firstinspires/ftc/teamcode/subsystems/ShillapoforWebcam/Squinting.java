@@ -8,6 +8,7 @@ public class Squinting {
     Drivetrain drive;
     private double bearingRange = 10, correctionSpeed = 1, pitchRange = 10, speedThresh;
     private int tagID;
+    public boolean primed;
 
     public Squinting (Master master) {
         webcam = master.get("webcam");

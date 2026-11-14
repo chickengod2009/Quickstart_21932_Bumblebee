@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems.LimelightLarp;
 
+import static com.pedropathing.api.Paths.line;
+
 import com.pedropathing.api.Paths;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
@@ -36,7 +38,7 @@ public class BallSniffer {
         positions = new ArrayList<>(results.ballCount);
 
         for (BallsResult.BallDetails details : results.balls){
-            if(!details.color.equalTeamColor(color)){
+            if(!details.color.equalTeamColor()){
                 continue;
             }
             BallStrength ball = new BallStrength(details.ballVectorCart.toPose(), details.color, details.getClusterSize());
@@ -94,7 +96,16 @@ public class BallSniffer {
 
         ArrayList<Path> paths = new ArrayList<>(positions.size()/2);
 
+        paths.add(line(robo, cornerPose));
+
         List<BallStrength> topPos = positions.subList(0, positions.size()/2);
+
+        Pose prev= cornerPose;
+
+
+        for (BallStrength strength : topPos){
+           // Path path = line(prev, strength.pos.withHeading());
+        }
 
 
 

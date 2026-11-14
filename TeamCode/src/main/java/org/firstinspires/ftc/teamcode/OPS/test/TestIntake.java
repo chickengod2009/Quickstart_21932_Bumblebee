@@ -5,8 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.control.functionality.MasterTrait;
-
 @TeleOp (name = "Intake Test")
 public class TestIntake extends OpMode {
     public static DcMotorEx intake;
@@ -17,7 +15,7 @@ public class TestIntake extends OpMode {
     static double targetPow2;
 
 
-    static double[] stepSizes = {.05,.07,.1,.15,.3,.5,.6,.8,.9,1};
+    static double[] stepSizes = {.005,.05,.07,.1,.15,.3,.5,.6,.8,.9,1};
 
     static int stepIndex = 1;
 
@@ -83,9 +81,4 @@ public class TestIntake extends OpMode {
         telemetry.addData("Rollers Velocity", rollers.getVelocity());
         telemetry.addData("Step Size", "%.4f (B Button", stepSizes[stepIndex]);
     }
-
-
-
 }
-
-

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import android.hardware.Sensor;
+
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +28,18 @@ public class ColorSensors {
             final int arrayIndex;
             SensorID(int index){
                 arrayIndex= index;
+            }
+            public static SensorID sensorIndex(int index){
+                switch (index){
+                    case 0:
+                        return ONE;
+                    case 1:
+                        return TWO;
+                    case 2:
+                        return THREE;
+                    default:
+                        throw new RuntimeException("Not an index");
+                }
             }
         }
 
@@ -60,9 +74,9 @@ public class ColorSensors {
         public RGB getRgb(){return this.rgb;}
 
 
-        public boolean equalTeamColor(@NotNull Master.TeamColor obj){
+        public boolean equalTeamColor(){
 
-            return this.index == (obj).index;
+            return this.index == Master.getTeam().index;
 
         }
 
@@ -149,10 +163,17 @@ public class ColorSensors {
 
     public int hasBall(RGB.SensorID sensorID) {
 
-
-
         Color[] sensors = {color1,color2,color3};
-        return (sensors[sensorID.arrayIndex] != Color.NA) ? 1 : 0;
+        return (sensors[sensorID.arrayIndex] != Color.NA) ? 0 : 1;
+    }
+    public boolean fullBladder() {
+        int sum=0;
+
+        for(int i = 0; i <3; ++i){
+            sum += this.hasBall(RGB.SensorID.sensorIndex(i));
+        }
+
+        return sum == 3;
     }
 
 }

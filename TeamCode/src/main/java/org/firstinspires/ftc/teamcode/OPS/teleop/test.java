@@ -20,7 +20,7 @@ public class test extends OpMode{
     @Override
     public void init() {
         //master = new Master(this, Master.TeamColor.RED, ); //add follower
-        intake = new Intake(master.get("intakemotor"));
+        intake = new Intake(master.get("intakeMotor"));
     }
 
 

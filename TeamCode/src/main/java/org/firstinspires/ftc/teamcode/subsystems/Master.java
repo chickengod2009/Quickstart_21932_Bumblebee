@@ -140,7 +140,7 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
   public Master(OpMode op, TeamColor color, OpModeFunctions auto){
     if (op == null || color==null || auto == null || !auto.isSafe()) throw new RuntimeException("Need an opmode for Master");
     //All the device naming and getting goes here
-    //this.open(op);
+    this.open(op);
     Master.color = color;
     this.follower= null;
 
@@ -229,24 +229,24 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
   private void open(@NotNull OpMode op){
     this.devices = new HashMap<>();
 
-    devices.put("frontLeftMotor",    op.hardwareMap.dcMotor.get("frontLeftMotor"));
-    devices.put("backLeftMotor",     op.hardwareMap.dcMotor.get("backLeftMotor"));
-    devices.put("frontRightMotor",   op.hardwareMap.dcMotor.get("frontRightMotor"));
-    devices.put("backRightMotor",    op.hardwareMap.dcMotor.get("backRightMotor"));
-    devices.put("intakeMotor",       op.hardwareMap.dcMotor.get("intake"));
-    devices.put("rollersMotor",      op.hardwareMap.dcMotor.get("roller"));
-    devices.put("kicker",            op.hardwareMap.servo.get("kicker"));
-    devices.put("turretMotor",       op.hardwareMap.dcMotor.get("turret"));
-    devices.put("webcam1",           op.hardwareMap.get(WebcamName.class, "camera"));
+//    devices.put("frontLeftMotor",    op.hardwareMap.dcMotor.get("frontLeftMotor"));
+//    devices.put("backLeftMotor",     op.hardwareMap.dcMotor.get("backLeftMotor"));
+//    devices.put("frontRightMotor",   op.hardwareMap.dcMotor.get("frontRightMotor"));
+//    devices.put("backRightMotor",    op.hardwareMap.dcMotor.get("backRightMotor"));
+    devices.put("intake",       op.hardwareMap.dcMotor.get("intakeMotor"));
+    devices.put("roller",      op.hardwareMap.dcMotor.get("rollersMotor"));
+//    devices.put("kicker",            op.hardwareMap.servo.get("kicker"));
+//    devices.put("turretMotor",       op.hardwareMap.dcMotor.get("turret"));
+    //devices.put("webcam1",           op.hardwareMap.get(WebcamName.class, "camera"));
 
     devices.put("shooter",           op.hardwareMap.get(DcMotorEx.class, "flyMotor"));
     devices.put("shooterTwo",        op.hardwareMap.get(DcMotorEx.class, "flyMotor2"));
-    devices.put("gate",              op.hardwareMap.servo.get("gate"));
-    devices.put("transfer1",         op.hardwareMap.crservo.get("transfer1"));
-    devices.put("transfer2",         op.hardwareMap.crservo.get("transfer2"));
-    devices.put("hood",              op.hardwareMap.servo.get("hood"));
-    devices.put("topSensor",         op.hardwareMap.get(ColorSensor.class, "topSenor"));
-    devices.put("touchSensor",       op.hardwareMap.get(DigitalChannel.class, "touchSensor"));
+    devices.put("gate",              op.hardwareMap.servo.get("pollenGate"));
+//    devices.put("transfer1",         op.hardwareMap.crservo.get("transfer1"));
+//    devices.put("transfer2",         op.hardwareMap.crservo.get("transfer2"));
+//    devices.put("hood",              op.hardwareMap.servo.get("hood"));
+//    devices.put("topSensor",         op.hardwareMap.get(ColorSensor.class, "topSenor"));
+//    devices.put("touchSensor",       op.hardwareMap.get(DigitalChannel.class, "touchSensor"));
   }
 
 

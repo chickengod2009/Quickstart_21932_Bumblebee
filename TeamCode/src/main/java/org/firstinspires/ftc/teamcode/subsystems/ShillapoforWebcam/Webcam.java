@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam;
 import android.util.Size;
 
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.subsystems.Master;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -25,7 +27,7 @@ public class Webcam {
     public final int cameraWidth = 640, cameraHeight = 480; // TODO: set proper aspect ratio and resolution if needed
 
 
-    public Webcam(HardwareMap hwMap, HashMap<String, String> config) {
+    public Webcam(Master master) {
 
         aprilTagProcessor = new AprilTagProcessor.Builder()
                 .setDrawTagID(true)
@@ -35,7 +37,7 @@ public class Webcam {
                 .build();
 
         visionPortal = new VisionPortal.Builder()
-                .setCamera(hwMap.get(WebcamName.class, config.get("webcam1")))
+                .setCamera((CameraName)master.get("webcam1"))
                 .addProcessor(aprilTagProcessor)
                 .setCameraResolution(new Size(cameraWidth, cameraHeight))
                 .setStreamFormat(VisionPortal.StreamFormat.YUY2)
