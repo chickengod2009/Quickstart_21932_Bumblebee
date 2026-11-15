@@ -3,10 +3,14 @@ package org.firstinspires.ftc.teamcode.opModeFuncs.telopFuncs;
 import org.firstinspires.ftc.teamcode.control.functionality.MasterTrait;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 
-public class Teleop {
+public class TeleopFunctions {
 
   private static Master master;
 
+
+  public static void init(MasterTrait master){
+
+  }
 
   public static void start(MasterTrait master){
 

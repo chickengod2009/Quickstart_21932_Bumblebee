@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.control.functionality;
 
 import org.firstinspires.ftc.teamcode.opModeFuncs.autoFuncs.Auton_Blue_One;
-import org.firstinspires.ftc.teamcode.opModeFuncs.telopFuncs.Teleop;
+import org.firstinspires.ftc.teamcode.opModeFuncs.telopFuncs.TeleopFunctions;
 
 import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.FullTest;
 import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.IntakeTest;
@@ -16,27 +16,30 @@ import java.util.function.Consumer;
 public enum OpModeFunctions {
 
 
-  TELOP(Teleop::start,Teleop::update,Teleop::end),
+  TELOP(TeleopFunctions::init, TeleopFunctions::start, TeleopFunctions::update, TeleopFunctions::end),
 
 
-  AUTON_BLUE_ONE(Auton_Blue_One::init, Auton_Blue_One::loop, Auton_Blue_One::fin),
+  AUTON_BLUE_ONE(Auton_Blue_One::init, Auton_Blue_One::start, Auton_Blue_One::loop, Auton_Blue_One::fin),
   
 
-  AUTON_RED_ONE(OpModeFunctions::todo, OpModeFunctions::todo, OpModeFunctions::todo),
+  AUTON_RED_ONE(OpModeFunctions::todo, OpModeFunctions::todo,OpModeFunctions::todo, OpModeFunctions::todo),
 
   
-  TEST_1(IntakeTest::init, IntakeTest::loop, OpModeFunctions::todo),
-  FULL_TEST(FullTest::init, FullTest::loop, OpModeFunctions::todo ),
-  Intake_Gate_Shooter_Test(ShooterGateIntakeTestFunc::init, ShooterGateIntakeTestFunc::loop, OpModeFunctions::todo );
+  TEST_1(IntakeTest::init, OpModeFunctions::todo, IntakeTest::loop, OpModeFunctions::todo),
+  FULL_TEST(FullTest::init, OpModeFunctions::todo, FullTest::loop, OpModeFunctions::todo ),
+  Intake_Gate_Shooter_Test(ShooterGateIntakeTestFunc::init, OpModeFunctions::todo, ShooterGateIntakeTestFunc::loop, OpModeFunctions::todo );
 
   public final Consumer<MasterTrait> start;
   public final Consumer<MasterTrait> update;
   public final Consumer<MasterTrait> fin;
+
+  public final Consumer<MasterTrait> init;
   
-  private OpModeFunctions(Consumer<MasterTrait> star, Consumer<MasterTrait> up, Consumer<MasterTrait> finish){
+  private OpModeFunctions(Consumer<MasterTrait> init, Consumer<MasterTrait> star, Consumer<MasterTrait> up, Consumer<MasterTrait> finish){
     start =star;
     update = up;
     fin = finish;
+    this.init =init;
                     
   }
 

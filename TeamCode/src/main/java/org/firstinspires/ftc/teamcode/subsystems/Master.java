@@ -213,6 +213,10 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
 
   }
 
+  public void init(){
+    this.func.init.accept(this);
+  }
+
 
   //STATES LOGIC
 
