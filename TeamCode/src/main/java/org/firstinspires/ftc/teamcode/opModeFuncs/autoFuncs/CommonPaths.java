@@ -15,6 +15,7 @@ import static com.pedropathing.ivy.groups.Groups.sequential;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.ColorSensors;
 import org.firstinspires.ftc.teamcode.subsystems.Gate;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
@@ -28,25 +29,28 @@ public class CommonPaths {
     Webcam cam;
     Gate gate;
     Intake intake;
+    ColorSensors CSensors;
+    public boolean shooting;
     private final PoseFactory poseFactory = PoseFactory.degrees();
     // Poses
     private final Pose startPose;
-    private final Pose bluePose = poseFactory.of(0,0,0); //TODO find pose
+    private final Pose bluePose = poseFactory.of(86.7,132.4,-90); //TODO find pose
     private final Pose redPose = poseFactory.of(0,0,0); //TODO find pose
 
 
-    private final Pose scorePose = poseFactory.of(48, 48, 90);
-    private final Pose parkPose = poseFactory.of(72, 48, 90);
-    private final Pose gardenPose = poseFactory.of(0, 12, 90);
-    private final Pose flowerPose1 = poseFactory.of(0, 22, 180);
-    private final Pose flowerPose2 = poseFactory.of(22, 140, 90);
+    private final Pose scorePoseBlue1 = poseFactory.of(86.7, 116, 0);
+    private final Pose scorePoseBlue2 = poseFactory.of(95.5, 23, 180);
+    private final Pose parkPose = poseFactory.of(123, 46, -90);
+    private final Pose gardenPose = poseFactory.of(0, 12, 0);
+    private final Pose flowerPose1 = poseFactory.of(94.5, 13.5, -90);
+    private final Pose flowerPose2 = poseFactory.of(127.5, 94, 0);
 
 
     public CommonPaths(Master.TeamColor teamColor) {
         switch (teamColor) {
             case BLUE: startPose = bluePose; break;
             case RED: startPose = redPose; break;
-            default: startPose = scorePose;
+            default: startPose = scorePoseBlue1;
         }
         follower = Constants.create(hardwareMap);
         if(Master.isNull(follower)){
@@ -55,47 +59,56 @@ public class CommonPaths {
         follower.setPose(startPose);
         gate = new Gate(master);
         cam = new Webcam(master);
+        CSensors = new ColorSensors(master);
     }
 
     Command drainBalls = Command.build()
             .setStart(() -> {
+                shooting = true;
                 gate.setPosition(Gate.OPEN);
             })
             .setExecute(() -> {
                 intake.setAllPower(1);
             })
-            .setDone(() -> !follower.isBusy())
+            .setDone(() -> CSensors.fullBladder())
             .setEnd(endCondition -> {
-                cam.stopStream();
+                shooting = false;
+                intake.setAllPower(0);
                 gate.setPosition(Gate.CLOSE);
             });
 
     private Path startToScore() {
-        return line(startPose, scorePose).linear(startPose, scorePose);
+        return line(startPose, scorePoseBlue1).linear(startPose, scorePoseBlue1);
     }
     private Path park(){
-        return line(scorePose, parkPose).linear(scorePose, parkPose);
+        return curve(follower.pose(), new Pose(133, 111.5), parkPose).tangent();
     }
     private Path toGarden() {
-        return line(follower.pose(), gardenPose).linear(follower.pose(), gardenPose);
+        return curve(follower.pose(), new Pose(104, 133), gardenPose).tangent();
     }
     private Path toFlower1() {
-        return line(follower.pose(), flowerPose1).linear(follower.pose(), flowerPose1);
+        return line(follower.pose(), flowerPose1).constant(-90);
     }
     private Path toFlower2() {
-        return line(follower.pose(), flowerPose2).linear(follower.pose(), flowerPose2);
+        return curve(follower.pose(), new Pose(119, 32), new Pose(101, 94), flowerPose2);
     }
-    private Path toScore() {
-        return line(follower.pose(), scorePose).linear(follower.pose(), scorePose);
+    private Path toScore1() {
+        return line(follower.pose(), scorePoseBlue1).tangent();
+    }
+    private Path toScore2() {
+        return line(follower.pose(), scorePoseBlue2).tangent();
+    }
+    private Path fromGarden() {
+        return curve(gardenPose, new Pose(114, 23), scorePoseBlue2).tangent();
     }
     private Path gardenShoot() {
-        return path(toGarden(), toScore());
+        return path(toGarden(), fromGarden());
     }
     private Path flowerShoot1() {
-        return path(toFlower1(), toScore());
+        return path(toFlower1(), toScore2());
     }
     private Path flowerShoot2() {
-        return path(toFlower2(), toScore());
+        return path(toFlower2(), toScore1());
 
     }
 
