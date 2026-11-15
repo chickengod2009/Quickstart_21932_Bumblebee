@@ -15,7 +15,7 @@ public class AutoBlue extends OpMode {
 
     public void init() {
         master = new Master(this, Master.TeamColor.BLUE, OpModeFunctions.AUTON_BLUE_ONE);
-
+        master.init();
     }
 
     public void start(){
