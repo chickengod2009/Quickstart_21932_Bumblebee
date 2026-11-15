@@ -1,13 +1,18 @@
 package org.firstinspires.ftc.teamcode.control.functionality;
 
+import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.control.ShootyBrain;
+import org.firstinspires.ftc.teamcode.subsystems.ColorSensors;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.BallSniffer;
+import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.SauronHandler;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
+import org.firstinspires.ftc.teamcode.subsystems.TouchSensor;
 
 public interface MasterTrait {
 
@@ -27,6 +32,20 @@ public interface MasterTrait {
     }
 
     HardwareMap getHM();
+
+    default ColorSensors getColorSensors(){
+        return null;
+    }
+
+    default TouchSensor getTouchSensor(){
+        return null;
+    }
+
+    SauronHandler getLLHandler();
+
+    BallSniffer getBallSniffer();
+
+    Follower getFollower();
 
 
 

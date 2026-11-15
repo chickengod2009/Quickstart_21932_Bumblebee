@@ -21,6 +21,10 @@ import org.firstinspires.ftc.teamcode.control.functionality.Testable;
 import org.firstinspires.ftc.teamcode.control.functionality.DefaultUpdate;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.control.functionality.OpModeFunctions;
+import org.firstinspires.ftc.teamcode.pedro.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.BallSniffer;
+import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.SauronHandler;
+import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.TowerOfSauron;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -95,6 +99,31 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
     return this.opmode.hardwareMap;
   }
 
+  @Override
+  public ColorSensors getColorSensors() {
+    return this.colorSensors;
+  }
+
+  @Override
+  public TouchSensor getTouchSensor() {
+    return this.touchMe;
+  }
+
+  @Override
+  public SauronHandler getLLHandler() {
+    return this.sauron;
+  }
+
+  @Override
+  public BallSniffer getBallSniffer() {
+    return this.balls;
+  }
+
+  @Override
+  public Follower getFollower() {
+    return this.follower;
+  }
+
   private Intake intake;
   private Drivetrain drivetrain;
   private ShootyBrain shooty;
@@ -146,19 +175,29 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
 
   public final OpModeFunctions func;
 
+  public final ColorSensors colorSensors;
+  public final TouchSensor touchMe;
+  public final SauronHandler sauron;
+  public final BallSniffer balls;
+
 
   public Master(OpMode op, TeamColor color, OpModeFunctions auto){
     if (op == null || color==null || auto == null || !auto.isSafe()) throw new RuntimeException("Need an opmode for Master");
     //All the device naming and getting goes here
     this.open(op);
     Master.color = color;
-    this.follower= null;
+    this.follower= Constants.create(op.hardwareMap);
 
 
 
     this.opmode = op;
 
     this.func =auto;
+
+    this.colorSensors = new ColorSensors(this);
+    this.balls= new BallSniffer(this);
+    this.sauron = new SauronHandler(new TowerOfSauron(this));
+    this.touchMe = new TouchSensor(this);
 
 
 
