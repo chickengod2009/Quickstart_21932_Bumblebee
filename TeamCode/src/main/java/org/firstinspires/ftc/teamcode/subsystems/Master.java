@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.control.ShootyBrain;
@@ -83,6 +84,15 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
 
     this.func.update.accept(this);
     //throw TODO();
+  }
+
+  @Override
+  public Master getMaster(){
+    return this;
+  }
+  @Override
+  public HardwareMap getHM(){
+    return this.opmode.hardwareMap;
   }
 
   private Intake intake;
