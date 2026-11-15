@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.control.field;
 
 import com.pedropathing.math.Pose;
 
+import org.firstinspires.ftc.teamcode.subsystems.Master;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +26,10 @@ public class Field {
         
         
 
+    }
+
+    public static PoseBody[] all(){
+        throw Master.TODO();
     }
     public static Pose redGoalTop(){
         throw new RuntimeException("Todo!!");

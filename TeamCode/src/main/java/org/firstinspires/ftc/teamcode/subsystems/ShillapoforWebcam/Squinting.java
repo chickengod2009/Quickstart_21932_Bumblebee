@@ -42,7 +42,7 @@ public class Squinting {
         double turn = rate * yaw;
         turn = Math.max(Math.abs(turn), (minTurn)) * dir;
 
-        drive.manualUpdate(0,0,turn);
+        drive.setAimTurn(Drivetrain.clamp(turn, Drivetrain.AIM_MAX_TURN), 100000);
 
 
 

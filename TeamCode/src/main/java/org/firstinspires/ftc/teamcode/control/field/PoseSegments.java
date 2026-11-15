@@ -36,25 +36,7 @@ public class PoseSegments implements FieldShape {
         return Math.max(0, points.size() - 1);
     }
 
-    @Override
-    public boolean lineIntersection(Pose from, Pose to) {
-        for (int i = 0; i < points.size() - 1; i++) {   // no (i + 1) % n, so it stays open
-            if (Geometry.segmentsIntersect(from, to, points.get(i), points.get(i + 1))) {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    /** Index of the first segment hit, or -1 if none. Handy for knowing which wall you hit. */
-    public int firstIntersectingSegment(Pose from, Pose to) {
-        for (int i = 0; i < points.size() - 1; i++) {
-            if (Geometry.segmentsIntersect(from, to, points.get(i), points.get(i + 1))) {
-                return i;
-            }
-        }
-        return -1;
-    }
 
     public double length() {
         double total = 0;
@@ -80,4 +62,72 @@ public class PoseSegments implements FieldShape {
         }
         return new Pose(x / total, y / total);
     }
+
+
+    /** True if any segment of this chain crosses or touches an edge of the body. */
+    private double width = 0;   // total width; 0 behaves exactly like before
+
+    public PoseSegments(double width) {
+        this();
+        this.width = width;
+    }
+
+    public PoseSegments(List<Pose> points, double width) {
+        this(points);
+        this.width = width;
+    }
+
+    public double getWidth() { return width; }
+
+    public PoseSegments withWidth(double width) {   // chainable
+        this.width = width;
+        return this;
+    }
+
+    private double half() { return width / 2.0; }
+
+    @Override
+    public boolean lineIntersection(Pose from, Pose to) {
+        return firstIntersectingSegment(from, to) != -1;
+    }
+
+    public int firstIntersectingSegment(Pose from, Pose to) {
+        for (int i = 0; i < points.size() - 1; i++) {
+            if (Geometry.segmentDistance(from, to, points.get(i), points.get(i + 1)) <= half()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public boolean intersects(PoseBody body) {
+        ArrayList<Pose> edges = body.getWhole();
+        int n = edges.size();
+        for (int i = 0; i < points.size() - 1; i++) {
+            for (int j = 0; j < n; j++) {
+                if (Geometry.segmentDistance(points.get(i), points.get(i + 1),
+                        edges.get(j), edges.get((j + 1) % n)) <= half()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean intersects(PoseBody[] bodies){
+        for(PoseBody p: bodies){
+            if(this.intersects(p)) return true;
+        }
+        return false;
+    }
+
+    /** Same as intersects(body), but also true if the chain lies completely inside the body. */
+    public boolean intersectsOrInside(PoseBody body) {
+        return intersects(body) || (!points.isEmpty() && body.contains(points.get(0)));
+    }
+
+
+
+
+
 }

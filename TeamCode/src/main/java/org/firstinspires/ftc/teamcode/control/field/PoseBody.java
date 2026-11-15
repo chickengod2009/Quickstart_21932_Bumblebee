@@ -90,5 +90,24 @@ public class PoseBody implements FieldShape{
         }
         // delete the private segmentsIntersect / orientation / onSegment
 
+
+    public boolean contains(Pose p) {
+        boolean inside = false;
+        int n = body.size();
+        for (int i = 0, j = n - 1; i < n; j = i++) {
+            double xi = body.get(i).x(), yi = body.get(i).y();
+            double xj = body.get(j).x(), yj = body.get(j).y();
+            if ((yi > p.y()) != (yj > p.y())
+                    && p.x() < (xj - xi) * (p.y() - yi) / (yj - yi) + xi) {
+                inside = !inside;
+            }
+        }
+        return inside;
+    }
+
+    public boolean intersects(PoseSegments segments) {
+        return segments.intersects(this);
+    }
+
 }
 // I looked up something better

@@ -31,4 +31,21 @@ public final class Geometry {
         return q.x() <= Math.max(p.x(), r.x()) && q.x() >= Math.min(p.x(), r.x())
                 && q.y() <= Math.max(p.y(), r.y()) && q.y() >= Math.min(p.y(), r.y());
     }
+
+
+    static double pointSegmentDistance(Pose p, Pose a, Pose b) {
+        double dx = b.x() - a.x(), dy = b.y() - a.y();
+        double lenSq = dx * dx + dy * dy;
+        double t = lenSq < 1e-12 ? 0 : ((p.x() - a.x()) * dx + (p.y() - a.y()) * dy) / lenSq;
+        t = Math.max(0, Math.min(1, t));
+        return Math.hypot(p.x() - (a.x() + t * dx), p.y() - (a.y() + t * dy));
+    }
+
+    /** Shortest distance between segments a-b and c-d (0 if they touch or cross). */
+    static double segmentDistance(Pose a, Pose b, Pose c, Pose d) {
+        if (segmentsIntersect(a, b, c, d)) return 0;
+        return Math.min(
+                Math.min(pointSegmentDistance(a, c, d), pointSegmentDistance(b, c, d)),
+                Math.min(pointSegmentDistance(c, a, b), pointSegmentDistance(d, a, b)));
+    }
 }

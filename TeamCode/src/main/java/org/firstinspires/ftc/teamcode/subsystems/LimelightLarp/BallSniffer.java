@@ -6,6 +6,7 @@ import com.pedropathing.api.Paths;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 
+import org.firstinspires.ftc.teamcode.control.field.Field;
 import org.firstinspires.ftc.teamcode.control.field.PoseBody;
 import org.firstinspires.ftc.teamcode.control.field.PoseLine;
 import org.firstinspires.ftc.teamcode.control.field.PoseSegments;
@@ -108,7 +109,7 @@ public class BallSniffer {
 
         double heading = (cornerPose.x() <= 70) ? 0 : 180;
 
-        PoseSegments poseLine = new PoseSegments();
+        PoseSegments poseLine = new PoseSegments(18.5);
 
         poseLine.add(cornerPose);
 
@@ -118,14 +119,9 @@ public class BallSniffer {
             Path path = line(prev, strength.pos.withHeading(heading));
             paths.add(path);
         }
-        poseLine.
-
-
-
-
-
-
-
+        if(poseLine.intersects(Field.all())){
+            throw Master.TODO();
+        }
 
 
 

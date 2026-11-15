@@ -5,6 +5,7 @@ import static com.pedropathing.api.Paths.*;
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ivy.Command;
+import com.pedropathing.ivy.behaviors.InterruptedBehavior;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 
@@ -13,7 +14,7 @@ import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
+import static com.pedropathing.ivy.commands.Commands.*;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.ColorSensors;
 import org.firstinspires.ftc.teamcode.subsystems.Gate;
@@ -21,6 +22,9 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Squinting;
 import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Webcam;
+
+import java.util.LinkedHashMap;
+import java.util.function.BooleanSupplier;
 
 public class CommonPaths {
     Master master;
@@ -112,7 +116,12 @@ public class CommonPaths {
 
     }
 
+    private static final LinkedHashMap<BooleanSupplier, Command> witchWichGoal;
+
+
+
     public Command commonPaths() {
+
         return sequential(
                 follow(follower, startToScore()),
                 drainBalls,
@@ -124,6 +133,24 @@ public class CommonPaths {
                 drainBalls,
                 //TODO: add automated pathing
                 follow(follower, park())
+
+        ).setInterruptedBehavior(InterruptedBehavior.SUSPEND);
+    }
+
+
+
+    static {
+        witchWichGoal  = new LinkedHashMap<>();
+        witchWichGoal.put(
+                () -> {
+                    throw Master.TODO();
+                },
+
+                sequential()
+
         );
+
+
+
     }
 }

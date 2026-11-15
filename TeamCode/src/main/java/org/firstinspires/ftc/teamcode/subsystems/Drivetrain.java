@@ -1,95 +1,139 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-
-//import com.acmerobotics.dashboard.config.Config;
-//import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
-//import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.control.functionality.DefaultUpdate;
 import org.firstinspires.ftc.teamcode.control.functionality.UtilityObject;
 
-//import java.master.HashMap;
-
-//@Config
 public class Drivetrain implements UtilityObject, DefaultUpdate {
 
     private DcMotor frontLeft, frontRight, backLeft, backRight;
-
-    public static double maxLinear = 1, maxRot = 1, slowLin = 1, slowRot = 1, fastLin = 1, fastRot = 1;
 
     public static double speedMult = 1;
 
     public final Master master;
 
     public static boolean test = false;
+
+    // --- tuning ---
+    private static final double DEADBAND        = 0.05;  // ignore tiny stick values
+    private static final double DRIVER_TAKEOVER = 0.30;  // |rx| above this gives rotation back to the driver
+    public static final double AIM_MAX_TURN    = 0.40;  // cap on auto-aim rotation
+
+    // --- inputs (rx is counter-clockwise positive) ---
+    private double x, y, rx;
+    private double aimTurn = Double.NaN;   // NaN = no auto-aim request
+
     public Drivetrain(Master master) {
         this.master = master;
 
-        // frontLeft = hwMap.dcMotor.get(config.get("frontLeftMotor"));
-        // backLeft = hwMap.dcMotor.get(config.get("backLeftMotor"));
-        // frontRight = hwMap.dcMotor.get(config.get("frontRightMotor"));
-        // backRight = hwMap.dcMotor.get(config.get("backRightMotor"));
-        /*
-        frontLeft = master.get("frontLeftMotor");
-        etc.
-        
-        */
-        frontLeft = master.get("frontLeftMotor");
-        backLeft = master.get("backLeftMotor");
+        frontLeft  = master.get("frontLeftMotor");
+        backLeft   = master.get("backLeftMotor");
         frontRight = master.get("frontRightMotor");
-        backRight = master.get("backRightMotor");
+        backRight  = master.get("backRightMotor");
 
         Master.reverse(new HardwareDevice[] {frontLeft, backLeft});
-
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
+
+    /**
+     * Driver inputs. rx is counter-clockwise positive, so pass the right stick negated.
+     * Call every loop.
+     */
+    public void setDrive(double x, double y) {
+        this.x  = deadband(x);
+        this.y  = deadband(y);
+
+    }
+
+    /**
+     * Auto-aim rotation request in the same convention as rx, or NaN to release.
+     * Call every loop.
+     */
+
+    int lastPriority =0;
+    public final int drivePrior=5;
+    public void setAimTurn(double turn, int priority) {
+        if (Double.isNaN(turn)) return;
+        if(priority == drivePrior) turn =deadband(turn);
+        if(lastPriority< priority) {
+            this.rx = turn;
+            lastPriority=priority;
+        }
+    }
+
     @Override
     public void update() {
-        double x = 0,  y =0 ,  rx = 0;
-        frontLeft.setPower( ((y + x - rx) * speedMult));
-        backLeft.setPower( ((y - x - rx) * speedMult));
-        frontRight.setPower( ((y - x + rx) * speedMult));
-        backRight.setPower( ((y + x + rx) * speedMult));
-        throw Master.TODO("Need to make variables responsive");
+        double turn = resolveTurn();
+
+        // Scale all wheels together so the driving direction survives when the total exceeds 1
+        double denom = Math.max(1.0, Math.abs(y) + Math.abs(x) + Math.abs(turn));
+
+        frontLeft.setPower( (y + x - turn) / denom * speedMult);
+        backLeft.setPower(  (y - x - turn) / denom * speedMult);
+        frontRight.setPower((y - x + turn) / denom * speedMult);
+        backRight.setPower( (y + x + turn) / denom * speedMult);
+
+        lastPriority=0;
+        rx= 0;
+        x=0;
+        y=0;
+
     }
 
-    public void manualUpdate(double x, double y, double rx){
-        frontLeft.setPower( ((y + x - rx) * speedMult));
-        backLeft.setPower( ((y - x - rx) * speedMult));
-        frontRight.setPower( ((y - x + rx) * speedMult));
-        backRight.setPower( ((y + x + rx) * speedMult));
+    /** Convenience wrapper so nothing bypasses the normalization. */
+    public void manualUpdate(double xx, double yy, double rrx) {
+        setDrive(xx, yy);
+        setAimTurn(rrx, 5);
+        update();
     }
 
-
+    public void stop() {
+        x = y = rx = 0;
+        lastPriority=0;
+        update();
+    }
 
     public void parkMode() {
         speedMult = .30;
-//        maxLinear = slowLin;
-//        maxRot = slowRot;
     }
 
     public void speedMode() {
         speedMult = 1;
-//        maxLinear = fastLin;
-//        maxRot = fastRot;
     }
 
-	@Override
-	public String log(){
-		// do more here
-		return 
-			"Front Left POS" + frontLeft.getCurrentPosition();
-	}
-
+    @Override
+    public String log() {
+        return "Front Left POS" + frontLeft.getCurrentPosition();
+    }
 
     @Override
     public void test() throws InterruptedException {
         throw Master.TODO();
     }
+
+    // --- internals ---
+
+    private double resolveTurn() {
+
+        return rx;
+    }
+
+    private static double deadband(double v) {
+        return Math.abs(v) < DEADBAND ? 0 : v;
+    }
+
+    public static double clamp(double v, double max) {
+        return Math.max(-max, Math.min(max, v));
+    }
+
+
+
+
+
 }

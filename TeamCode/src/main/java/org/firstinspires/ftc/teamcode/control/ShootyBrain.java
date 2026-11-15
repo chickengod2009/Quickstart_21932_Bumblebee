@@ -1,20 +1,20 @@
 package org.firstinspires.ftc.teamcode.control;
 
 import com.pedropathing.math.Pose;
+import com.pedropathing.math.Vector2D;
 
 import org.firstinspires.ftc.teamcode.control.functionality.DefaultUpdate;
 import org.firstinspires.ftc.teamcode.control.functionality.UtilityObject;
 import org.firstinspires.ftc.teamcode.subsystems.Gate;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
+import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Squinting;
+import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Webcam;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.jetbrains.annotations.NotNull;
 
 public class ShootyBrain implements UtilityObject, DefaultUpdate {
 
-    @Override
-    public void update() {
-        //update(master.getPose());
-    }
+
 
     @Override
     public String log() {
@@ -29,9 +29,11 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
     public enum ShootingState {
         LAUNCHING,
         IDLE,
-        FIRING_UP,
+        FIRING_UP_AND_AIMING,
         OFF,
         THINKING,
+
+        SHUTOFF,
         CLOSING,
         OPENING,
     }
@@ -43,7 +45,9 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
 
 
     Shooter mortar;
-    Gate gate;
+    Gate gates;
+
+
 
     double vel =0;
 
@@ -57,16 +61,20 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
         state = ShootingState.OFF;
         this.mortar = new Shooter(master);
         this.teamColor = Master.getTeam();
-        this.gate = new Gate(master);
+        this.gates = new Gate(master);
         this.master = master;
+        squinty = new Squinting(master);
     }
 
+    public final Squinting squinty;
 
     public ShootyBrain(Shooter mort, Master master){
         state = ShootingState.OFF;
         this.mortar = mort;
         this.teamColor = Master.getTeam();
         this.master = master;
+
+        squinty = new Squinting(master);
 
     }
 
@@ -84,10 +92,11 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
         switch (this.state){
             case OFF:
             case IDLE:
-            case CLOSING:    
+            case CLOSING:
+            case SHUTOFF:
                 break;
             default:
-                this.state = ShootingState.CLOSING;
+                this.state = ShootingState.SHUTOFF;
                 break;
         }
     }
@@ -95,6 +104,11 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
     public void off(){
         this.state =ShootingState.OFF;
     }
+
+    boolean forceShoot = false;
+
+    public void forceShoot(){forceShoot=true;}
+    public void unForceShoot(){forceShoot=false;}
 
 
     
@@ -107,7 +121,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
      * made -> if recalculations are needed, then thinking -> Opening -> Shooting -> Closing
      *  </>
      */
-    public void update(Pose pose){
+    public void update(){
         switch (this.state){
             case IDLE:
                 //set velocity to a minimal power, but enough to save time
@@ -115,31 +129,41 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                 break;
             case THINKING:
                 //calc distance for target velocity than set state to firing up
-                think(pose);
-                this.state = ShootingState.FIRING_UP;
+                think();
+                this.state = ShootingState.FIRING_UP_AND_AIMING;
                 break;
-            case FIRING_UP:
+            case FIRING_UP_AND_AIMING:
                 //get to target velocity, then switch to shooting
                 mortar.setVelocity(vel);
                 if (poisonedState){poisonedState = false; state = ShootingState.THINKING; break;}
-                if(checkForRecalibration(pose)) break;
-                if (Math.abs(mortar.getVelocity() - vel) <= 100) this.state =ShootingState.OPENING;
+                if(checkForRecalibration()) break;
+                if (Math.abs(mortar.getVelocity() - vel) <= 100 && correctAngle() && !forceShoot){
+                    this.state =ShootingState.OPENING;
+                    this.gates.setPosition(Gate.OPEN);
+
+                }
+                squinty.correctChuddedAim();
 
                 break;
             case OPENING:
                 //make sure nothing else happening while opening
                 //when not opened, break;
                 //when opened
-                this.state = ShootingState.LAUNCHING;
+                if (gates.getPosition() == Gate.OPEN)
+                    this.state = ShootingState.LAUNCHING;
+                else this.gates.setPosition(Gate.OPEN);
                 break;
             case LAUNCHING:
                 //maintain velocity and keep gate open, maybe keep check of how many balls?
-                checkForRecalibration(pose);
+                checkForRecalibration();
                 break;
+
+            case SHUTOFF: this.mortar.setVelocity(100); this.state = ShootingState.CLOSING;break;
 
             case CLOSING:
                 //make sure nothing else is happening while gate is closing
-                this.state = ShootingState.IDLE;
+                if(gates.getPosition() == Gate.CLOSE) this.state = ShootingState.IDLE;
+                else gates.setPosition(Gate.CLOSE);
                 break;
 
             case OFF:
@@ -151,7 +175,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
 
 
 
-    private void think(@NotNull Pose pose){
+    private void think(){
         //logic
 
 
@@ -161,27 +185,44 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
         
 
         
-        Pose targ = master.getTarget().closestTarget(Master.getTeam(), pose);
+        targ = master.getTarget().closestTarget(Master.getTeam(), master.getPose());
                 
         // if pose block by body :- poisdenedState = true;
-        double dist = pose.distance(targ);
+        double dist = master.getPose().distance(targ);
         this.vel = dist*100;//Not final formula!!
+
+
+
         
 
     }
 
-    private static final byte needRecalibration = 1;
-    private boolean checkForRecalibration(Pose pose){
+    Pose targ =new Pose(0,0);
+
+    private static final double needRecalibration = .4;
+    private boolean checkForRecalibration(){
         boolean ret = false;
-        if (pose.distance(this.lastRecalibratedPose) >= needRecalibration){
+
+
+
+        if (master.getPose().distance(this.lastRecalibratedPose) >= needRecalibration){
             this.state =ShootingState.THINKING;
             ret= true;
-            this.lastRecalibratedPose = pose;
+            this.lastRecalibratedPose = master.getPose();
         }
 
         return ret;
 
 
+    }
+
+
+    private static double wrap(double a) { return Math.atan2(Math.sin(a), Math.cos(a)); }
+
+    public boolean correctAngle() {
+        Pose p = master.getPose();   // read once
+        double wanted = Math.atan2(targ.y() - p.y(), targ.x() - p.x());
+        return Math.abs(wrap(wanted - p.heading())) <= Math.toRadians(6);
     }
 
 
