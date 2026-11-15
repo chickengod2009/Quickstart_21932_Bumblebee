@@ -32,7 +32,7 @@ public class Auton_Blue_One {
         intake = master.getIntake();
     }
 
-    public static void start() {
+    public static void start(MasterTrait master) {
         schedule(CP.commonPaths());
     }
 
@@ -54,8 +54,8 @@ public class Auton_Blue_One {
     }
 
 
-    public static void fin(MasterTrait master){
-        Auton_Blue_One.master = master;
-    }
+   public static void fin(MasterTrait master) {
+
+   }
 
 }
