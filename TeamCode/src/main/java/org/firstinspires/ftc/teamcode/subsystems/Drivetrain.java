@@ -23,7 +23,7 @@ public class Drivetrain implements UtilityObject, DefaultUpdate {
 
     // --- inputs (rx is counter-clockwise positive) ---
     private double x, y, rx;
-    private double aimTurn = Double.NaN;   // NaN = no auto-aim request
+
 
     public Drivetrain(Master master) {
         this.master = master;
@@ -86,10 +86,12 @@ public class Drivetrain implements UtilityObject, DefaultUpdate {
 
     }
 
-    /** Convenience wrapper so nothing bypasses the normalization. */
+
     public void manualUpdate(double xx, double yy, double rrx) {
         setDrive(xx, yy);
-        setAimTurn(rrx, 5);
+        int p;
+        if(rrx >= DRIVER_TAKEOVER) p=1000; else p = drivePrior;
+        setAimTurn(rrx, p);
         update();
     }
 
