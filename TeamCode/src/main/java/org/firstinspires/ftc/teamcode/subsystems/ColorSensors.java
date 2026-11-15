@@ -1,10 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import android.hardware.Sensor;
-
 import com.qualcomm.robotcore.hardware.ColorSensor;
-
-import org.jetbrains.annotations.NotNull;
 
 public class ColorSensors {
 
@@ -23,7 +19,9 @@ public class ColorSensors {
         public enum SensorID{
             ONE(0),
             TWO(1),
-            THREE(2);
+            THREE(2),
+            FOUR(3),
+            FIVE(3);
 
             final int arrayIndex;
             SensorID(int index){
@@ -37,6 +35,10 @@ public class ColorSensors {
                         return TWO;
                     case 2:
                         return THREE;
+                    case 3:
+                        return FOUR;
+                    case 4:
+                        return FIVE;
                     default:
                         throw new RuntimeException("Not an index");
                 }
@@ -81,15 +83,17 @@ public class ColorSensors {
         }
 
     }
-    ColorSensor firstSensor, secondSensor, thirdSensor;
-    private Color color1, color2, color3;
-    private RGB C1, C2, C3;
+    ColorSensor firstSensor, secondSensor, thirdSensor, fourthSensor, fifthSensor;
+    private Color color1, color2, color3, color4, color5;
+    private RGB C1, C2, C3, C4, C5;
 
     public int ct, noise;
     public ColorSensors(Master master) {
         firstSensor = master.get("topSensor");
         secondSensor = master.get("middleSensor");
         thirdSensor = master.get("bottomSensor");
+        fourthSensor = master.get("fourthSensor");
+        fifthSensor = master.get("fifthSensor");
 
         noise = 200;
         //topSensor.setGain(4);
@@ -108,12 +112,22 @@ public class ColorSensors {
                 thirdSensor.green(),
                 thirdSensor.blue());
 
+        C4 = new RGB( fourthSensor.red(),
+                fourthSensor.green(),
+                fourthSensor.blue());
+
+        C5 = new RGB( fifthSensor.red(),
+                fifthSensor.green(),
+                fifthSensor.blue());
+
+
         //TODO: find parameters for colors
         //FIRST
         color1 = C1.assignColor(noise);
         color2 = C2.assignColor(noise);
         color3 = C3.assignColor(noise);
-
+        color4 = C4.assignColor(noise);
+        color5 = C5.assignColor(noise);
     }
     public Color getColor(RGB.SensorID sensor) {
 
@@ -124,6 +138,10 @@ public class ColorSensors {
                 return color2;
             case THREE:
                 return color3;
+            case FOUR:
+                return color4;
+            case FIVE:
+                return color5;
         }
         return color1;
     }
@@ -135,6 +153,10 @@ public class ColorSensors {
                 return C2.Red;
             case THREE:
                 return C3.Red;
+            case FOUR:
+                return C4.Red;
+            case FIVE:
+                return C5.Red;
         }
         return -1;
     }
@@ -146,6 +168,10 @@ public class ColorSensors {
                 return C2.Green;
             case THREE:
                 return C3.Green;
+            case FOUR:
+                return C4.Green;
+            case FIVE:
+                return C5.Green;
         }
         return -1;
     }
@@ -157,6 +183,10 @@ public class ColorSensors {
                 return C2.Blue;
             case THREE:
                 return C3.Blue;
+            case FOUR:
+                return C4.Blue;
+            case FIVE:
+                return C5.Blue;
         }
         return -1;
     }
@@ -166,7 +196,7 @@ public class ColorSensors {
         Color[] sensors = {color1,color2,color3};
         return (sensors[sensorID.arrayIndex] != Color.NA) ? 0 : 1;
     }
-    public boolean fullBladder() {
+    public boolean bladderFullOfPollen() {
         int sum=0;
 
         for(int i = 0; i <3; ++i){
@@ -175,5 +205,13 @@ public class ColorSensors {
 
         return sum == 3;
     }
+    public boolean bladderFullOfNectar() {
+        int sum=0;
 
+        for(int i = 3; i <5; ++i){
+            sum += this.hasBall(RGB.SensorID.sensorIndex(i));
+        }
+
+        return sum == 2;
+    }
 }

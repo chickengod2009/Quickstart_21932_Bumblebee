@@ -14,7 +14,7 @@ import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static com.pedropathing.ivy.commands.Commands.*;
+
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.ColorSensors;
 import org.firstinspires.ftc.teamcode.subsystems.Gate;
@@ -74,7 +74,7 @@ public class CommonPaths {
             .setExecute(() -> {
                 intake.setAllPower(1);
             })
-            .setDone(() -> CSensors.fullBladder())
+            .setDone(() -> CSensors.bladderFullOfPollen())
             .setEnd(endCondition -> {
                 shooting = false;
                 intake.setAllPower(0);
