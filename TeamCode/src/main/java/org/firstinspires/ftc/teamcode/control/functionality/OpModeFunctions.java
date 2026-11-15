@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.control.functionality;
 
-import org.firstinspires.ftc.teamcode.opModeFuncs.autoFuncs.Auton_Blue_One;
+import org.firstinspires.ftc.teamcode.opModeFuncs.autoFuncs.Auton_One;
 import org.firstinspires.ftc.teamcode.opModeFuncs.telopFuncs.TeleopFunctions;
 
 import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.FullTest;
@@ -19,7 +19,7 @@ public enum OpModeFunctions {
   TELOP(TeleopFunctions::init, TeleopFunctions::start, TeleopFunctions::update, TeleopFunctions::end),
 
 
-  AUTON_BLUE_ONE(Auton_Blue_One::init, Auton_Blue_One::start, Auton_Blue_One::loop, Auton_Blue_One::fin),
+  AUTON_ONE(Auton_One::init, Auton_One::start, Auton_One::loop, Auton_One::fin),
   
 
   AUTON_RED_ONE(OpModeFunctions::todo, OpModeFunctions::todo,OpModeFunctions::todo, OpModeFunctions::todo),

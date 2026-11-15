@@ -29,7 +29,7 @@ public class MainBlueAuto extends OpMode{
     public void init() {
         Scheduler.reset();
         follower = Constants.create(hardwareMap);
-        master = new Master(this, Master.TeamColor.BLUE, OpModeFunctions.AUTON_BLUE_ONE);
+        master = new Master(this, Master.TeamColor.BLUE, OpModeFunctions.AUTON_ONE);
         CP = new CommonPaths(Master.TeamColor.BLUE);
         CSensors = new ColorSensors(master);
         intake = new Intake(master);

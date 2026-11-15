@@ -4,7 +4,6 @@ import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
 
 import org.firstinspires.ftc.teamcode.control.functionality.MasterTrait;
-import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 import com.pedropathing.ivy.Scheduler;
 import static com.pedropathing.ivy.Scheduler.schedule;
@@ -13,7 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ColorSensors;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 
-public class Auton_Blue_One {
+public class Auton_One {
     private static MasterTrait master;
     static CommonPaths CP;
     static ColorSensors CSensors;
@@ -24,10 +23,10 @@ public class Auton_Blue_One {
 
 
     public static void init(MasterTrait master) {
-        Auton_Blue_One.master = master;
+        Auton_One.master = master;
         Scheduler.reset();
         follower = master.getFollower();
-        CP = new CommonPaths(Master.TeamColor.BLUE);
+        CP = new CommonPaths(Master.getTeam());
         CSensors = master.getColorSensors();
         intake = master.getIntake();
     }

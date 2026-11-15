@@ -7,14 +7,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.control.functionality.OpModeFunctions;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 
-@Autonomous(name = "AutoBlue", group = "Autos")
-public class AutoBlue extends OpMode {
+@Autonomous(name = "AutoRed_V1", group = "Autos")
+public class AutoRed_V1 extends OpMode {
 
 
     Master master;
 
     public void init() {
-        master = new Master(this, Master.TeamColor.BLUE, OpModeFunctions.AUTON_BLUE_ONE);
+        master = new Master(this, Master.TeamColor.RED, OpModeFunctions.AUTON_ONE);
         master.init();
     }
 
