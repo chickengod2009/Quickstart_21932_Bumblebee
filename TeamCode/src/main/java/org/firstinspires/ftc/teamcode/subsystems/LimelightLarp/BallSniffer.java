@@ -6,6 +6,9 @@ import com.pedropathing.api.Paths;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 
+import org.firstinspires.ftc.teamcode.control.field.PoseBody;
+import org.firstinspires.ftc.teamcode.control.field.PoseLine;
+import org.firstinspires.ftc.teamcode.control.field.PoseSegments;
 import org.firstinspires.ftc.teamcode.subsystems.ColorSensors;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 
@@ -79,17 +82,18 @@ public class BallSniffer {
 
         Pose cornerPose =null;
 
-        switch (Master.getTeam()){
-
-            case RED:
-                cornerPose = (robo.distance(RedCornerRedGoal) <= robo.distance(RedCornerBlueGoal)) ? RedCornerRedGoal : RedCornerBlueGoal;
-                break;
-            case BLUE:
-                cornerPose = (robo.distance(BlueCornerRedGoal) <= robo.distance(BlueCornerBlueGoal)) ? BlueCornerRedGoal : BlueCornerBlueGoal;
-                break;
 
 
-        }
+
+        cornerPose = (robo.distance(RedCornerRedGoal) <= robo.distance(RedCornerBlueGoal)) ? RedCornerRedGoal : RedCornerBlueGoal;
+        cornerPose = (robo.distance(BlueCornerRedGoal) <= robo.distance(cornerPose)) ? BlueCornerRedGoal : cornerPose;
+        cornerPose = (robo.distance(BlueCornerBlueGoal) <= robo.distance(cornerPose)) ? BlueCornerBlueGoal : cornerPose;
+
+
+
+
+
+
 
 
         this.createPoses(res,cornerPose);
@@ -102,11 +106,19 @@ public class BallSniffer {
 
         Pose prev= cornerPose;
 
+        double heading = (cornerPose.x() <= 70) ? 0 : 180;
+
+        PoseSegments poseLine = new PoseSegments();
+
+        poseLine.add(cornerPose);
+
 
         for (BallStrength strength : topPos){
-
-           //Path path = line(prev, strength.pos.withHeading());
+            poseLine.add(strength.pos);
+            Path path = line(prev, strength.pos.withHeading(heading));
+            paths.add(path);
         }
+        poseLine.
 
 
 

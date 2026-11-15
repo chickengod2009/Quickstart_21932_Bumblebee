@@ -5,44 +5,35 @@ import com.pedropathing.math.Pose;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 import org.jetbrains.annotations.NotNull;
 
-public class PoseBody {
-    public final Pose[] body;
+import java.util.ArrayList;
+
+public class PoseBody implements FieldShape{
+    public final ArrayList<Pose> body;
 
     /**
      * @param body Arrange points starting in top left corner, going clockwise
      */
-    public PoseBody(@NotNull Pose[] body) {
-        this.body = body.clone();
+
+    public PoseBody() {
+        this.body = new ArrayList<>();
     }
 
-    public Pose[] getWhole() {
+    public void add(Pose pose){
+        this.body.add(pose);
+    }
+
+    public ArrayList<Pose> getWhole() {
         return this.body;
     }
 
     public Pose get(int index) {
-        return this.body[index];
-    }
-
-    
-    public boolean lineIntersection(Pose pose, Pose targetPose) {
-        int n = this.body.length;
-        for (int i = 0; i < n; i++) {
-            Pose p1 = this.body[i];
-            Pose p2 = this.body[(i + 1) % n];
-
-            if (segmentsIntersect(pose, targetPose, p1, p2)) {
-                return true;
-            }
-        }
-        return false;
+        return this.body.get(index);
     }
 
 
-    public Pose center(){
-        throw Master.TODO();
-    }
 
-    
+
+
     private static boolean segmentsIntersect(Pose a, Pose b, Pose c, Pose d) {
         int uno = orientation(a, b, c);
         int dous = orientation(a, b, d);
@@ -73,5 +64,31 @@ public class PoseBody {
         return q.x() <= Math.max(p.x(), r.x()) && q.x() >= Math.min(p.x(), r.x()) &&
                 q.y() <= Math.max(p.y(), r.y()) && q.y() >= Math.min(p.y(), r.y());
     }
+
+
+
+        public PoseBody(@NotNull ArrayList<Pose> body) {
+            this.body = new ArrayList<>(body);   // instead of the unchecked clone cast
+        }
+
+        @Override
+        public boolean lineIntersection(Pose pose, Pose targetPose) {
+            int n = body.size();
+            for (int i = 0; i < n; i++) {
+                if (Geometry.segmentsIntersect(pose, targetPose, body.get(i), body.get((i + 1) % n))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public Pose center() {   // vertex average, which also fills in your TODO
+            double x = 0, y = 0;
+            for (Pose p : body) { x += p.x(); y += p.y(); }
+            return new Pose(x / body.size(), y / body.size());
+        }
+        // delete the private segmentsIntersect / orientation / onSegment
+
 }
 // I looked up something better

@@ -2,6 +2,10 @@ package org.firstinspires.ftc.teamcode.control.field;
 
 import com.pedropathing.math.Pose;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Field {
 
 
@@ -16,7 +20,7 @@ public class Field {
         Pose bottomRed = new Pose(58,60);
         Pose bottomLeft = new Pose(46,52);
 
-        return new PoseBody(new Pose[]{topLeft,topRed,topBlue,topRight,bottomRight,bottomBlue,bottomRed,bottomLeft});
+        return new PoseBody((ArrayList<Pose>) Arrays.asList(new Pose[]{topLeft,topRed,topBlue,topRight,bottomRight,bottomBlue,bottomRed,bottomLeft}));
         
         
 
