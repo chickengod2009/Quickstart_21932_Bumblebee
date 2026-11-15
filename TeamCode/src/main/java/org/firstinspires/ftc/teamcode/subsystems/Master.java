@@ -124,9 +124,9 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
     return this.follower;
   }
 
-  private Intake intake;
-  private Drivetrain drivetrain;
-  private ShootyBrain shooty;
+  private final Intake intake;
+  private final Drivetrain drivetrain;
+  private final ShootyBrain shooty;
 
   public void start(){
 //    this.intake = new Intake(this);
@@ -190,10 +190,17 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
 
 
 
+
+
     this.opmode = op;
 
     this.func =auto;
 
+
+
+    this.intake = new Intake(this);
+    this.shooty = new ShootyBrain(this);
+    this.drivetrain =new Drivetrain(this);
     this.colorSensors = new ColorSensors(this);
     this.balls= new BallSniffer(this);
     this.sauron = new SauronHandler(new TowerOfSauron(this));
