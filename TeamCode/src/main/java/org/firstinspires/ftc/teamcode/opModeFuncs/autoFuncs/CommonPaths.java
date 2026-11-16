@@ -38,7 +38,7 @@ public class CommonPaths {
     private final PoseFactory poseFactory = PoseFactory.degrees();
     // Poses
     private final Pose startPose;
-    private final Pose bluePose = poseFactory.of(86.7,132.4,-90); //TODO find pose
+    private final Pose bluePose = poseFactory.of(86.7,132.4,-90);
     private final Pose redPose = poseFactory.of(0,0,0); //TODO find pose
 
 
@@ -56,14 +56,14 @@ public class CommonPaths {
             case RED: startPose = redPose; break;
             default: startPose = scorePoseBlue1;
         }
-        follower = Constants.create(hardwareMap);
-        if(Master.isNull(follower)){
-            throw new RuntimeException();
-        }
+        follower = master.getFollower();
+
         follower.setPose(startPose);
         gate = new Gate(master);
         cam = new Webcam(master);
-        CSensors = new ColorSensors(master);
+        CSensors = master.colorSensors;
+        intake = master.getIntake();
+        shooting = false;
     }
 
     Command drainBalls = Command.build()
@@ -74,7 +74,7 @@ public class CommonPaths {
             .setExecute(() -> {
                 intake.setAllPower(1);
             })
-            .setDone(() -> CSensors.bladderFullOfPollen())
+            .setDone(() -> !CSensors.bladderFullOfPollen() && !CSensors.bladderFullOfNectar())
             .setEnd(endCondition -> {
                 shooting = false;
                 intake.setAllPower(0);
