@@ -6,8 +6,10 @@ import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ivy.Command;
 import com.pedropathing.ivy.behaviors.InterruptedBehavior;
+import com.pedropathing.ivy.commands.Commands;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
+import com.pedropathing.utils.Timer;
 
 import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
@@ -17,6 +19,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.ColorSensors;
+import org.firstinspires.ftc.teamcode.subsystems.FlowerRamp;
 import org.firstinspires.ftc.teamcode.subsystems.Gate;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
@@ -34,6 +37,8 @@ public class CommonPaths {
     Gate gate;
     Intake intake;
     ColorSensors CSensors;
+    FlowerRamp ramp;
+    Timer flowerTimer;
     public boolean shooting;
     private final PoseFactory poseFactory = PoseFactory.degrees();
     // Poses
@@ -63,7 +68,9 @@ public class CommonPaths {
         cam = new Webcam(master);
         CSensors = master.colorSensors;
         intake = master.getIntake();
+        ramp = new FlowerRamp(master);
         shooting = false;
+        flowerTimer = new Timer();
     }
 
     Command drainBalls = Command.build()
@@ -80,6 +87,15 @@ public class CommonPaths {
                 intake.setAllPower(0);
                 gate.setPosition(Gate.CLOSE);
             });
+//    Command operateRamp = Command.build()
+//            .setStart(() -> {
+//                flowerTimer.reset();
+//                ramp.setRampPosition(FlowerRamp.DOWN);
+//            })
+//            .setDone(() -> flowerTimer.seconds() == 5)
+//            .setEnd(endCondition -> {
+//                ramp.setRampPosition(FlowerRamp.UP);
+//            });
 
     private Path startToScore() {
         return line(startPose, scorePoseBlue1).linear(startPose, scorePoseBlue1);
@@ -108,13 +124,13 @@ public class CommonPaths {
     private Path gardenShoot() {
         return path(toGarden(), fromGarden());
     }
-    private Path flowerShoot1() {
-        return path(toFlower1(), toScore2());
-    }
-    private Path flowerShoot2() {
-        return path(toFlower2(), toScore1());
-
-    }
+//    private Path flowerShoot1() {
+//        return path(toFlower1(), toScore2());
+//    }
+//    private Path flowerShoot2() {
+//        return path(toFlower2(), toScore1());
+//
+//    }
 
     private static final LinkedHashMap<BooleanSupplier, Command> witchWichGoal;
 
@@ -127,10 +143,15 @@ public class CommonPaths {
                 drainBalls,
                 follow(follower, gardenShoot()),
                 drainBalls,
-                follow(follower, flowerShoot1()),
+                Commands.instant(() -> ramp.setRampPosition(FlowerRamp.DOWN)),
+                follow(follower, toFlower1()),
+                Commands.instant(() -> ramp.setRampPosition(FlowerRamp.UP)),
+                follow(follower, toScore2()),
                 drainBalls,
-                follow(follower, flowerShoot2()),
-                drainBalls,
+                Commands.instant(() -> ramp.setRampPosition(FlowerRamp.DOWN)),
+                follow(follower, toFlower2()),
+                Commands.instant(() -> ramp.setRampPosition(FlowerRamp.UP)),
+                follow(follower, toScore1()),
                 //TODO: add automated pathing
                 follow(follower, park())
 

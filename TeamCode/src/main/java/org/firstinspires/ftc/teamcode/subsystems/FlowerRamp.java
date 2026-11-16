@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class FlowerRamp {
     private Servo ramp;
     private double position;
+    public static double DOWN = 0.4, UP = 0.1;
+
 
     public FlowerRamp(Master master) {
         ramp = master.get("ramp1");
