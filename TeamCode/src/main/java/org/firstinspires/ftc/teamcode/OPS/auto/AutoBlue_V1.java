@@ -19,7 +19,8 @@ public class AutoBlue_V1 extends OpMode {
     }
 
     public void start(){
-        master.start();}
+        master.start();
+    }
 
     public void loop(){
         master.update();

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 public class Shooter {
     private final DcMotorEx flyMotor, flyMotor2;
 
-    private double power, vel;
+    private double power, vel, vel2;
 
     public static double THRESH = 25;
     public static double OFF = 0, MAX = 1, NORMAL = 0.6, WAIT = 1400;
@@ -46,15 +46,18 @@ public class Shooter {
 //        return (int) ( slope*(dist) + b);
 //    }
 
-    public void setFlyMotorPower(double power) {
-        flyMotor.setPower(power);
+    public void setPollenVel(double velocity) {
+        vel = velocity;
     }
-    public void setFlyMotor2Power(double power) {
-        flyMotor2.setPower(power);
+    public void setNectarVel(double velocity) {
+        vel2 = velocity;
     }
 
-    public double getTargetVelocity() {
+    public double getPollenTargetVelocity() {
         return vel;
+    } //Pollen 2350
+    public double getNectarTargetVelocity() {
+        return vel2;
     } //Nectar 2500
 
     public double getPower() {
@@ -64,8 +67,8 @@ public class Shooter {
     public void update() {
         //flyMotor.setPower(power);
 //        flyMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p, 0, 0, f));
-//        flyMotor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p, 0, 0, f));
+//        flyMotor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p2, 0, 0, f2));
         flyMotor.setVelocity(vel);
-        flyMotor2.setVelocity(vel);
+        flyMotor2.setVelocity(vel2);
     }
 }

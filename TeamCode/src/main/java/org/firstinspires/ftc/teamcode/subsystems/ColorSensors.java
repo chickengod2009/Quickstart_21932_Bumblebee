@@ -21,7 +21,7 @@ public class ColorSensors {
             TWO(1),
             THREE(2),
             FOUR(3),
-            FIVE(3);
+            FIVE(4);
 
             final int arrayIndex;
             SensorID(int index){

@@ -41,6 +41,13 @@ public class Intake implements Loggable, DefaultUpdate {
         intakePower = power;
         rollerPower = power;
     }
+    public double getIntakePower() {
+        return intake.getPower();
+    }
+    public double getRollersPower() {
+        return rollers.getPower();
+    }
+
     @Override
     public void update() {
         intake.setPower(intakePower);

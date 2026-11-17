@@ -6,19 +6,24 @@ import com.pedropathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.control.functionality.MasterTrait;
 
 import com.pedropathing.ivy.Scheduler;
+import com.pedropathing.math.Pose;
+
 import static com.pedropathing.ivy.Scheduler.schedule;
 
 import org.firstinspires.ftc.teamcode.subsystems.ColorSensors;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
+import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 
 public class Auton_One {
     private static MasterTrait master;
     static CommonPaths CP;
     static ColorSensors CSensors;
     static Intake intake;
+    static Shooter shooter;
     static private Follower follower;
     private final PoseFactory poseFactory = PoseFactory.degrees();
+    public final Pose endPose = poseFactory.of(123, 46, -90);
 
 
 
@@ -29,9 +34,12 @@ public class Auton_One {
         CP = new CommonPaths(Master.getTeam());
         CSensors = master.getColorSensors();
         intake = master.getIntake();
+        shooter = new Shooter(master.getMaster());
     }
 
     public static void start(MasterTrait master) {
+        shooter.setPollenVel(2350);
+        shooter.setNectarVel(2500);
         schedule(CP.commonPaths());
     }
 
@@ -54,7 +62,7 @@ public class Auton_One {
 
 
    public static void fin(MasterTrait master) {
-
+        //endPose = follower.pose();
    }
 
 }

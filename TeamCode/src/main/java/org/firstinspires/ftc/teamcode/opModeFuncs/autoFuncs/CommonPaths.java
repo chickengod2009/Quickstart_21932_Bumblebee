@@ -49,7 +49,7 @@ public class CommonPaths {
 
     private final Pose scorePoseBlue1 = poseFactory.of(86.7, 116, 0);
     private final Pose scorePoseBlue2 = poseFactory.of(95.5, 23, 180);
-    private final Pose parkPose = poseFactory.of(123, 46, -90);
+    public  Pose parkPose = poseFactory.of(123, 46, -90);
     private final Pose gardenPose = poseFactory.of(0, 12, 0);
     private final Pose flowerPose1 = poseFactory.of(94.5, 13.5, -90);
     private final Pose flowerPose2 = poseFactory.of(127.5, 94, 0);
