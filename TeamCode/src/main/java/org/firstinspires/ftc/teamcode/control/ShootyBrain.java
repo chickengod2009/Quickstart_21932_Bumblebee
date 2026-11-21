@@ -164,7 +164,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                 if ((Math.abs(mortar.getVelPollen() - velPollen) <= 100 && Math.abs(mortar.getVelNectar() - velNectar) <= 100 && correctAngle()) || forceShoot){
 
                     this.state =ShootingState.OPENING;
-                    this.gates.setAllPosition("close");
+                    this.gates.setAllPosition("open");
                     this.gateTimer.reset();
 
                 }
