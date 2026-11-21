@@ -61,8 +61,8 @@ public class TeleopFunctions {
 
 
   public static void start(MasterTrait master) {
-    master.getShootyBrain().setOverloadPollen(800.0);
-    master.getShootyBrain().setOverloadNectar(1400.0);
+    shooter.setOverloadPollen(2000.0);
+    shooter.setOverloadNectar(2000.0);
     // does not work
 //    shootCauseNoShootyBrain.setPollenVel(800);
 //    shootCauseNoShootyBrain.setNectarVel(1400);
@@ -72,6 +72,7 @@ public class TeleopFunctions {
 
 
   public static void update(MasterTrait master) {
+    intake.setAllPower(0);
     //follower.manual(-master.getOpMode().gamepad1.left_stick_y * driveSpeed, -master.getOpMode().gamepad1.left_stick_x * driveSpeed, -master.getOpMode().gamepad1.right_stick_x * driveSpeed);
     TeleopFunctions.drive.setDrive(master.getOpMode().gamepad1.left_stick_x, master.getOpMode().gamepad1.left_stick_y);
     TeleopFunctions.drive.setAimTurn(master.getOpMode().gamepad1.right_stick_x, 5);
@@ -95,13 +96,14 @@ public class TeleopFunctions {
         if (master.getOpMode().gamepad1.right_trigger > .5) {
           //cam.stopStream();
           shooter.activate();
+          telemetryManager.addLine("Activated");
 //          shootCauseNoShootyBrain.setPollenVel(1300);
 //          shootCauseNoShootyBrain.setNectarVel(1900);
 //          intake.setAllPower(Intake.intakeSpeed);
         }
-        if(master.getOpMode().gamepad1.right_trigger < .5){
+        else{
           shooter.deactivate();
-          intake.setAllPower(0);
+
           //          shootCauseNoShootyBrain.setPollenVel(800);
 //          shootCauseNoShootyBrain.setNectarVel(1400);
 //          intake.setAllPower(0.0);
@@ -117,20 +119,19 @@ public class TeleopFunctions {
 
 
         //      ------INTAKE------
-        if (master.getOpMode().gamepad1.rightBumperWasPressed()) {
+        if (master.getOpMode().gamepad1.right_bumper) {
           intake.setAllPower(Intake.intakeSpeed);
         }
-        if (master.getOpMode().gamepad1.leftBumperWasPressed()) {
+        if (master.getOpMode().gamepad1.left_bumper) {
           intake.setAllPower(0);
         }
 
 //      ------EJECT------
-        if (master.getOpMode().gamepad2.aWasPressed()) {
+        if (master.getOpMode().gamepad2.a) {
           intake.setAllPower(-.2);
         }
-        if (master.getOpMode().gamepad2.bWasPressed()) {
-          intake.setAllPower(0);
-        }
+
+
 
 //      ------LOCALIZE------
         if (master.getOpMode().gamepad2.leftTriggerWasPressed() && master.getOpMode().gamepad2.rightTriggerWasPressed()) {

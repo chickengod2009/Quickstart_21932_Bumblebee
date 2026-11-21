@@ -12,8 +12,8 @@ public class Shooter {
     public static double THRESH = 25;
     public static double OFF = 0, MAX = 1, NORMAL = 0.6, WAIT = 1500;
     public static double slope = 5.9343, closeB = 1015, farB = 1285;
-    public static double p = 8, i = 0, d = 0, f = 33.6;
-    public static double p2 = 12, i2 = 0, d2 = 0, f2 = 12.5;
+    public static double p = 100, i = 0, d = 0, f = 13;
+    public static double p2 = 100, i2 = 0, d2 = 0, f2 = 14.5;
 
 
 
@@ -50,10 +50,10 @@ public class Shooter {
 //    }
 
     public void setPollenVel(double velocity) {
-        flyMotor.setVelocity(velocity);
+        vel = velocity;
     }
     public void setNectarVel(double velocity) {
-        flyMotor2.setVelocity(velocity);
+        vel2 =velocity;
     }
 
     public double getPollenTargetVelocity() {

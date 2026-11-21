@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Gate {
-    private Servo gate, gate2;
+    private final Servo gate, gate2;
 
-    public static double NECTAR_CLOSE = 0.129, NECTAR_OPEN = 0.42, POLLEN_CLOSE = .91, POLLEN_OPEN = .74;;
+    public static double NECTAR_CLOSE = 0.72, NECTAR_OPEN = 0.42, POLLEN_CLOSE = .0, POLLEN_OPEN = .22;;
 
     private double position = NECTAR_OPEN, position2 = POLLEN_OPEN;
 

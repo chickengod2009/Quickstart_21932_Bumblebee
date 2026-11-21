@@ -108,7 +108,16 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
         }
     }
     public void deactivate(){
-        this.state = ShootingState.CLOSING;
+        switch (this.state){
+            case OFF:
+            case IDLE:
+            case SHUTOFF:
+            case CLOSING:
+                return;
+            default:
+                this.state = ShootingState.SHUTOFF;
+                break;
+        }
     }
 
     public Shooter getMortar(){return mortar;}
@@ -134,6 +143,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
      *  </>
      */
     public void update(){
+        this.master.opmode.telemetry.addLine("Vels " + velNectar + " " + velPollen + "\n" + this.state);
         switch (this.state){
             case IDLE:
                 //set velocity to a minimal power, but enough to save time
@@ -148,11 +158,10 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                 break;
             case FIRING_UP_AND_AIMING:
                 //get to target velocity, then switch to shooting
-                mortar.setPollenVel(velPollen);
-                mortar.setNectarVel(velNectar);
+
                 //if (poisonedState){poisonedState = false; state = ShootingState.THINKING; break;}
 
-                if (Math.abs(mortar.getVelPollen() - velPollen) <= 100 && Math.abs(mortar.getVelNectar() - velNectar) <= 100 && correctAngle() || !forceShoot){
+                if ((Math.abs(mortar.getVelPollen() - velPollen) <= 100 && Math.abs(mortar.getVelNectar() - velNectar) <= 100 && correctAngle()) || forceShoot){
 
                     this.state =ShootingState.OPENING;
                     this.gates.setAllPosition("close");
@@ -172,7 +181,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                 //when opened
                 if (gateTimer.seconds() >= .5)
                     this.state = ShootingState.LAUNCHING;
-                else this.gates.setAllPosition("close");
+                else this.gates.setAllPosition("open");
                 break;
             case LAUNCHING:
                 //maintain velocity and keep gate open, maybe keep check of how many balls?
@@ -191,15 +200,17 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
             case CLOSING:
                 //make sure nothing else is happening while gate is closing
                 //if(gateTimer.seconds() >= .5) this.state = ShootingState.IDLE;
-                gates.setAllPosition("open");
+                gates.setAllPosition("close");
                 this.state = ShootingState.IDLE;
                 break;
 
             case OFF:
-                this.mortar.setNectarVel(0);
-                this.mortar.setPollenVel(0);
+                this.velPollen =0;
+                this.velNectar =0;
                 break;
         }
+        mortar.setPollenVel(velPollen);
+        mortar.setNectarVel(velNectar);
 
         this.gates.update();
         this.mortar.update();
@@ -215,9 +226,9 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
     private void think() {
         //targ = master.getTarget().closestTarget(teamColor, master.getPose());
         double dist = master.getPose().distance(new Pose(0,0));
-        velPollen = overloadPollen != null ? overloadPollen : dist * 100;   // not final formula
-        velNectar = overloadNectar != null ? overloadNectar : dist * 100;
-        lastRecalibratedPose = master.getPose();                            // see #6
+        velPollen = overloadPollen != null ? overloadPollen :  1000;   // not final formula
+        velNectar = overloadNectar != null ? overloadNectar : 1000;
+        lastRecalibratedPose = master.getPose();
     }
 
     public void setOverloadPollen(Double pollen){
@@ -229,7 +240,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
 
     Pose targ =new Pose(0,0);
 
-    private static final double needRecalibration = .4;
+    private static final double needRecalibration = 4;
     private boolean checkForRecalibration(){
         boolean ret = false;
 
