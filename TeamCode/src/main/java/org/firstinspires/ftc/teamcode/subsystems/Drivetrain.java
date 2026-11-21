@@ -76,7 +76,7 @@ public class Drivetrain implements UtilityObject, DefaultUpdate {
 
         frontLeft.setPower( (y + x - turn) / denom * speedMult);
         backLeft.setPower(  (y - x - turn) / denom * speedMult);
-        frontRight.setPower((y - x + turn) / denom * speedMult);
+        frontRight.setPower(-((y - x + turn) / denom * speedMult));
         backRight.setPower( (y + x + turn) / denom * speedMult);
 
         lastPriority=0;

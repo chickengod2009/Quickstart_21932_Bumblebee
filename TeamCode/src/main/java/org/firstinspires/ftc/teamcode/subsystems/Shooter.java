@@ -10,7 +10,7 @@ public class Shooter {
     private double power, vel, vel2;
 
     public static double THRESH = 25;
-    public static double OFF = 0, MAX = 1, NORMAL = 0.6, WAIT = 1400;
+    public static double OFF = 0, MAX = 1, NORMAL = 0.6, WAIT = 1500;
     public static double slope = 5.9343, closeB = 1015, farB = 1285;
     public static double p = 8, i = 0, d = 0, f = 33.6;
     public static double p2 = 12, i2 = 0, d2 = 0, f2 = 12.5;
@@ -25,7 +25,6 @@ public class Shooter {
         flyMotor2 = master.get("shooterTwo");
         flyMotor2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         flyMotor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p2, i2, d2, f2));
-        //flyMotor2.setDirection(Direction.REVERSE);
     }
 
     public void setPower(double motorPower) {
@@ -51,10 +50,10 @@ public class Shooter {
 //    }
 
     public void setPollenVel(double velocity) {
-        vel = velocity;
+        flyMotor.setVelocity(velocity);
     }
     public void setNectarVel(double velocity) {
-        vel2 = velocity;
+        flyMotor2.setVelocity(velocity);
     }
 
     public double getPollenTargetVelocity() {

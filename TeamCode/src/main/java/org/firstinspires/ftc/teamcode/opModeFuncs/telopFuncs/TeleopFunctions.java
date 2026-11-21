@@ -31,6 +31,7 @@ public class TeleopFunctions {
   static Shooter shootCauseNoShootyBrain;
   static Webcam cam;
   static Squinting squinting;
+  static Gate gate;
   static TelemetryManager telemetryManager;
   private static double driveSpeed;
 
@@ -46,7 +47,7 @@ public class TeleopFunctions {
     CSensors = master.getColorSensors();
     drive = master.getDrivetrain();
     TeleopFunctions.ramp = new FlowerRamp(master.getMaster());
-    //gate = new Gate(master.getMaster());
+    gate = new Gate(master.getMaster());
     TeleopFunctions.intake = master.getIntake();
     TeleopFunctions.shooter = master.getShootyBrain();
     TeleopFunctions.shootCauseNoShootyBrain = new Shooter(master.getMaster());
@@ -63,8 +64,8 @@ public class TeleopFunctions {
 //    master.getShootyBrain().setOverloadPollen(2350.0);
 //    master.getShootyBrain().setOverloadNectar(2500.0);
     // does not work
-    shootCauseNoShootyBrain.setPollenVel(2350);
-    shootCauseNoShootyBrain.setNectarVel(2500);
+    shootCauseNoShootyBrain.setPollenVel(1400);
+    shootCauseNoShootyBrain.setNectarVel(1400);
 
     TeleopFunctions.ramp.setRampPosition(FlowerRamp.UP);
   }
@@ -88,17 +89,21 @@ public class TeleopFunctions {
 //      ------SHOOTING------
         if (master.getOpMode().gamepad1.leftTriggerWasPressed()) {
           //cam.resumeStream();
-          //squinting.correctChuddedAim();
+          squinting.correctChuddedAim();
         }
 
         if (master.getOpMode().gamepad1.rightTriggerWasPressed()) {
           //cam.stopStream();
           shooter.activate();
-          //intake.setAllPower(Intake.intakeSpeed);
+          shootCauseNoShootyBrain.setPollenVel(1900);
+          shootCauseNoShootyBrain.setNectarVel(1900);
+          intake.setAllPower(Intake.intakeSpeed);
         }
         if(master.getOpMode().gamepad1.right_trigger <= .5){
           shooter.deactivate();
-          //intake.setAllPower(0.0);
+          shootCauseNoShootyBrain.setPollenVel(1400);
+          shootCauseNoShootyBrain.setNectarVel(1400);
+          intake.setAllPower(0.0);
         }
 
 //      ------FLOWER------
@@ -141,6 +146,7 @@ public class TeleopFunctions {
     ramp.update();
     drive.update();
     intake.update();
+    //shootCauseNoShootyBrain.update();
     shooter.update();
     follower.update();
 

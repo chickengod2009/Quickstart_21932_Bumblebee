@@ -23,7 +23,6 @@ public class Intake implements Loggable, DefaultUpdate {
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rollers.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rollers.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

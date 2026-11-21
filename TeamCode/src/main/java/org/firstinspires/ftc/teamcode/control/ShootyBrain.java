@@ -137,7 +137,8 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
         switch (this.state){
             case IDLE:
                 //set velocity to a minimal power, but enough to save time
-                this.mortar.setVelocity(100);
+                this.mortar.setNectarVel(1400);
+                this.mortar.setPollenVel(1400);
                 break;
             case THINKING:
                 //calc distance for target velocity than set state to firing up
@@ -147,8 +148,8 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                 break;
             case FIRING_UP_AND_AIMING:
                 //get to target velocity, then switch to shooting
-                mortar.setPollenVel(velPollen);
-                mortar.setNectarVel(velNectar);
+                mortar.setPollenVel(1900);
+                mortar.setNectarVel(1900);
                 if (poisonedState){poisonedState = false; state = ShootingState.THINKING; break;}
                 if(checkForRecalibration()) break;
                 if (Math.abs(mortar.getVelPollen() - velPollen) <= 100 && Math.abs(mortar.getVelNectar() - velNectar) <= 100 && correctAngle() || !forceShoot){
@@ -158,7 +159,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                     this.gateTimer.reset();
 
                 }
-                squinty.correctChuddedAim();
+                //squinty.correctChuddedAim();
 
                 break;
             case OPENING:
@@ -172,12 +173,13 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
             case LAUNCHING:
                 //maintain velocity and keep gate open, maybe keep check of how many balls?
                 checkForRecalibration();
-                this.intake.setIntakePower(-.5);
-                this.squinty.correctChuddedAim();
+                this.intake.setAllPower(Intake.intakeSpeed);
+                //this.squinty.correctChuddedAim();
                 break;
 
             case SHUTOFF:
-                this.mortar.setVelocity(100);
+                this.mortar.setNectarVel(1400);
+                this.mortar.setPollenVel(1400);
                 this.state = ShootingState.CLOSING;
                 this.gateTimer.reset();
                 this.intake.setAllPower(0);
@@ -190,7 +192,8 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                 break;
 
             case OFF:
-                this.mortar.setPower(0);
+                this.mortar.setNectarVel(1400);
+                this.mortar.setPollenVel(1400);
         }
 
         this.gates.update();
