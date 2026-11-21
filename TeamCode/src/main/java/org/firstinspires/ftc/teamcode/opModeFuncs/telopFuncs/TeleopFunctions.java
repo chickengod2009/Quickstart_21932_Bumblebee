@@ -50,7 +50,7 @@ public class TeleopFunctions {
     gate = new Gate(master.getMaster());
     TeleopFunctions.intake = master.getIntake();
     TeleopFunctions.shooter = master.getShootyBrain();
-    TeleopFunctions.shootCauseNoShootyBrain = new Shooter(master.getMaster());
+    //TeleopFunctions.shootCauseNoShootyBrain = new Shooter(master.getMaster());
     //cam = new Webcam(master.getMaster());
     TeleopFunctions.squinting = master.getSquinter();
     TeleopFunctions.telemetryManager = PanelsTelemetry.INSTANCE.getTelemetry();
@@ -61,11 +61,11 @@ public class TeleopFunctions {
 
 
   public static void start(MasterTrait master) {
-//    master.getShootyBrain().setOverloadPollen(2350.0);
-//    master.getShootyBrain().setOverloadNectar(2500.0);
+    master.getShootyBrain().setOverloadPollen(800.0);
+    master.getShootyBrain().setOverloadNectar(1400.0);
     // does not work
-    shootCauseNoShootyBrain.setPollenVel(1400);
-    shootCauseNoShootyBrain.setNectarVel(1400);
+//    shootCauseNoShootyBrain.setPollenVel(800);
+//    shootCauseNoShootyBrain.setNectarVel(1400);
 
     TeleopFunctions.ramp.setRampPosition(FlowerRamp.UP);
   }
@@ -92,18 +92,19 @@ public class TeleopFunctions {
           squinting.correctChuddedAim();
         }
 
-        if (master.getOpMode().gamepad1.rightTriggerWasPressed()) {
+        if (master.getOpMode().gamepad1.right_trigger > .5) {
           //cam.stopStream();
           shooter.activate();
-          shootCauseNoShootyBrain.setPollenVel(1900);
-          shootCauseNoShootyBrain.setNectarVel(1900);
-          intake.setAllPower(Intake.intakeSpeed);
+//          shootCauseNoShootyBrain.setPollenVel(1300);
+//          shootCauseNoShootyBrain.setNectarVel(1900);
+//          intake.setAllPower(Intake.intakeSpeed);
         }
-        if(master.getOpMode().gamepad1.right_trigger <= .5){
+        if(master.getOpMode().gamepad1.right_trigger < .5){
           shooter.deactivate();
-          shootCauseNoShootyBrain.setPollenVel(1400);
-          shootCauseNoShootyBrain.setNectarVel(1400);
-          intake.setAllPower(0.0);
+          intake.setAllPower(0);
+          //          shootCauseNoShootyBrain.setPollenVel(800);
+//          shootCauseNoShootyBrain.setNectarVel(1400);
+//          intake.setAllPower(0.0);
         }
 
 //      ------FLOWER------
