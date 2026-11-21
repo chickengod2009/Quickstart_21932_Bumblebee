@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.control;
 
 import com.pedropathing.math.Pose;
 import com.pedropathing.math.Vector2D;
+import com.pedropathing.utils.Timer;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.control.functionality.DefaultUpdate;
 import org.firstinspires.ftc.teamcode.control.functionality.UtilityObject;
 import org.firstinspires.ftc.teamcode.subsystems.Gate;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Squinting;
 import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Webcam;
@@ -18,7 +21,12 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
 
     @Override
     public String log() {
-        return "";
+
+        return String.format("Nectar Velocity: %s;\nPollen Velocity:" +
+                " %s;\n%s",
+                this.mortar.getVelNectar(),
+                this.mortar.getVelPollen(),
+                this.state.toString());
     }
 
     @Override
@@ -35,27 +43,34 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
 
         SHUTOFF,
         CLOSING,
-        OPENING,
+        OPENING;
+
+
     }
 
     //a pos that a shot cannot be made from
     boolean poisonedState = false;
 
+    Double overloadPollen = null;
+    Double overloadNectar = null;
+
     ShootingState state;
 
 
-    Shooter mortar;
+    final Shooter mortar;
     Gate gates;
 
 
 
-    double vel =0;
+    double velPollen =0;
+    double velNectar =0;
 
     Master.TeamColor teamColor;
 
 
     Pose lastRecalibratedPose = new Pose(0,0);
     final Master master;
+    final Intake intake;
 
     public ShootyBrain(Master master){
         state = ShootingState.OFF;
@@ -63,7 +78,8 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
         this.teamColor = Master.getTeam();
         this.gates = new Gate(master);
         this.master = master;
-        squinty = new Squinting(master);
+        squinty = master.getSquinter();
+        intake= master.getIntake();
     }
 
     public final Squinting squinty;
@@ -74,7 +90,10 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
         this.teamColor = Master.getTeam();
         this.master = master;
 
-        squinty = new Squinting(master);
+        this.gates = new Gate(master);
+
+        squinty = master.getSquinter();
+        intake= master.getIntake();
 
     }
 
@@ -89,17 +108,10 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
         }
     }
     public void deactivate(){
-        switch (this.state){
-            case OFF:
-            case IDLE:
-            case CLOSING:
-            case SHUTOFF:
-                break;
-            default:
-                this.state = ShootingState.SHUTOFF;
-                break;
-        }
+        this.state = ShootingState.SHUTOFF;
     }
+
+    public Shooter getMortar(){return mortar;}
 
     public void off(){
         this.state =ShootingState.OFF;
@@ -110,7 +122,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
     public void forceShoot(){forceShoot=true;}
     public void unForceShoot(){forceShoot=false;}
 
-
+    Timer gateTimer = new Timer();
     
     /**
      * <pre>My thinking with this function is that all the processes of shooting the balls can be handled in an orderly
@@ -131,15 +143,19 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                 //calc distance for target velocity than set state to firing up
                 think();
                 this.state = ShootingState.FIRING_UP_AND_AIMING;
+
                 break;
             case FIRING_UP_AND_AIMING:
                 //get to target velocity, then switch to shooting
-                mortar.setVelocity(vel);
+                mortar.setPollenVel(velPollen);
+                mortar.setNectarVel(velNectar);
                 if (poisonedState){poisonedState = false; state = ShootingState.THINKING; break;}
                 if(checkForRecalibration()) break;
-                if (Math.abs(mortar.getVelocity() - vel) <= 100 && correctAngle() && !forceShoot){
+                if (Math.abs(mortar.getVelPollen() - velPollen) <= 100 && Math.abs(mortar.getVelNectar() - velNectar) <= 100 && correctAngle() || !forceShoot){
+
                     this.state =ShootingState.OPENING;
-                    this.gates.setPosition(Gate.OPEN);
+                    this.gates.setAllPosition("close");
+                    this.gateTimer.reset();
 
                 }
                 squinty.correctChuddedAim();
@@ -149,52 +165,58 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                 //make sure nothing else happening while opening
                 //when not opened, break;
                 //when opened
-                if (gates.getPosition() == Gate.OPEN)
+                if (gateTimer.seconds() >= .5)
                     this.state = ShootingState.LAUNCHING;
-                else this.gates.setPosition(Gate.OPEN);
+                else this.gates.setAllPosition("close");
                 break;
             case LAUNCHING:
                 //maintain velocity and keep gate open, maybe keep check of how many balls?
                 checkForRecalibration();
+                this.intake.setIntakePower(-.5);
+                this.squinty.correctChuddedAim();
                 break;
 
-            case SHUTOFF: this.mortar.setVelocity(100); this.state = ShootingState.CLOSING;break;
+            case SHUTOFF:
+                this.mortar.setVelocity(100);
+                this.state = ShootingState.CLOSING;
+                this.gateTimer.reset();
+                this.intake.setAllPower(0);
+            break;
 
             case CLOSING:
                 //make sure nothing else is happening while gate is closing
-                if(gates.getPosition() == Gate.CLOSE) this.state = ShootingState.IDLE;
-                else gates.setPosition(Gate.CLOSE);
+                //if(gateTimer.seconds() >= .5) this.state = ShootingState.IDLE;
+                gates.setAllPosition("open");
                 break;
 
             case OFF:
                 this.mortar.setPower(0);
         }
 
+        this.gates.update();
+        this.mortar.update();
+        this.intake.update();
+
 
     }
 
 
-
-    private void think(){
-        //logic
+    public Gate getGate(){return this.gates;}
 
 
+    private void think() {
+        //targ = master.getTarget().closestTarget(teamColor, master.getPose());
+        double dist = master.getPose().distance(new Pose(0,0));
+        velPollen = overloadPollen != null ? overloadPollen : dist * 100;   // not final formula
+        velNectar = overloadNectar != null ? overloadNectar : dist * 100;
+        lastRecalibratedPose = master.getPose();                            // see #6
+    }
 
-        
-
-        
-
-        
-        targ = master.getTarget().closestTarget(Master.getTeam(), master.getPose());
-                
-        // if pose block by body :- poisdenedState = true;
-        double dist = master.getPose().distance(targ);
-        this.vel = dist*100;//Not final formula!!
-
-
-
-        
-
+    public void setOverloadPollen(Double pollen){
+        this.overloadPollen =pollen;
+    }
+    public void setOverloadNectar(Double pollen){
+        this.overloadNectar =pollen;
     }
 
     Pose targ =new Pose(0,0);

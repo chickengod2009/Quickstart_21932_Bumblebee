@@ -25,6 +25,8 @@ import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.BallSniffer;
 import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.SauronHandler;
 import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.TowerOfSauron;
+import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Squinting;
+import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Webcam;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -155,7 +157,7 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
     return this.drivetrain;
   }
 
-  @Override
+  @Override @NonNull
   public ShootyBrain getShootyBrain() {
     return this.shooty;
   }
@@ -180,6 +182,10 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
   public final SauronHandler sauron;
   public final BallSniffer balls;
 
+  public final Squinting squinter;
+
+  public final Gate gate;
+
 
   public Master(OpMode op, TeamColor color, OpModeFunctions auto){
     if (op == null || color==null || auto == null || !auto.isSafe()) throw new RuntimeException("Need an opmode for Master");
@@ -195,16 +201,19 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
     this.opmode = op;
 
     this.func =auto;
-
-
-
-    this.intake = new Intake(this);
-    this.shooty = new ShootyBrain(this);
-    this.drivetrain =new Drivetrain(this);
-    this.colorSensors = new ColorSensors(this);
-    this.balls= new BallSniffer(this);
-    this.sauron = new SauronHandler(new TowerOfSauron(this));
     this.touchMe = new TouchSensor(this);
+    this.balls= new BallSniffer(this);
+    this.drivetrain =new Drivetrain(this);
+    this.intake = new Intake(this);
+    this.squinter = new Squinting(this);
+    this.gate = new Gate(this);
+    this.colorSensors = new ColorSensors(this);
+    this.shooty = new ShootyBrain(this);
+
+    this.sauron = new SauronHandler(new TowerOfSauron(this));
+
+
+
 
 
 
@@ -289,29 +298,31 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
   private void open(@NotNull OpMode op){
     this.devices = new HashMap<>();
 
-//    devices.put("frontLeftMotor",    op.hardwareMap.dcMotor.get("frontLeftMotor"));
-//    devices.put("backLeftMotor",     op.hardwareMap.dcMotor.get("backLeftMotor"));
-//    devices.put("frontRightMotor",   op.hardwareMap.dcMotor.get("frontRightMotor"));
-//    devices.put("backRightMotor",    op.hardwareMap.dcMotor.get("backRightMotor"));
+    devices.put("frontLeftMotor",    op.hardwareMap.dcMotor.get("frontLeftMotor"));
+    devices.put("backLeftMotor",     op.hardwareMap.dcMotor.get("backLeftMotor"));
+    devices.put("frontRightMotor",   op.hardwareMap.dcMotor.get("frontRightMotor"));
+    devices.put("backRightMotor",    op.hardwareMap.dcMotor.get("backRightMotor"));
     devices.put("intake",              op.hardwareMap.dcMotor.get("intakeMotor"));
     devices.put("roller",              op.hardwareMap.dcMotor.get("rollersMotor"));
-//    devices.put("kicker",            op.hardwareMap.servo.get("kicker"));
-//    devices.put("turretMotor",       op.hardwareMap.dcMotor.get("turret"));
-    //devices.put("webcam1",           op.hardwareMap.get(WebcamName.class, "camera"));
+    //devices.put("kicker",            op.hardwareMap.servo.get("kicker"));
+   // devices.put("turretMotor",       op.hardwareMap.dcMotor.get("turret"));
+    devices.put("webcam1",           op.hardwareMap.get(WebcamName.class, "Webcam 1"));
 
     devices.put("shooter",             op.hardwareMap.get(DcMotorEx.class, "flyMotor"));
     devices.put("shooterTwo",          op.hardwareMap.get(DcMotorEx.class, "flyMotor2"));
     devices.put("gate",                op.hardwareMap.servo.get("pollenGate"));
-//    devices.put("transfer1",         op.hardwareMap.crservo.get("transfer1"));
-//    devices.put("transfer2",         op.hardwareMap.crservo.get("transfer2"));
-//    devices.put("hood",              op.hardwareMap.servo.get("hood"));
-//    devices.put("firstSensor",         op.hardwareMap.get(ColorSensor.class, "firstSensor"));
-//    devices.put("secondSensor",        op.hardwareMap.get(ColorSensor.class, "secondSensor"));
-//    devices.put("thirdSensor",         op.hardwareMap.get(ColorSensor.class, "thirdSensor"));
-//    devices.put("fourthSensor",        op.hardwareMap.get(ColorSensor.class, "fourthSensor"));
-//    devices.put("fifthSensor",         op.hardwareMap.get(ColorSensor.class, "fifthSensor"));
+    devices.put("gate2",                op.hardwareMap.servo.get("nectarGate"));
+    devices.put("ramp",                op.hardwareMap.servo.get("ramp"));
+    //devices.put("transfer1",         op.hardwareMap.crservo. get("transfer1"));
+    //.put("transfer2",         op.hardwareMap.crservo.get("transfer2"));
+    //devices.put("hood",              op.hardwareMap.servo.get("hood"));
+    devices.put("firstSensor",         op.hardwareMap.get(ColorSensor.class, "firstSensor"));
+    //devices.put("secondSensor",        op.hardwareMap.get(ColorSensor.class, "secondSensor"));
+    devices.put("thirdSensor",         op.hardwareMap.get(ColorSensor.class, "thirdSensor"));
+    devices.put("fourthSensor",        op.hardwareMap.get(ColorSensor.class, "fourthSensor"));
+    devices.put("fifthSensor",         op.hardwareMap.get(ColorSensor.class, "fifthSensor"));
 
-//    devices.put("touchSensor",       op.hardwareMap.get(DigitalChannel.class, "touchSensor"));
+    devices.put("touchSensor",       op.hardwareMap.get(DigitalChannel.class, "touchSensor"));
   }
 
 
@@ -319,6 +330,16 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
 
   public static <T extends DcMotorSimple> void reverseMotorAndCRServoIGB(@NonNull T motor){
     Master.reverseMotorAndCRServoIGB(new DcMotorSimple[]{motor});
+  }
+
+  @Override
+  public Squinting getSquinter(){
+    return this.squinter;
+  }
+
+  @Override
+  public Gate getGate(){
+    return gate;
   }
 
 
@@ -363,6 +384,7 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
     //if(!haveIBeenLookedAt) throw new RuntimeException("Utility has been closed! OpMode is no longer available, must reopen.");
     T ret;
     HardwareDevice dev = (devices.get(name));
+
     if (dev == null) throw new RuntimeException("Device " + name + "does not exist");
 
     try {

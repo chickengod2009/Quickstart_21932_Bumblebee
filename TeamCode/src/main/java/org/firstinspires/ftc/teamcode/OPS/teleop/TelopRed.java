@@ -15,7 +15,7 @@ public class TelopRed extends OpMode {
 
   public void init() {
     master = new Master(this, Master.TeamColor.RED, OpModeFunctions.TELOP);
-
+    master.init();
   }
 
   public void start(){

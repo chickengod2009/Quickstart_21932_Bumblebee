@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.control.functionality.OpModeFunctions;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 
-@Autonomous(name = "AutoBlue_V1", group = "Autos")
+@Autonomous(name = "AutoBlue_V2", group = "Autos")
 public class AutoBlue_V1 extends OpMode {
 
 

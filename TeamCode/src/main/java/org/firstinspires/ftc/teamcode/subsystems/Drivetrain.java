@@ -33,7 +33,7 @@ public class Drivetrain implements UtilityObject, DefaultUpdate {
         frontRight = master.get("frontRightMotor");
         backRight  = master.get("backRightMotor");
 
-        Master.reverse(new HardwareDevice[] {frontLeft, backLeft});
+        Master.reverse(new HardwareDevice[] {frontLeft, frontRight, backLeft});
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -90,9 +90,9 @@ public class Drivetrain implements UtilityObject, DefaultUpdate {
     public void manualUpdate(double xx, double yy, double rrx) {
         setDrive(xx, yy);
         int p;
-        if(rrx >= DRIVER_TAKEOVER) p=1000; else p = drivePrior;
+        if(Math.abs(rrx) >= DRIVER_TAKEOVER) p=1000; else p = drivePrior;
         setAimTurn(rrx, p);
-        update();
+        //update();
     }
 
     public void stop() {

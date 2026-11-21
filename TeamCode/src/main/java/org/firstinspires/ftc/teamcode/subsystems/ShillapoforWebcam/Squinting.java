@@ -11,7 +11,7 @@ public class Squinting {
     public boolean primed;
 
     public Squinting (Master master) {
-        webcam = master.get("webcam");
+        webcam = new Webcam(master);
         drive = master.getDrivetrain();
     }
 
@@ -56,7 +56,7 @@ public class Squinting {
     public int targeting() {
         switch (Master.getTeam()) {
             case BLUE:
-                if (webcam.getTagPose(42).range < webcam.getTagPose(41).range || webcam.getTagPose(45).range < webcam.getTagPose(38).range) {
+                if (webcam.getTagPose(42) != null && webcam.getTagPose(41) != null && webcam.getTagPose(45) != null && webcam.getTagPose(38) != null && (webcam.getTagPose(42).range < webcam.getTagPose(41).range || webcam.getTagPose(45).range < webcam.getTagPose(38).range)) {
                     tagID = 44;
                 }
                 else {
@@ -65,7 +65,7 @@ public class Squinting {
             break;
 
             case RED:
-                if (webcam.getTagPose(33).range < webcam.getTagPose(34).range || webcam.getTagPose(30).range < webcam.getTagPose(37).range) {
+                if (webcam.getTagPose(38) != null && webcam.getTagPose(33) != null && webcam.getTagPose(34) != null && webcam.getTagPose(30) != null && webcam.getTagPose(37) != null &&( webcam.getTagPose(33).range < webcam.getTagPose(34).range || webcam.getTagPose(30).range < webcam.getTagPose(37).range)) {
                     tagID = 31;
                 }
                 else {
@@ -74,6 +74,11 @@ public class Squinting {
             break;
         }
         return tagID;
+    }
+
+
+    public int seeID(){
+        return this.webcam.getLatestDetections();
     }
 
     public void correctChuddedAim() {

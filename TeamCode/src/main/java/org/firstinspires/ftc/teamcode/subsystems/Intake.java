@@ -10,14 +10,15 @@ import org.firstinspires.ftc.teamcode.control.functionality.DefaultUpdate;
 public class Intake implements Loggable, DefaultUpdate {
     private DcMotorEx intake;
     private DcMotorEx rollers;
+    public static double intakeSpeed = .4;
 
     private double intakePower, rollerPower;
     private Master master;
 
     public Intake(Master master){
         this.master = master;
-        intake = master.get("intakeMotor");
-        rollers = master.get("rollersMotor");
+        intake = master.get("intake");
+        rollers = master.get("roller");
 
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rollers.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

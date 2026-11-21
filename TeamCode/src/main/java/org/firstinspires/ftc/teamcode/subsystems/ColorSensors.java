@@ -18,10 +18,10 @@ public class ColorSensors {
 
         public enum SensorID{
             ONE(0),
-            TWO(1),
-            THREE(2),
-            FOUR(3),
-            FIVE(4);
+            //TWO(1),
+            THREE(1),
+            FOUR(2),
+            FIVE(3);
 
             final int arrayIndex;
             SensorID(int index){
@@ -32,12 +32,10 @@ public class ColorSensors {
                     case 0:
                         return ONE;
                     case 1:
-                        return TWO;
-                    case 2:
                         return THREE;
-                    case 3:
+                    case 2:
                         return FOUR;
-                    case 4:
+                    case 3:
                         return FIVE;
                     default:
                         throw new RuntimeException("Not an index");
@@ -84,14 +82,14 @@ public class ColorSensors {
 
     }
     ColorSensor firstSensor, secondSensor, thirdSensor, fourthSensor, fifthSensor;
-    private Color color1, color2, color3, color4, color5;
-    private RGB C1, C2, C3, C4, C5;
+    private Color color1, /*color2*/ color3, color4, color5;
+    private RGB C1, C3, C4, C5;
 
     public int ct, noise;
     public ColorSensors(Master master) {
-        firstSensor = master.get("topSensor");
-        secondSensor = master.get("middleSensor");
-        thirdSensor = master.get("bottomSensor");
+        firstSensor = master.get("firstSensor");
+        //secondSensor = master.get("secondSensor");
+        thirdSensor = master.get("thirdSensor");
         fourthSensor = master.get("fourthSensor");
         fifthSensor = master.get("fifthSensor");
 
@@ -104,9 +102,9 @@ public class ColorSensors {
                 firstSensor.green(),
                 firstSensor.blue());
 
-        C2 = new RGB( secondSensor.red(),
-                secondSensor.green(),
-                secondSensor.blue());
+//        C2 = new RGB( secondSensor.red(),
+//                secondSensor.green(),
+//                secondSensor.blue());
 
         C3 = new RGB( thirdSensor.red(),
                 thirdSensor.green(),
@@ -124,7 +122,7 @@ public class ColorSensors {
         //TODO: find parameters for colors
         //FIRST
         color1 = C1.assignColor(noise);
-        color2 = C2.assignColor(noise);
+        //color2 = C2.assignColor(noise);
         color3 = C3.assignColor(noise);
         color4 = C4.assignColor(noise);
         color5 = C5.assignColor(noise);
@@ -134,8 +132,6 @@ public class ColorSensors {
         switch (sensor){
             case ONE:
                 return color1;
-            case TWO:
-                return color2;
             case THREE:
                 return color3;
             case FOUR:
@@ -149,8 +145,6 @@ public class ColorSensors {
         switch (sensor){
             case ONE:
                 return C1.Red;
-            case TWO:
-                return C2.Red;
             case THREE:
                 return C3.Red;
             case FOUR:
@@ -164,8 +158,6 @@ public class ColorSensors {
         switch (sensor){
             case ONE:
                 return C1.Green;
-            case TWO:
-                return C2.Green;
             case THREE:
                 return C3.Green;
             case FOUR:
@@ -179,8 +171,6 @@ public class ColorSensors {
         switch (sensor){
             case ONE:
                 return C1.Blue;
-            case TWO:
-                return C2.Blue;
             case THREE:
                 return C3.Blue;
             case FOUR:
@@ -193,17 +183,17 @@ public class ColorSensors {
 
     public int hasBall(RGB.SensorID sensorID) {
 
-        Color[] sensors = {color1,color2,color3};
+        Color[] sensors = {color1,color3,color4,color5};
         return (sensors[sensorID.arrayIndex] != Color.NA) ? 0 : 1;
     }
     public boolean bladderFullOfPollen() {
         int sum=0;
 
-        for(int i = 0; i <3; ++i){
+        for(int i = 0; i <2; ++i){
             sum += this.hasBall(RGB.SensorID.sensorIndex(i));
         }
 
-        return sum == 3;
+        return sum == 2;
     }
     public boolean bladderFullOfNectar() {
         int sum=0;

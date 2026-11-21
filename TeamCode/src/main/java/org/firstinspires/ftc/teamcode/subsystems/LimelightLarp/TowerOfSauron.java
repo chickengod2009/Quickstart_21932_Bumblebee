@@ -32,9 +32,9 @@ public class TowerOfSauron {
 
 
     public TowerOfSauron(Master master){
-        this.theOneRing = master.get("Limelight");
+        this.theOneRing = null;
 
-        this.theOneRing.setPollRateHz(100);
+        //this.theOneRing.setPollRateHz(100);
 
     }
 

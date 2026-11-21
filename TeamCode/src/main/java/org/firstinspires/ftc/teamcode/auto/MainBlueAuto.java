@@ -30,13 +30,13 @@ public class MainBlueAuto extends OpMode{
         Scheduler.reset();
         follower = Constants.create(hardwareMap);
         master = new Master(this, Master.TeamColor.BLUE, OpModeFunctions.AUTON_ONE);
-        CP = new CommonPaths(Master.TeamColor.BLUE);
+        CP = new CommonPaths(master, Master.TeamColor.BLUE);
         CSensors = new ColorSensors(master);
         intake = new Intake(master);
     }
     @Override
     public void start() {
-        schedule(CP.commonPaths());
+        schedule(CP.commonPathsBlue());
     }
     @Override
     public void loop() {

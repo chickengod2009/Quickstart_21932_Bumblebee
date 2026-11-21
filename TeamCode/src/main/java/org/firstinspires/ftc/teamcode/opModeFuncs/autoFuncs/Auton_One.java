@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opModeFuncs.autoFuncs;
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
 
+import org.firstinspires.ftc.teamcode.control.AutonPackage;
 import org.firstinspires.ftc.teamcode.control.functionality.MasterTrait;
 
 import com.pedropathing.ivy.Scheduler;
@@ -31,7 +32,7 @@ public class Auton_One {
         Auton_One.master = master;
         Scheduler.reset();
         follower = master.getFollower();
-        CP = new CommonPaths(Master.getTeam());
+        CP = new CommonPaths(master.getMaster(), Master.getTeam());
         CSensors = master.getColorSensors();
         intake = master.getIntake();
         shooter = new Shooter(master.getMaster());
@@ -44,12 +45,12 @@ public class Auton_One {
     }
 
     public static void loop(MasterTrait master) {
-        if (!CP.shooting || CSensors.bladderFullOfPollen() || CSensors.bladderFullOfNectar()) {
-            intake.setAllPower(0);
-        }
-        else {
-            intake.setAllPower(.5);
-        }
+//        if (!CP.shooting || CSensors.bladderFullOfPollen() || CSensors.bladderFullOfNectar()) {
+//            intake.setAllPower(0);
+//        }
+//        else {
+//            intake.setAllPower(Intake.intakeSpeed);
+//        }
         follower.update();
         Scheduler.execute();
         // add your other methods needed in the loop here
@@ -62,7 +63,7 @@ public class Auton_One {
 
 
    public static void fin(MasterTrait master) {
-        //endPose = follower.pose();
+       AutonPackage.assignVariables(master.getFollower().pose());
    }
 
 }
