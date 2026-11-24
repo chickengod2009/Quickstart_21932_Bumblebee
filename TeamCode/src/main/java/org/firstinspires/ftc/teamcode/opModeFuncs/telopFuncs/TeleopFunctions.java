@@ -118,7 +118,7 @@ public class TeleopFunctions {
         }
 
 
-        //      ------INTAKE------
+//       ------INTAKE------
         if (master.getOpMode().gamepad1.right_bumper) {
           intake.setAllPower(Intake.intakeSpeed);
         }
