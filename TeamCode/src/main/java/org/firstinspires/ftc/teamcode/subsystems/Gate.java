@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Gate {
     private final Servo gate, gate2;
 
-    public static double NECTAR_CLOSE = .2, NECTAR_OPEN = 0, POLLEN_CLOSE = 0, POLLEN_OPEN = .2;;
+    public static double NECTAR_CLOSE = .23, NECTAR_OPEN = 0, POLLEN_CLOSE = 0.21, POLLEN_OPEN = 0;
 
     private double position = POLLEN_CLOSE, position2 = NECTAR_CLOSE;
 
@@ -13,6 +13,7 @@ public class Gate {
         gate = master.get("gate");
         gate2 = master.get("gate2");
         gate.setDirection(Servo.Direction.FORWARD);
+        gate2.setDirection(Servo.Direction.REVERSE);
     }
 
     public void setPosition(double gatePosition){

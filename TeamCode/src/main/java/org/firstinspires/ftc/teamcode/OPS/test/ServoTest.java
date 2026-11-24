@@ -19,6 +19,9 @@ public class ServoTest extends LinearOpMode {
 
         TelemetryManager teelelelel = PanelsTelemetry.INSTANCE.getTelemetry();
         Servo servo = hardwareMap.get(Servo.class, servoName);
+        if (servoName.equalsIgnoreCase("nectarGate")) {
+            servo.setDirection(Servo.Direction.REVERSE);
+        }
         waitForStart();
 
         if (isStopRequested()) return;

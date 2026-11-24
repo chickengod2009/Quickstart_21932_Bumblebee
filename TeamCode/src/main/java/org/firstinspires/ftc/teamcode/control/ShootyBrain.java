@@ -163,7 +163,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
 
                 if ((Math.abs(mortar.getVelPollen() - velPollen) <= 100 && Math.abs(mortar.getVelNectar() - velNectar) <= 100 && correctAngle()) || forceShoot){
 
-                    this.state =ShootingState.OPENING;
+                    this.state = ShootingState.OPENING;
                     this.gates.setAllPosition("open");
                     this.gateTimer.reset();
 
@@ -198,8 +198,6 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
             break;
 
             case CLOSING:
-                //make sure nothing else is happening while gate is closing
-                //if(gateTimer.seconds() >= .5) this.state = ShootingState.IDLE;
                 gates.setAllPosition("close");
                 this.state = ShootingState.IDLE;
                 break;
