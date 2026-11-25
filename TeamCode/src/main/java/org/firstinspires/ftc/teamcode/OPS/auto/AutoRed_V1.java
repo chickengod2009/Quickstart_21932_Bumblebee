@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.OPS.auto;
 
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.control.functionality.OpModeFunctions;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
-
+@Configurable
 @Autonomous(name = "AutoRed_V1", group = "Autos")
 public class AutoRed_V1 extends OpMode {
 
