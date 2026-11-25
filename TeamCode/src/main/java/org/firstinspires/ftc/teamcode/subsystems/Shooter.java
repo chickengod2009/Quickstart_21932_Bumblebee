@@ -21,10 +21,12 @@ public class Shooter {
         flyMotor = master.get("shooter");
         flyMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         flyMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p, i, d, f));
+        flyMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         flyMotor2 = master.get("shooterTwo");
         flyMotor2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         flyMotor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p2, i2, d2, f2));
+        flyMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
     public void setPower(double motorPower) {
@@ -41,6 +43,15 @@ public class Shooter {
 
     public double getVelPollen() { return flyMotor.getVelocity();}
     public double getVelNectar() { return flyMotor2.getVelocity();}
+    enum Mode{
+        prime,
+        relaxed,
+        coast
+    }
+    Mode mode =Mode.prime;
+    public void idle(){
+        mode=Mode.relaxed;
+    }
 
 
 //    public int calcVelocity(double dist) {
@@ -50,9 +61,11 @@ public class Shooter {
 //    }
 
     public void setPollenVel(double velocity) {
+        mode = Mode.prime;
         vel = velocity;
     }
     public void setNectarVel(double velocity) {
+        mode = Mode.prime;
         vel2 =velocity;
     }
 
@@ -68,10 +81,26 @@ public class Shooter {
     }
 
     public void update() {
-        //flyMotor.setPower(power);
-//        flyMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p, 0, 0, f));
-//        flyMotor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(p2, 0, 0, f2));
-        flyMotor.setVelocity(vel);
-        flyMotor2.setVelocity(vel2);
+
+        switch (mode) {
+            case prime:
+                flyMotor.setVelocity(vel);
+                flyMotor2.setVelocity(vel2);
+                break;
+            case relaxed:
+                this.flyMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                this.flyMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                this.flyMotor.setPower(0);
+                this.flyMotor2.setPower(0);
+                if(Math.abs(flyMotor.getVelocity()) <= Math.abs(vel/2) || Math.abs(flyMotor2.getVelocity()) <= Math.abs(vel2/2)){
+                    mode = Mode.coast;
+
+                }
+               break;
+            case coast:
+                flyMotor.setVelocity(vel/2);
+                flyMotor2.setVelocity(vel2/2);
+                break;
+        }
     }
 }
