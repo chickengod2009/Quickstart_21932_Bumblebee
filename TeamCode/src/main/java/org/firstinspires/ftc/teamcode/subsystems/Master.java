@@ -298,23 +298,23 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
   private void open(@NotNull OpMode op){
     this.devices = new HashMap<>();
 
-    devices.put("frontLeftMotor",      op.hardwareMap.dcMotor.get("frontLeftMotor"));
-    devices.put("backLeftMotor",       op.hardwareMap.dcMotor.get("backLeftMotor"));
-    devices.put("frontRightMotor",     op.hardwareMap.dcMotor.get("frontRightMotor"));
-    devices.put("backRightMotor",      op.hardwareMap.dcMotor.get("backRightMotor"));
-    devices.put("intake",              op.hardwareMap.dcMotor.get("intakeMotor"));
-    devices.put("roller",              op.hardwareMap.dcMotor.get("rollersMotor"));
+    devices.put("frontLeftMotor",      op.hardwareMap.dcMotor.get("frontLeftMotor")); //port 0
+    devices.put("backLeftMotor",       op.hardwareMap.dcMotor.get("backLeftMotor")); // port 1
+    devices.put("frontRightMotor",     op.hardwareMap.dcMotor.get("frontRightMotor")); // port 2
+    devices.put("backRightMotor",      op.hardwareMap.dcMotor.get("backRightMotor")); // port 3
+    devices.put("intake",              op.hardwareMap.dcMotor.get("intakeMotor")); // port 1
+    devices.put("roller",              op.hardwareMap.dcMotor.get("rollersMotor")); // port 2
     devices.put("webcam1",             op.hardwareMap.get(WebcamName.class, "Webcam 1"));
-    devices.put("shooter",             op.hardwareMap.get(DcMotorEx.class, "flyMotor"));
-    devices.put("shooterTwo",          op.hardwareMap.get(DcMotorEx.class, "flyMotor2"));
-    devices.put("gate",                op.hardwareMap.servo.get("pollenGate"));
-    devices.put("gate2",               op.hardwareMap.servo.get("nectarGate"));
-    devices.put("ramp",                op.hardwareMap.servo.get("ramp"));
-    devices.put("firstSensor",         op.hardwareMap.get(ColorSensor.class, "firstSensor"));
-    devices.put("secondSensor",        op.hardwareMap.get(ColorSensor.class, "secondSensor"));
-    devices.put("thirdSensor",         op.hardwareMap.get(ColorSensor.class, "thirdSensor"));
-    devices.put("fourthSensor",        op.hardwareMap.get(ColorSensor.class, "fourthSensor"));
-    devices.put("fifthSensor",         op.hardwareMap.get(ColorSensor.class, "fifthSensor"));
+    devices.put("shooter",             op.hardwareMap.get(DcMotorEx.class, "flyMotor")); // port 0
+    devices.put("shooterTwo",          op.hardwareMap.get(DcMotorEx.class, "flyMotor2")); // port 3
+    devices.put("gate",                op.hardwareMap.servo.get("pollenGate")); //port 5
+    devices.put("gate2",               op.hardwareMap.servo.get("nectarGate"));//port 2
+    devices.put("ramp",                op.hardwareMap.servo.get("ramp"));//port 0
+    devices.put("firstSensor",         op.hardwareMap.get(ColorSensor.class, "firstSensor"));//chub port 2
+    devices.put("secondSensor",        op.hardwareMap.get(ColorSensor.class, "secondSensor")); // chub port 3
+    devices.put("thirdSensor",         op.hardwareMap.get(ColorSensor.class, "thirdSensor")); // ehub port 0
+    devices.put("fourthSensor",        op.hardwareMap.get(ColorSensor.class, "fourthSensor")); // ehub port 1
+    devices.put("fifthSensor",         op.hardwareMap.get(ColorSensor.class, "fifthSensor")); // ehub port 2
 
   }
 
