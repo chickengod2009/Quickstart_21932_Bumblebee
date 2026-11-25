@@ -106,7 +106,12 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
             default:
                 break;
         }
+        if(!this.squinty.isActive()){
+            this.squinty.prime();
+            resetCam = true;
+        }
     }
+    boolean resetCam =false;
     public void deactivate(){
         switch (this.state){
             case OFF:
@@ -117,6 +122,10 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
             default:
                 this.state = ShootingState.SHUTOFF;
                 break;
+        }
+        if(resetCam){
+            resetCam= false;
+            squinty.unPrime();
         }
     }
 
@@ -147,8 +156,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
         switch (this.state){
             case IDLE:
                 //set velocity to a minimal power, but enough to save time
-                this.velNectar = 100;
-                this.velPollen =100;
+                this.mortar.idle();
                 break;
             case THINKING:
                 //calc distance for target velocity than set state to firing up
@@ -172,6 +180,8 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                     this.state = ShootingState.THINKING;
                     break;
                 }
+                mortar.setPollenVel(velPollen);
+                mortar.setNectarVel(velNectar);
                 //squinty.correctChuddedAim();
 
                 break;
@@ -187,7 +197,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                 //maintain velocity and keep gate open, maybe keep check of how many balls?
                 checkForRecalibration();
                 this.intake.setAllPower(Intake.intakeSpeed);
-                //this.squinty.correctChuddedAim();
+
                 break;
 
             case SHUTOFF:
@@ -207,9 +217,8 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                 this.velNectar =0;
                 break;
         }
-        mortar.setPollenVel(velPollen);
-        mortar.setNectarVel(velNectar);
 
+        if(master.opmode.gamepad1.left_trigger>=.3 && this.squinty.isActive()) this.squinty.correctChuddedAim();
         this.gates.update();
         this.mortar.update();
         this.intake.update();

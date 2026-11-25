@@ -65,13 +65,19 @@ public class Webcam {
         }
         return aprilTag;
     }
+    private boolean primed;
 
     public void stopStream() {
+        primed = false;
         if (visionPortal != null) {
             visionPortal.stopStreaming();
         }
     }
+    public boolean isActive(){
+        return primed;
+    }
     public void resumeStream() {
+        primed=true;
         if (visionPortal != null) {
             visionPortal.resumeStreaming();
         }
