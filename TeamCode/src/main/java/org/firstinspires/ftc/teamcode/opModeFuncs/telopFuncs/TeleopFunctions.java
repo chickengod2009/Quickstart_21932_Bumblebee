@@ -28,7 +28,6 @@ public class TeleopFunctions {
   //static Gate gate;
   static Intake intake;
   static ShootyBrain shooter;
-  static Shooter shootCauseNoShootyBrain;
   static Webcam cam;
   static Squinting squinting;
   static Gate gate;
@@ -50,7 +49,7 @@ public class TeleopFunctions {
     gate = new Gate(master.getMaster());
     TeleopFunctions.intake = master.getIntake();
     TeleopFunctions.shooter = master.getShootyBrain();
-    //cam = new Webcam(master.getMaster());
+    cam = new Webcam(master.getMaster());
     TeleopFunctions.squinting = master.getSquinter();
     TeleopFunctions.telemetryManager = PanelsTelemetry.INSTANCE.getTelemetry();
     TeleopFunctions.driveSpeed = 1;
@@ -85,12 +84,12 @@ public class TeleopFunctions {
 
 //      ------SHOOTING------
         if (master.getOpMode().gamepad1.leftTriggerWasPressed()) {
-          //cam.resumeStream();
+          cam.resumeStream();
           squinting.correctChuddedAim();
         }
 
         if (master.getOpMode().gamepad1.right_trigger > .5) {
-          //cam.stopStream();
+          cam.stopStream();
           shooter.activate();
           telemetryManager.addLine("Activated");
         }
@@ -120,6 +119,10 @@ public class TeleopFunctions {
         if (master.getOpMode().gamepad2.a) {
           intake.setAllPower(-.2);
         }
+        if (master.getOpMode().gamepad2.b) {
+          shooter.setOverloadNectar(-100.0);
+          shooter.setOverloadPollen(-100.0);
+        }
 
 
 
@@ -138,7 +141,6 @@ public class TeleopFunctions {
     ramp.update();
     drive.update();
     intake.update();
-    //shootCauseNoShootyBrain.update();
     shooter.update();
     follower.update();
 
