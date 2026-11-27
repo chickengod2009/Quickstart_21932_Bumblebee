@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.BallSniffer;
 import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.SauronHandler;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Squinting;
+import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Webcam;
 
 public interface MasterTrait {
 
@@ -45,6 +46,7 @@ public interface MasterTrait {
     Follower getFollower();
 
     Squinting getSquinter();
+    Webcam getWebcam();
 
     Gate getGate();
 

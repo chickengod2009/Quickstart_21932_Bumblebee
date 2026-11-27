@@ -178,6 +178,7 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
   public final BallSniffer balls;
 
   public final Squinting squinter;
+  public final Webcam webcam;
 
   public final Gate gate;
 
@@ -200,6 +201,7 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
     this.drivetrain =new Drivetrain(this);
     this.intake = new Intake(this);
     this.squinter = new Squinting(this);
+    this.webcam = new Webcam(this);
     this.gate = new Gate(this);
     this.colorSensors = new ColorSensors(this);
     this.shooty = new ShootyBrain(this);
@@ -322,6 +324,11 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
   @Override
   public Squinting getSquinter(){
     return this.squinter;
+  }
+
+  @Override
+  public Webcam getWebcam() {
+    return this.webcam;
   }
 
   @Override

@@ -49,7 +49,7 @@ public class TeleopFunctions {
     gate = new Gate(master.getMaster());
     TeleopFunctions.intake = master.getIntake();
     TeleopFunctions.shooter = master.getShootyBrain();
-    cam = new Webcam(master.getMaster());
+    cam = master.getWebcam();
     TeleopFunctions.squinting = master.getSquinter();
     TeleopFunctions.telemetryManager = PanelsTelemetry.INSTANCE.getTelemetry();
     TeleopFunctions.driveSpeed = 1;
@@ -62,7 +62,7 @@ public class TeleopFunctions {
     shooter.setOverloadPollen(2000.0);
     shooter.setOverloadNectar(2000.0);
 
-
+    cam.stopStream();
     TeleopFunctions.ramp.setRampPosition(FlowerRamp.UP);
   }
 
@@ -87,9 +87,11 @@ public class TeleopFunctions {
           cam.resumeStream();
           squinting.correctChuddedAim();
         }
+        if (master.getOpMode().gamepad1.leftTriggerWasReleased()) {
+          cam.stopStream();
+        }
 
         if (master.getOpMode().gamepad1.right_trigger > .5) {
-          cam.stopStream();
           shooter.activate();
           telemetryManager.addLine("Activated");
         }

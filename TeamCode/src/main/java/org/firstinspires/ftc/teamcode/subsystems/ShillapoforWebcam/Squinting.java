@@ -23,7 +23,7 @@ public class Squinting {
     }
 
     public Squinting (Master master) {
-        webcam = new Webcam(master);
+        webcam = master.getWebcam();
         drive = master.getDrivetrain();
     }
 
@@ -94,6 +94,7 @@ public class Squinting {
     }
 
     public void correctChuddedAim() {
+        webcam.resumeStream();
         targeting();
         aiming();
         adjusting();
