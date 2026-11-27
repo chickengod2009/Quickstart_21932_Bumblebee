@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.BallSniffer;
 import org.firstinspires.ftc.teamcode.subsystems.LimelightLarp.SauronHandler;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Squinting;
-import org.firstinspires.ftc.teamcode.subsystems.TouchSensor;
 
 public interface MasterTrait {
 
@@ -36,10 +35,6 @@ public interface MasterTrait {
     HardwareMap getHM();
 
     default ColorSensors getColorSensors(){
-        return null;
-    }
-
-    default TouchSensor getTouchSensor(){
         return null;
     }
 

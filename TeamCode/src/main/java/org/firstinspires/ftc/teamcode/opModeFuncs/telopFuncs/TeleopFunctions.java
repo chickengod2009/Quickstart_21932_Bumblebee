@@ -70,7 +70,7 @@ public class TeleopFunctions {
 
   public static void update(MasterTrait master) {
     intake.setAllPower(0);
-    TeleopFunctions.drive.setDrive(-master.getOpMode().gamepad1.left_stick_x, master.getOpMode().gamepad1.left_stick_y);
+    TeleopFunctions.drive.setDrive(master.getOpMode().gamepad1.left_stick_x, master.getOpMode().gamepad1.left_stick_y);
     TeleopFunctions.drive.setAimTurn(master.getOpMode().gamepad1.right_stick_x, 5);
     if (master.getOpMode().gamepad2.rightTriggerWasPressed()) {
       state = STATE.DRIVING;

@@ -20,8 +20,8 @@ public class Constants {
     public static MecanumConfig drivetrainConfig = new MecanumConfig(
             c -> {
                 c.frontLeftName.set("frontLeftMotor");
-                c.backLeftName.set("backLeftMotor");
                 c.frontRightName.set("frontRightMotor");
+                c.backLeftName.set("backLeftMotor");
                 c.backRightName.set("backRightMotor");
                 c.frontLeftDirection.set(DcMotorSimple.Direction.REVERSE);
                 c.frontRightDirection.set(DcMotorSimple.Direction.FORWARD);

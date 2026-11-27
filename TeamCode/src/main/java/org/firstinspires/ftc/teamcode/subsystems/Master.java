@@ -106,10 +106,6 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
     return this.colorSensors;
   }
 
-  @Override
-  public TouchSensor getTouchSensor() {
-    return this.touchMe;
-  }
 
   @Override
   public SauronHandler getLLHandler() {
@@ -178,7 +174,6 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
   public final OpModeFunctions func;
 
   public final ColorSensors colorSensors;
-  public final TouchSensor touchMe;
   public final SauronHandler sauron;
   public final BallSniffer balls;
 
@@ -201,7 +196,6 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
     this.opmode = op;
 
     this.func =auto;
-    this.touchMe = new TouchSensor(this);
     this.balls= new BallSniffer(this);
     this.drivetrain =new Drivetrain(this);
     this.intake = new Intake(this);

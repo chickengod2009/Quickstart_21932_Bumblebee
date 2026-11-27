@@ -33,7 +33,7 @@ public class Drivetrain implements UtilityObject, DefaultUpdate {
         frontRight = master.get("frontRightMotor");
         backRight  = master.get("backRightMotor");
 
-        Master.reverse(new HardwareDevice[] {frontLeft, frontRight, backLeft});
+        Master.reverse(new HardwareDevice[] {frontLeft, backLeft, frontRight, backRight});
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -74,10 +74,10 @@ public class Drivetrain implements UtilityObject, DefaultUpdate {
         // Scale all wheels together so the driving direction survives when the total exceeds 1
         double denom = Math.max(1.0, Math.abs(y) + Math.abs(x) + Math.abs(turn));
 
-        frontLeft.setPower( (y + x - turn) / denom * speedMult);
-        backLeft.setPower(  (y - x - turn) / denom * speedMult);
-        frontRight.setPower(-((y - x + turn) / denom * speedMult));
-        backRight.setPower( (y + x + turn) / denom * speedMult);
+        frontLeft.setPower( (y - x - turn) / denom * speedMult);
+        backLeft.setPower(  (y + x - turn) / denom * speedMult);
+        frontRight.setPower((y + x + turn) / denom * speedMult);
+        backRight.setPower( (y - x + turn) / denom * speedMult);
 
         lastPriority=0;
         rx= 0;
