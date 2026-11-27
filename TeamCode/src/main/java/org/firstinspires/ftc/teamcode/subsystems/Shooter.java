@@ -61,12 +61,15 @@ public class Shooter {
 //    }
 
     public void setPollenVel(double velocity) {
-        mode = Mode.prime;
+
         vel = velocity;
     }
     public void setNectarVel(double velocity) {
-        mode = Mode.prime;
+
         vel2 =velocity;
+    }
+    public void prime(){
+        mode=Mode.prime;
     }
 
     public double getPollenTargetVelocity() {
@@ -100,6 +103,10 @@ public class Shooter {
             case coast:
                 flyMotor.setVelocity(vel/2);
                 flyMotor2.setVelocity(vel2/2);
+                if(Math.abs(flyMotor.getVelocity()) >= Math.abs(vel/2) && Math.abs(flyMotor2.getVelocity()) >= Math.abs(vel2/2)){
+                    mode = Mode.relaxed;
+
+                }
                 break;
         }
     }

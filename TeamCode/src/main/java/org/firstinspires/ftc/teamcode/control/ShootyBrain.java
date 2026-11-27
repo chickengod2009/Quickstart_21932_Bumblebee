@@ -166,7 +166,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                 break;
             case FIRING_UP_AND_AIMING:
                 //get to target velocity, then switch to shooting
-
+                mortar.prime();
                 //if (poisonedState){poisonedState = false; state = ShootingState.THINKING; break;}
 
                 if ((Math.abs(mortar.getVelPollen() - velPollen) <= 100 && Math.abs(mortar.getVelNectar() - velNectar) <= 100 && correctAngle()) || forceShoot){
@@ -180,8 +180,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                     this.state = ShootingState.THINKING;
                     break;
                 }
-                mortar.setPollenVel(velPollen);
-                mortar.setNectarVel(velNectar);
+
                 //squinty.correctChuddedAim();
 
                 break;
@@ -219,6 +218,8 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
         }
 
         if(master.opmode.gamepad1.left_trigger>=.3 && this.squinty.isActive()) this.squinty.correctChuddedAim();
+        mortar.setPollenVel(velPollen);
+        mortar.setNectarVel(velNectar);
         this.gates.update();
         this.mortar.update();
         this.intake.update();

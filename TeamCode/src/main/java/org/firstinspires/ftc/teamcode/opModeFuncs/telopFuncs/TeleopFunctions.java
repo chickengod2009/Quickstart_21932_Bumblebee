@@ -119,9 +119,12 @@ public class TeleopFunctions {
 
 //      ------EJECT------
         if (master.getOpMode().gamepad2.a) {
-          intake.setAllPower(-.2);
+          intake.setRollerPower(-.2);
         }
         if (master.getOpMode().gamepad2.b) {
+          intake.setIntakePower(-.2);
+        }
+        if (master.getOpMode().gamepad2.y) {
           shooter.setOverloadNectar(-100.0);
           shooter.setOverloadPollen(-100.0);
         }
