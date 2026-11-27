@@ -23,10 +23,14 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
     public String log() {
 
         return String.format("Nectar Velocity: %s;\nPollen Velocity:" +
-                " %s;\n%s",
+                " %s;\n%s; \nNectar Target : %s \nPollen Target : %s",
                 this.mortar.getVelNectar(),
                 this.mortar.getVelPollen(),
-                this.state.toString());
+                this.state.toString(),
+                this.velNectar,
+                this.velPollen
+                )
+        ;
     }
 
     @Override
@@ -73,7 +77,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
     final Intake intake;
 
     public ShootyBrain(Master master){
-        state = ShootingState.OFF;
+        state = ShootingState.IDLE;
         this.mortar = new Shooter(master);
         this.teamColor = Master.getTeam();
         this.gates = new Gate(master);
@@ -85,7 +89,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
     public final Squinting squinty;
 
     public ShootyBrain(Shooter mort, Master master){
-        state = ShootingState.OFF;
+        state = ShootingState.IDLE;
         this.mortar = mort;
         this.teamColor = Master.getTeam();
         this.master = master;
@@ -94,6 +98,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
 
         squinty = master.getSquinter();
         intake= master.getIntake();
+
 
     }
 
@@ -162,14 +167,15 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                 //calc distance for target velocity than set state to firing up
                 think();
                 this.state = ShootingState.FIRING_UP_AND_AIMING;
+                mortar.prime();
 
                 break;
             case FIRING_UP_AND_AIMING:
                 //get to target velocity, then switch to shooting
-                mortar.prime();
+
                 //if (poisonedState){poisonedState = false; state = ShootingState.THINKING; break;}
 
-                if ((Math.abs(mortar.getVelPollen() - velPollen) <= 100 && Math.abs(mortar.getVelNectar() - velNectar) <= 100 && correctAngle()) || forceShoot){
+                if (((Math.abs(mortar.getVelPollen() - velPollen) <= 100 && Math.abs(mortar.getVelNectar() - velNectar) <= 100 && correctAngle())) || forceShoot){
 
                     this.state = ShootingState.OPENING;
                     this.gates.setAllPosition("open");
@@ -180,6 +186,8 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                     this.state = ShootingState.THINKING;
                     break;
                 }
+
+
 
                 //squinty.correctChuddedAim();
 
@@ -212,8 +220,7 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
                 break;
 
             case OFF:
-                this.velPollen =0;
-                this.velNectar =0;
+                this.mortar.smoothStop();
                 break;
         }
 
@@ -246,6 +253,10 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
         this.overloadNectar =pollen;
     }
 
+    public void forceThink(){
+        this.think();
+    }
+
     Pose targ =new Pose(0,0);
 
     private static final double needRecalibration = 4;
@@ -269,9 +280,10 @@ public class ShootyBrain implements UtilityObject, DefaultUpdate {
     private static double wrap(double a) { return Math.atan2(Math.sin(a), Math.cos(a)); }
 
     public boolean correctAngle() {
-        Pose p = master.getPose();   // read once
-        double wanted = Math.atan2(targ.y() - p.y(), targ.x() - p.x());
-        return Math.abs(wrap(wanted - p.heading())) <= Math.toRadians(6);
+//        Pose p = master.getPose();   // read once
+//        double wanted = Math.atan2(targ.y() - p.y(), targ.x() - p.x());
+//        return Math.abs(wrap(wanted - p.heading())) <= Math.toRadians(6);
+        return true;
     }
 
 

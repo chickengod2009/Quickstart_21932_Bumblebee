@@ -46,11 +46,19 @@ public class Shooter {
     enum Mode{
         prime,
         relaxed,
-        coast
+        coast,
+        smooth_end
     }
-    Mode mode =Mode.prime;
+    Mode mode =Mode.coast;
     public void idle(){
-        mode=Mode.relaxed;
+        switch (mode){
+            case coast:
+            case relaxed: break;
+            case prime:
+                mode = Mode.relaxed;
+                break;
+        }
+
     }
 
 
@@ -87,6 +95,8 @@ public class Shooter {
 
         switch (mode) {
             case prime:
+                this.flyMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                this.flyMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 flyMotor.setVelocity(vel);
                 flyMotor2.setVelocity(vel2);
                 break;
@@ -97,10 +107,11 @@ public class Shooter {
                 this.flyMotor2.setPower(0);
                 if(Math.abs(flyMotor.getVelocity()) <= Math.abs(vel/2) || Math.abs(flyMotor2.getVelocity()) <= Math.abs(vel2/2)){
                     mode = Mode.coast;
-
                 }
                break;
             case coast:
+                this.flyMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                this.flyMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 flyMotor.setVelocity(vel/2);
                 flyMotor2.setVelocity(vel2/2);
                 if(Math.abs(flyMotor.getVelocity()) >= Math.abs(vel/2) && Math.abs(flyMotor2.getVelocity()) >= Math.abs(vel2/2)){
@@ -108,6 +119,18 @@ public class Shooter {
 
                 }
                 break;
+            case smooth_end:
+                this.flyMotor.setPower(0);
+                this.flyMotor2.setPower(0);
+                break;
         }
+    }
+
+
+
+    public void smoothStop(){
+        this.flyMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.flyMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mode = Mode.smooth_end;
     }
 }

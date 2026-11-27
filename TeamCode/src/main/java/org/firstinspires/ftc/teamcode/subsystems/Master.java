@@ -200,8 +200,8 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
     this.balls= new BallSniffer(this);
     this.drivetrain =new Drivetrain(this);
     this.intake = new Intake(this);
-    this.squinter = new Squinting(this);
     this.webcam = new Webcam(this);
+    this.squinter = new Squinting(this);
     this.gate = new Gate(this);
     this.colorSensors = new ColorSensors(this);
     this.shooty = new ShootyBrain(this);
@@ -301,8 +301,8 @@ public class Master implements Testable, DefaultUpdate, Loggable, MasterTrait {
     devices.put("intake",              op.hardwareMap.dcMotor.get("intakeMotor")); // port 1
     devices.put("roller",              op.hardwareMap.dcMotor.get("rollersMotor")); // port 2
     devices.put("webcam1",             op.hardwareMap.get(WebcamName.class, "Webcam 1"));
-    devices.put("shooter",             op.hardwareMap.get(DcMotorEx.class, "flyMotor")); // port 0
-    devices.put("shooterTwo",          op.hardwareMap.get(DcMotorEx.class, "flyMotor2")); // port 3
+    devices.put("shooter",             op.hardwareMap.get(DcMotorEx.class, "flyMotor")); // port 3
+    devices.put("shooterTwo",          op.hardwareMap.get(DcMotorEx.class, "flyMotor2")); // port 0
     devices.put("gate",                op.hardwareMap.servo.get("pollenGate")); //port 5
     devices.put("gate2",               op.hardwareMap.servo.get("nectarGate"));//port 2
     devices.put("ramp",                op.hardwareMap.servo.get("ramp"));//port 0

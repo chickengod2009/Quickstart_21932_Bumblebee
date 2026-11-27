@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opModeFuncs.telopFuncs;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Master;
 import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Squinting;
 import org.firstinspires.ftc.teamcode.subsystems.ShillapoforWebcam.Webcam;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
-
+//@Configurable
 public class TeleopFunctions {
   private static MasterTrait master;
   private static Follower follower;
@@ -59,8 +60,10 @@ public class TeleopFunctions {
 
 
   public static void start(MasterTrait master) {
-    shooter.setOverloadPollen(2000.0);
+    shooter.setOverloadPollen(1850.0);
     shooter.setOverloadNectar(2000.0);
+    master.getOpMode().telemetry.addLine(shooter.log());
+    shooter.forceThink();
 
     cam.stopStream();
     TeleopFunctions.ramp.setRampPosition(FlowerRamp.UP);
@@ -69,6 +72,8 @@ public class TeleopFunctions {
 
   public static void update(MasterTrait master) {
     intake.setAllPower(0);
+    shooter.setOverloadPollen(pollenvectoconf.pollen);
+    shooter.setOverloadNectar(pollenvectoconf.nectar);
     TeleopFunctions.drive.setDrive(master.getOpMode().gamepad1.left_stick_x, master.getOpMode().gamepad1.left_stick_y);
     TeleopFunctions.drive.setAimTurn(master.getOpMode().gamepad1.right_stick_x, 5);
     if (master.getOpMode().gamepad2.rightTriggerWasPressed()) {
@@ -177,7 +182,7 @@ public class TeleopFunctions {
 
 
   public static void end(MasterTrait master) {
-
+    shooter.off();
 
   }
 }
