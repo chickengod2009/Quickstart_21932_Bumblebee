@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.opModeFuncs.telopFuncs.TeleopFunctions;
 
 import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.FullTest;
 import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.IntakeTest;
+import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.ShooterCamDistTest;
 import org.firstinspires.ftc.teamcode.opModeFuncs.testFuncs.ShooterGateIntakeTestFunc;
 import org.firstinspires.ftc.teamcode.subsystems.Master;
 
@@ -25,7 +26,8 @@ public enum OpModeFunctions {
 
   AUTON_TWO(Auton_Two::init, Auton_Two::start,Auton_Two::loop, Auton_Two::fin),
 
-  
+
+  DIST_TEST(ShooterCamDistTest::init, ShooterCamDistTest::start, ShooterCamDistTest::loop, ShooterCamDistTest:: end),
   TEST_1(IntakeTest::init, OpModeFunctions::todo, IntakeTest::loop, OpModeFunctions::todo),
   FULL_TEST(FullTest::init, OpModeFunctions::todo, FullTest::loop, OpModeFunctions::todo ),
   Intake_Gate_Shooter_Test(ShooterGateIntakeTestFunc::init, OpModeFunctions::todo, ShooterGateIntakeTestFunc::loop, OpModeFunctions::todo );
