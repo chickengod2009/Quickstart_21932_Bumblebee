@@ -43,10 +43,10 @@ public class ShooterCamDistTest {
 
         master.getOpMode().telemetry.addLine("Init complete");
         targetVel = 0;
+        webcam.resumeStream();
     }
 
     public static void start (MasterTrait master) {
-        webcam.resumeStream();
     }
 
     public static void loop(MasterTrait master) {
@@ -88,6 +88,7 @@ public class ShooterCamDistTest {
 
         master.getOpMode().telemetry.addData("April Tag", webcam.getLatestDetections());
         master.getOpMode().telemetry.addData("Distance", webcam.getTagPose(webcam.getLatestDetections()));
+        master.getOpMode().telemetry.addData("Active:", webcam.isActive());
         master.getOpMode().telemetry.addLine("-------------------");
         master.getOpMode().telemetry.addData("Target Velocity", targetVel);
         master.getOpMode().telemetry.addData("Current Velocity", currentVel);

@@ -10,6 +10,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
+import com.bylazar.camerastream.PanelsCameraStream;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.HashMap;
@@ -25,9 +26,11 @@ public class Webcam {
 
 
     public final int cameraWidth = 640, cameraHeight = 480; // TODO: set proper aspect ratio and resolution if needed
+    private final StreamProcessor streamProcessor = new StreamProcessor();
 
 
     public Webcam(Master master) {
+
 
         aprilTagProcessor = new AprilTagProcessor.Builder()
                 .setDrawTagID(true)
@@ -44,6 +47,7 @@ public class Webcam {
                 .enableLiveView(true)
                 .setAutoStopLiveView(true)
                 .build();
+        PanelsCameraStream.INSTANCE.startStream(streamProcessor, null);
     }
 
     public List<AprilTagDetection> detectAprilTags() {
